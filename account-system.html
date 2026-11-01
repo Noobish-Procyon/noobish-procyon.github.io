@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noobish Procyon | Account System</title>
+    <style>
+        :root {
+            --bg: #f3f3f0;
+            --panel: #ffffff;
+            --panel-alt: #f8f4ef;
+            --ink: #1d2431;
+            --muted: #5d6777;
+            --line: #dfe4ea;
+            --primary: #3558d1;
+            --primary-soft: #dfe7ff;
+            --accent: #f1b15d;
+            --success: #2e8855;
+            --danger: #a84545;
+            --shadow: rgba(17, 25, 45, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top, rgba(53, 88, 209, 0.12), transparent 28%),
+                var(--bg);
+            color: var(--ink);
+            font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        }
+
+        .page-shell {
+            width: min(1100px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 32px 0 56px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .back-link {
+            color: var(--ink);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .brand {
+            color: var(--muted);
+            font-size: 13px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .header-action {
+            border: 1px solid var(--line);
+            background: var(--panel);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-weight: 700;
+            color: var(--ink);
+            cursor: pointer;
+        }
+
+        .hero {
+            padding: 28px 0 18px;
+        }
+
+        .eyebrow {
+            margin: 0 0 12px;
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.2rem, 3vw, 3.4rem);
+            line-height: 1.1;
+        }
+
+        .hero p {
+            margin: 12px 0 0;
+            max-width: 680px;
+            color: var(--muted);
+            font-size: 1.03rem;
+            line-height: 1.6;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: 0 16px 32px var(--shadow);
+            padding: 22px;
+        }
+
+        .tab-row {
+            display: inline-flex;
+            gap: 6px;
+            padding: 6px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: var(--panel-alt);
+            margin-bottom: 18px;
+        }
+
+        .tab {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 18px rgba(53, 88, 209, 0.28);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: #fff;
+            font: inherit;
+            color: var(--ink);
+        }
+
+        input:focus {
+            outline: 3px solid rgba(53, 88, 209, 0.15);
+            border-color: var(--primary);
+        }
+
+        .primary-button,
+        .secondary-button,
+        .danger-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font: inherit;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .primary-button:hover,
+        .secondary-button:hover,
+        .danger-button:hover,
+        .header-action:hover {
+            transform: translateY(-1px);
+        }
+
+        .primary-button {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 12px 24px rgba(53, 88, 209, 0.24);
+        }
+
+        .secondary-button {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .danger-button {
+            background: rgba(168, 69, 69, 0.1);
+            color: var(--danger);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .message {
+            min-height: 22px;
+            margin: 18px 0 0;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .message.success { color: var(--success); }
+        .message.error { color: var(--danger); }
+
+        .account-card {
+            background: linear-gradient(135deg, var(--primary-soft), #eef1ff);
+            border: 1px solid rgba(53, 88, 209, 0.12);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .account-card h2,
+        .panel h2 {
+            margin: 0 0 8px;
+            font-size: 1.2rem;
+        }
+
+        .account-meta {
+            color: var(--muted);
+            font-size: 0.94rem;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            color: var(--muted);
+            line-height: 1.6;
+            padding-top: 4px;
+        }
+
+        .account-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .account-item {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px;
+            background: #fff;
+        }
+
+        .account-item-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: rgba(53, 88, 209, 0.08);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .account-item small {
+            display: block;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .account-item-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .profile-form {
+            display: grid;
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .profile-form textarea {
+            width: 100%;
+            min-height: 110px;
+            resize: vertical;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font: inherit;
+            color: var(--ink);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 760px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page-shell">
+        <header class="topbar">
+            <a class="back-link" href="index.html">← Back to games</a>
+            <div class="brand">Noobish Procyon</div>
+            <button id="logoutButton" class="header-action hidden" type="button">Log out</button>
+        </header>
+
+        <section class="hero">
+            <p class="eyebrow">Player account hub</p>
+            <h1>Account System</h1>
+            <p>Create a browser-based player profile, save it locally, and keep your favorite game and preferences ready whenever you return.</p>
+        </section>
+
+        <div class="layout">
+            <section class="panel">
+                <div class="tab-row" aria-label="Authentication tabs">
+                    <button class="tab active" type="button" data-tab="login">Log in</button>
+                    <button class="tab" type="button" data-tab="signup">Create account</button>
+                </div>
+
+                <form id="loginForm" class="auth-form active" novalidate>
+                    <div class="field-group">
+                        <label for="loginIdentifier">Username or email</label>
+                        <input id="loginIdentifier" name="loginIdentifier" type="text" placeholder="Player name or email" autocomplete="username">
+                    </div>
+                    <div class="field-group">
+                        <label for="loginPassword">Password</label>
+                        <input id="loginPassword" name="loginPassword" type="password" placeholder="********" autocomplete="current-password">
+                    </div>
+                    <div class="button-row">
+                        <button class="primary-button" type="submit">Log in</button>
+                    </div>
+                </form>
+
+                <form id="signupForm" class="auth-form" novalidate>
+                    <div class="field-group">
+                        <label for="signupUsername">Username</label>
+                        <input id="signupUsername" name="signupUsername" type="text" placeholder="your-player-name" minlength="3" maxlength="24" autocomplete="username">
+                    </div>
+                    <div class="field-group">
+                        <label for="signupEmail">Email</label>
+                        <input id="signupEmail" name="signupEmail" type="email" placeholder="player@example.com" autocomplete="email">
+                    </div>
+                    <div class="field-group">
+                        <label for="signupPassword">Password</label>
+                        <input id="signupPassword" name="signupPassword" type="password" placeholder="At least 6 characters" minlength="6" autocomplete="new-password">
+                    </div>
+                    <div class="field-group">
+                        <label for="signupConfirmPassword">Confirm password</label>
+                        <input id="signupConfirmPassword" name="signupConfirmPassword" type="password" placeholder="Re-enter your password" autocomplete="new-password">
+                    </div>
+                    <div class="button-row">
+                        <button class="primary-button" type="submit">Create account</button>
+                    </div>
+                </form>
+
+                <p id="message" class="message" aria-live="polite"></p>
+            </section>
+
+            <aside class="panel">
+                <h2>Current account</h2>
+                <div id="accountSummary" class="empty-state">No player is signed in yet. Log in or create a new account to begin.</div>
+            </aside>
+        </div>
+
+        <section class="panel" style="margin-top: 18px;">
+            <h2>Saved accounts</h2>
+            <div id="accountsList" class="account-list"></div>
+        </section>
+
+        <section id="profileEditorPanel" class="panel hidden" style="margin-top: 18px;">
+            <h2>Profile settings</h2>
+            <form id="profileForm" class="profile-form" novalidate>
+                <div class="field-group">
+                    <label for="displayNameInput">Display name</label>
+                    <input id="displayNameInput" name="displayName" type="text" maxlength="40">
+                </div>
+                <div class="field-group">
+                    <label for="favoriteGameInput">Favorite game</label>
+                    <input id="favoriteGameInput" name="favoriteGame" type="text" maxlength="40" placeholder="Shape Summoner">
+                </div>
+                <div class="field-group">
+                    <label for="levelInput">Player level</label>
+                    <input id="levelInput" name="level" type="number" min="1" max="999" value="1">
+                </div>
+                <div class="field-group">
+                    <label for="bioInput">Bio</label>
+                    <textarea id="bioInput" name="bio" placeholder="Tell everyone a little about your play style..."></textarea>
+                </div>
+                <div class="button-row">
+                    <button class="primary-button" type="submit">Save profile</button>
+                    <button id="deleteAccountButton" class="danger-button" type="button">Delete account</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const ACCOUNTS_KEY = 'noobish-procyon-accounts';
+        const CURRENT_ACCOUNT_KEY = 'noobish-procyon-current-account';
+
+        const state = {
+            accounts: loadAccounts(),
+            currentAccountId: localStorage.getItem(CURRENT_ACCOUNT_KEY) || null
+        };
+
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const tabs = document.querySelectorAll('.tab');
+        const messageBox = document.getElementById('message');
+        const accountSummary = document.getElementById('accountSummary');
+        const accountsList = document.getElementById('accountsList');
+        const logoutButton = document.getElementById('logoutButton');
+        const profileEditorPanel = document.getElementById('profileEditorPanel');
+        const profileForm = document.getElementById('profileForm');
+        const deleteAccountButton = document.getElementById('deleteAccountButton');
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                tabs.forEach((item) => item.classList.toggle('active', item === tab));
+                loginForm.classList.toggle('active', target === 'login');
+                signupForm.classList.toggle('active', target === 'signup');
+                clearMessage();
+            });
+        });
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!identifier || !password) {
+                showMessage('Please enter your username or email and password.', 'error');
+                return;
+            }
+
+            const account = state.accounts.find((entry) =>
+                entry.username.toLowerCase() === identifier.toLowerCase() ||
+                entry.email.toLowerCase() === identifier.toLowerCase()
+            );
+
+            if (!account) {
+                showMessage('No account matches that username or email.', 'error');
+                return;
+            }
+
+            const passwordHash = await hashPassword(password);
+            if (account.passwordHash !== passwordHash) {
+                showMessage('That password is incorrect.', 'error');
+                return;
+            }
+
+            account.lastLogin = new Date().toISOString();
+            state.currentAccountId = account.id;
+            localStorage.setItem(CURRENT_ACCOUNT_KEY, account.id);
+            saveAccounts();
+            render();
+            showMessage(`Welcome back, ${account.displayName || account.username}!`, 'success');
+            loginForm.reset();
+        });
+
+        signupForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const username = document.getElementById('signupUsername').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+            if (username.length < 3) {
+                showMessage('Username must be at least 3 characters long.', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters long.', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match.', 'error');
+                return;
+            }
+
+            const duplicate = state.accounts.some((entry) =>
+                entry.username.toLowerCase() === username.toLowerCase() ||
+                entry.email.toLowerCase() === email.toLowerCase()
+            );
+
+            if (duplicate) {
+                showMessage('An account already exists with that username or email.', 'error');
+                return;
+            }
+
+            const account = {
+                id: createId(),
+                username,
+                email,
+                displayName: username,
+                favoriteGame: 'Noobish Procyon',
+                level: 1,
+                bio: '',
+                passwordHash: await hashPassword(password),
+                createdAt: new Date().toISOString(),
+                lastLogin: new Date().toISOString()
+            };
+
+            state.accounts.push(account);
+            state.currentAccountId = account.id;
+            localStorage.setItem(CURRENT_ACCOUNT_KEY, account.id);
+            saveAccounts();
+            render();
+            showMessage(`Account created for ${account.username}.`, 'success');
+            signupForm.reset();
+        });
+
+        logoutButton.addEventListener('click', () => {
+            state.currentAccountId = null;
+            localStorage.removeItem(CURRENT_ACCOUNT_KEY);
+            render();
+            clearMessage();
+        });
+
+        profileForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const account = getCurrentAccount();
+            if (!account) {
+                return;
+            }
+
+            account.displayName = document.getElementById('displayNameInput').value.trim() || account.username;
+            account.favoriteGame = document.getElementById('favoriteGameInput').value.trim() || 'Noobish Procyon';
+            account.level = clampNumber(parseInt(document.getElementById('levelInput').value, 10) || 1, 1, 999);
+            account.bio = document.getElementById('bioInput').value.trim();
+
+            saveAccounts();
+            render();
+            showMessage('Profile updated successfully.', 'success');
+        });
+
+        deleteAccountButton.addEventListener('click', () => {
+            const account = getCurrentAccount();
+            if (!account) {
+                return;
+            }
+
+            const confirmed = window.confirm(`Delete the account for ${account.username}? This cannot be undone.`);
+            if (!confirmed) {
+                return;
+            }
+
+            state.accounts = state.accounts.filter((entry) => entry.id !== account.id);
+            state.currentAccountId = null;
+            localStorage.removeItem(CURRENT_ACCOUNT_KEY);
+            saveAccounts();
+            render();
+            showMessage('Account deleted.', 'success');
+        });
+
+        function render() {
+            const currentAccount = getCurrentAccount();
+
+            logoutButton.classList.toggle('hidden', !currentAccount);
+            profileEditorPanel.classList.toggle('hidden', !currentAccount);
+
+            if (!currentAccount) {
+                accountSummary.innerHTML = 'No player is signed in yet. Log in or create a new account to begin.';
+                accountSummary.className = 'empty-state';
+                document.getElementById('displayNameInput').value = '';
+                document.getElementById('favoriteGameInput').value = 'Noobish Procyon';
+                document.getElementById('levelInput').value = 1;
+                document.getElementById('bioInput').value = '';
+            } else {
+                accountSummary.className = 'account-card';
+                accountSummary.innerHTML = `
+                    <h2>${escapeHtml(currentAccount.displayName || currentAccount.username)}</h2>
+                    <div class="account-meta">
+                        <div><strong>Username:</strong> ${escapeHtml(currentAccount.username)}</div>
+                        <div><strong>Email:</strong> ${escapeHtml(currentAccount.email)}</div>
+                        <div><strong>Favorite game:</strong> ${escapeHtml(currentAccount.favoriteGame)}</div>
+                        <div><strong>Level:</strong> ${currentAccount.level}</div>
+                        <div><strong>Created:</strong> ${formatDate(currentAccount.createdAt)}</div>
+                        <div><strong>Last login:</strong> ${formatDate(currentAccount.lastLogin)}</div>
+                        <div><strong>Bio:</strong> ${escapeHtml(currentAccount.bio || 'No bio added yet.')}</div>
+                    </div>
+                `;
+
+                document.getElementById('displayNameInput').value = currentAccount.displayName || currentAccount.username;
+                document.getElementById('favoriteGameInput').value = currentAccount.favoriteGame || 'Noobish Procyon';
+                document.getElementById('levelInput').value = currentAccount.level || 1;
+                document.getElementById('bioInput').value = currentAccount.bio || '';
+            }
+
+            renderAccountsList();
+        }
+
+        function renderAccountsList() {
+            accountsList.innerHTML = '';
+
+            if (!state.accounts.length) {
+                accountsList.innerHTML = '<div class="empty-state">No saved accounts yet.</div>';
+                return;
+            }
+
+            state.accounts.forEach((account) => {
+                const item = document.createElement('div');
+                item.className = 'account-item';
+                const active = account.id === state.currentAccountId;
+                const removeButton = active ? '' : `<button class="danger-button" type="button" data-remove-id="${account.id}">Remove</button>`;
+                item.innerHTML = `
+                    <div class="account-item-header">
+                        <strong>${escapeHtml(account.displayName || account.username)}</strong>
+                        ${active ? '<span class="pill">Active</span>' : ''}
+                    </div>
+                    <div>${escapeHtml(account.username)}</div>
+                    <small>${escapeHtml(account.email)}</small>
+                    <small>Last seen: ${formatDate(account.lastLogin)}</small>
+                    <div class="account-item-actions">
+                        <button class="secondary-button" type="button" data-select-id="${account.id}">Select</button>
+                        ${removeButton}
+                    </div>
+                `;
+
+                accountsList.appendChild(item);
+            });
+
+            accountsList.querySelectorAll('[data-select-id]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.selectId;
+                    state.currentAccountId = targetId;
+                    localStorage.setItem(CURRENT_ACCOUNT_KEY, targetId);
+                    render();
+                    clearMessage();
+                });
+            });
+
+            accountsList.querySelectorAll('[data-remove-id]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.removeId;
+                    const account = state.accounts.find((entry) => entry.id === targetId);
+                    if (!account) return;
+                    const confirmed = window.confirm(`Delete ${account.username}?`);
+                    if (!confirmed) return;
+
+                    state.accounts = state.accounts.filter((entry) => entry.id !== targetId);
+                    if (state.currentAccountId === targetId) {
+                        state.currentAccountId = null;
+                        localStorage.removeItem(CURRENT_ACCOUNT_KEY);
+                    }
+                    saveAccounts();
+                    render();
+                    showMessage('Account removed.', 'success');
+                });
+            });
+        }
+
+        function loadAccounts() {
+            try {
+                const raw = localStorage.getItem(ACCOUNTS_KEY);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveAccounts() {
+            localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(state.accounts));
+        }
+
+        function getCurrentAccount() {
+            return state.accounts.find((account) => account.id === state.currentAccountId) || null;
+        }
+
+        function showMessage(message, type = '') {
+            messageBox.textContent = message;
+            messageBox.className = `message ${type}`.trim();
+        }
+
+        function clearMessage() {
+            messageBox.textContent = '';
+            messageBox.className = 'message';
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        async function hashPassword(value) {
+            if (window.crypto && crypto.subtle) {
+                const bytes = new TextEncoder().encode(value);
+                const digest = await crypto.subtle.digest('SHA-256', bytes);
+                return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+            }
+
+            return btoa(unescape(encodeURIComponent(value)));
+        }
+
+        function createId() {
+            if (window.crypto && crypto.randomUUID) {
+                return crypto.randomUUID();
+            }
+            return `account-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        }
+
+        function clampNumber(value, min, max) {
+            return Math.min(Math.max(value, min), max);
+        }
+
+        function formatDate(value) {
+            if (!value) return 'Never';
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return 'Unknown';
+            return new Intl.DateTimeFormat('en', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }).format(date);
+        }
+
+        function escapeHtml(input) {
+            return String(input)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        render();
+    </script>
+</body>
+</html>
