@@ -91,11 +91,15 @@ rewards on upgrades. The game offers both computer and mobile controls.
 
 Launch: [`hyperfighters/index.html`](hyperfighters/index.html)
 
-### Circlebound Dungeon Run
+### Elemental Descent
 
-Descend through connected dungeon rooms, fight enemies, and collect relics.
-Choose a class, gain upgrades, and use a movement joystick and dash control on
-mobile or keyboard controls on a computer.
+Descend through shifting rooms, defeat bosses to awaken elements, and collect
+fragments to unlock a 24-element roster. Save a three-element loadout, unlock
+colorways at depth 10, and customize each element with two attack-changing
+colorways of its own. Melee swings display their directional hit arc. Awakened
+boss elements are randomized; defeating one opens a matching Hyper trial.
+Defeat its boss for 50 fragments and the persistent HYPER-<ELEMENT> form, with
+four upgraded moves. Use keyboard or mobile controls to survive the run.
 
 Launch: [`dungeoncrawlers/index.html`](dungeoncrawlers/index.html)
 
