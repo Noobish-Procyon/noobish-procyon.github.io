@@ -123,6 +123,14 @@ for each shape. Progress is saved in the browser.
 
 Launch: [`shapefighters/index.html`](shapefighters/index.html)
 
+### Account System
+
+A lightweight browser-based player account manager that supports sign-up,
+log-in, logout, and local profile persistence for the project hub. Accounts are
+stored in localStorage so the system works without a backend.
+
+Launch: [`account-system.html`](account-system.html)
+
 ## Project Notes
 
 - Each project is a standalone browser experience with its own entry page and
