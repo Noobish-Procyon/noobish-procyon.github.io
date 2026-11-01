@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Fight through elemental rooms, collect fragments, unlock elements, and challenge dungeon bosses.">
-  <title>Circlebound | Elemental Dungeon</title>
+  <meta name="description" content="Descend through an unstable elemental dungeon, collect fragments, unlock elements, and awaken their powers.">
+  <title>Elemental Descent — an elemental dungeon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
 <body>
   <main class="shell">
     <header class="topbar">
-      <a class="brand" href="../index.html"><span class="brand-mark"></span><span>CIRCLEBOUND</span></a>
+      <a class="brand" href="../index.html"><span class="brand-mark"></span><span>ELEMENTAL DESCENT</span></a>
       <div class="run-status"><span class="pulse"></span><span id="run-state">RUN IN PROGRESS</span><b id="room-label">ROOM 01</b></div>
     </header>
     <section class="game-layout">
@@ -29,20 +29,35 @@
       </aside>
       <section class="arena-wrap">
         <div class="arena-head"><span id="room-name">THE SUNKEN VESTIBULE</span><span id="wave-status">CLEAR THE ROOM</span></div>
-        <div class="canvas-frame"><canvas id="game-canvas" aria-label="Circlebound elemental dungeon game"></canvas><div class="canvas-hint" id="canvas-hint">WASD / ARROWS TO MOVE · Q RANGED · CLICK MELEE</div><div class="mobile-controls" id="mobile-controls" aria-label="Mobile game controls"><div class="virtual-stick" id="move-stick" aria-label="Movement joystick"><div class="virtual-stick-knob"></div></div><div class="mobile-abilities" id="mobile-abilities" aria-label="Element abilities"><button class="mobile-action mobile-ability" type="button" data-mobile-ability="0"><kbd>Z</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="1"><kbd>X</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="2"><kbd>C</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="3"><kbd>V</kbd><span>LOCKED</span></button></div><button class="mobile-action mobile-ranged" id="mobile-ranged" type="button">Q · RANGED</button><button class="mobile-action mobile-dash" id="mobile-dash" type="button">DASH</button></div></div>
+        <div class="canvas-frame"><canvas id="game-canvas" aria-label="Elemental Descent dungeon game"></canvas><div class="canvas-hint" id="canvas-hint">WASD / ARROWS TO MOVE · Q RANGED · CLICK MELEE</div><div class="mobile-controls" id="mobile-controls" aria-label="Mobile game controls"><div class="virtual-stick" id="move-stick" aria-label="Movement joystick"><div class="virtual-stick-knob"></div></div><div class="mobile-abilities" id="mobile-abilities" aria-label="Element abilities"><button class="mobile-action mobile-ability" type="button" data-mobile-ability="0"><kbd>Z</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="1"><kbd>X</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="2"><kbd>C</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="3"><kbd>V</kbd><span>LOCKED</span></button></div><button class="mobile-action mobile-ranged" id="mobile-ranged" type="button">Q · RANGED</button><button class="mobile-action mobile-dash" id="mobile-dash" type="button">DASH</button></div></div>
         <div class="arena-foot"><span><i class="key" id="arena-move-label">WASD</i> MOVE</span><span><i class="key">Q</i> RANGED · <i class="key">CLICK</i> MELEE</span><span><i class="key">SPACE</i> DASH</span><span><i class="key">R</i> NEW RUN</span></div>
       </section>
       <aside class="control-panel">
         <div class="identity"><div class="class-orb" id="element-orb">●</div><div><p class="eyebrow">CURRENT ELEMENT</p><h2 id="element-name">NONE</h2><span id="element-desc">NO ELEMENT · NO ABILITIES</span></div></div>
+        <div class="element-colorway-block">
+          <div class="block-heading"><p class="eyebrow">ELEMENT COLORWAY</p><span id="element-colorway-name">NO ELEMENT</span></div>
+          <div class="element-colorway-list" id="element-colorway-list" aria-label="Current element colorways"></div>
+          <p class="colorway-hint" id="element-colorway-hint">EQUIP AN ELEMENT TO CUSTOMIZE ITS COLOR AND ATTACK</p>
+        </div>
         <div class="resource"><span>VITALITY</span><strong id="health-value">100</strong><div class="meter"><span id="health-meter"></span></div></div>
         <div class="stats"><div><span>FRAGMENTS</span><strong id="fragments-value">00</strong></div><div><span>DEPTH</span><strong id="depth-value">01</strong></div></div>
+        <div class="system-block">
+          <div class="block-heading"><p class="eyebrow">SYSTEM</p><span id="system-count">0/3 SLOTS</span></div>
+          <div class="system-slots" id="system-slots" aria-label="Element loadout slots"></div>
+        </div>
+        <div class="colorway-block">
+          <div class="block-heading"><p class="eyebrow">COLORWAY</p><span id="colorway-unlock">DEPTH 10</span></div>
+          <div class="colorway-list" id="colorway-list" aria-label="Dungeon colorways"></div>
+          <p class="colorway-hint" id="colorway-hint">REACH DEPTH 10 TO UNLOCK COLORWAYS</p>
+        </div>
         <div class="element-block">
           <div class="block-heading"><p class="eyebrow">ELEMENTS</p><span>UNLOCK / SWAP</span></div>
           <div class="element-list" id="element-list" aria-label="Element unlocks and selection"></div>
         </div>
         <div class="ability-block">
-          <div class="block-heading"><p class="eyebrow">ELEMENT MOVES</p><span>BASE + AWAKENED</span></div>
+          <div class="block-heading"><p class="eyebrow">ELEMENT MOVES</p><span>BASE + AWAKENED + HYPER</span></div>
           <div class="ability-list" id="ability-list" aria-label="Element awakening moves"></div>
+          <div class="hyper-form" id="hyper-form"></div>
         </div>
         <div class="feed"><p class="eyebrow">FIELD NOTES</p><div id="log-lines"><p><span>NOW</span> No element equipped.</p><p><span>TIP</span> Q fires · click to melee.</p></div></div>
       </aside>
@@ -59,7 +74,7 @@
     <button class="upgrade-choice" data-upgrade="quickstep"><strong>QUICKSTEP</strong><span>Dash cooldown is 20% shorter.</span></button>
     <button class="upgrade-choice" data-upgrade="scavenger"><strong>SCAVENGER</strong><span>Every enemy drops 1 extra fragment.</span></button>
   </div></div></div>
-  <div class="modal controls-modal" id="controls-modal"><div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="controls-title"><p class="eyebrow">CIRCLEBOUND / CONTROL SETUP</p><h2 id="controls-title">CHOOSE YOUR CONTROLS</h2><p>Move through the dungeon, fight enemies, and claim their fragments.</p><div class="control-options"><button type="button" data-control-mode="mobile"><strong>MOBILE</strong><span>Joystick + ranged + dash; tap the arena to melee</span></button><button type="button" data-control-mode="computer"><strong>COMPUTER</strong><span>WASD / arrows · Q ranged · click melee · space dash</span></button></div></div></div>
+  <div class="modal controls-modal" id="controls-modal"><div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="controls-title"><p class="eyebrow">ELEMENTAL DUNGEON / 01</p><h2 id="controls-title">Claim your element.</h2><p>Fight through shifting rooms, gather fragments, unlock an element, and face its awakened boss.</p><div class="control-options"><button type="button" data-control-mode="computer"><strong>COMPUTER</strong><span>WASD / ARROWS · Q RANGED · CLICK MELEE · SPACE DASH</span></button><button type="button" data-control-mode="mobile"><strong>MOBILE</strong><span>JOYSTICK · Q BUTTON · TAP THE ARENA TO MELEE</span></button></div><p class="controls-footnote">Z X C V CAST ELEMENT MOVES · R STARTS A NEW RUN · FRAGMENTS PERSIST BETWEEN RUNS</p></div></div>
   <script src="game.js"></script>
 </body>
 </html>

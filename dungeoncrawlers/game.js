@@ -9,17 +9,73 @@ const elements = [
   { id: 'water', name: 'WATER', awakenedName: 'OCEAN', cost: 15, color: '#4b9fe0', baseMoves: ['WATER JET', 'RIPTIDE', 'MIST VEIL', 'TIDAL CRASH'], awakeMoves: ['ABYSSAL STREAM', 'MAELSTROM', 'OCEAN VEIL', 'TSUNAMI'], moves: [15, 25, 35, 45] },
   { id: 'light', name: 'LIGHT', awakenedName: 'STAR', cost: 20, color: '#f4d777', baseMoves: ['SUNRAY', 'FLASHBANG', 'DAWNSHIELD', 'BLINK'], awakeMoves: ['STARPIERCER', 'SUPERNOVA', 'SOLAR AEGIS', 'CONSTELLATION'], moves: [20, 30, 40, 50] },
   { id: 'dark', name: 'DARK', awakenedName: 'VOID', cost: 20, color: '#a18bd3', baseMoves: ['NIGHT ORB', 'GRAVITY WELL', 'SOUL SIPHON', 'SHADOW STEP'], awakeMoves: ['VOID BOLT', 'SINGULARITY', 'ECLIPSE DRAIN', 'ABYSS WALK'], moves: [20, 30, 40, 50] },
+  { id: 'wind', name: 'WIND', awakenedName: 'TEMPEST', cost: 25, color: '#94d6c3', baseMoves: ['WING SLASH', 'GALE FORCE', 'UPDRAFT', 'TEMPEST'], awakeMoves: ['SKYPIERCER', 'CYCLONE', 'WIND WALK', 'HURRICANE'], moves: [25, 35, 45, 55] },
   { id: 'poison', name: 'POISON', awakenedName: 'TOXIN', cost: 30, color: '#9ec84e', baseMoves: ['VENOM DART', 'MIRE CLOUD', 'ANTIDOTE', 'PLAGUE BLOOM'], awakeMoves: ['TOXIN NEEDLE', 'BLACK FOG', 'PURGE', 'CONTAGION'], moves: [30, 40, 50, 60] },
   { id: 'electric', name: 'ELECTRIC', awakenedName: 'VOLTAGE', cost: 40, color: '#f4cf54', baseMoves: ['ARC BOLT', 'CHAIN LIGHTNING', 'STATIC DASH', 'THUNDERCLAP'], awakeMoves: ['RAILGUN', 'OVERLOAD', 'LIGHTNING RUSH', 'STORMFRONT'], moves: [35, 45, 55, 65] },
+  { id: 'silk', name: 'SILK', awakenedName: 'SPIDER', cost: 45, color: '#e8b3d2', baseMoves: ['THREAD NEEDLE', 'WEB TRAP', 'COCOON', 'GRAND LOOM'], awakeMoves: ['SILK SPEAR', 'WIDOW WEB', 'GILDED COCOON', 'WORLDWIDE WEB'], moves: [45, 55, 65, 75] },
   { id: 'crystal', name: 'CRYSTAL', awakenedName: 'EMERALD', cost: 50, color: '#61c9a2', baseMoves: ['SHARD FLICK', 'PRISM BURST', 'GEODE GUARD', 'SHATTERLINE'], awakeMoves: ['DIAMOND SPEAR', 'PRISMATIC RUIN', 'FORTRESS CORE', 'WORLD SPLITTER'], moves: [40, 50, 60, 70] },
   { id: 'metal', name: 'METAL', awakenedName: 'STEEL', cost: 55, color: '#aeb8c5', baseMoves: ['IRON NEEDLE', 'ORBITAL BLADES', 'FORGE ARMOR', 'MAGNETIC CRUSH'], awakeMoves: ['CANNON SPIKE', 'SHRAPNEL STORM', 'TITAN PLATING', 'POLARITY COLLAPSE'], moves: [45, 55, 65, 75] },
-  { id: 'blood', name: 'BLOOD', cost: 75, color: '#d84d5d', baseMoves: ['SANGUINE BOLT', 'BLOOD TIDE', 'HEART TRADE', 'RED HARVEST'] },
-  { id: 'time', name: 'TIME', cost: 100, color: '#bda5e8', baseMoves: ['SECOND HAND', 'TIME SNARE', 'REWIND', 'HOURGLASS'] },
-  { id: 'digital', name: 'DIGITAL', cost: 85, color: '#55e6df', baseMoves: ['PIXEL PULSE', 'GLITCH GRID', 'FRAME SKIP', 'SYSTEM CRASH'] }
+  { id: 'soul', name: 'SOUL', awakenedName: 'SPIRIT', cost: 60, color: '#c4a6ef', baseMoves: ['WISP SHOT', 'SOUL DRAIN', 'SPIRIT VEIL', 'REBIRTH'], awakeMoves: ['PHANTOM LANCE', 'HARVESTER', 'ETERNAL VEIL', 'AFTERLIFE'], moves: [60, 70, 80, 90] },
+  { id: 'mystic', name: 'MYSTIC', awakenedName: 'ARCANE', cost: 60, color: '#ba91ee', baseMoves: ['ARCANE BOLT', 'SPELL WELL', 'MANA SHIELD', 'ASTRAL STORM'], awakeMoves: ['RUNE SPEAR', 'WITCHING HOUR', 'ASTRAL ARMOR', 'GRAND CONJURATION'], moves: [60, 70, 80, 90] },
+  { id: 'telekinesis', name: 'TELEKINESIS', awakenedName: 'PSIONIC', cost: 65, color: '#85d5d0', baseMoves: ['PUSH', 'GRAVITY WELL', 'LEVITATE', 'CRUSH'], awakeMoves: ['MIND LANCE', 'SINGULARITY', 'PSIONIC GUARD', 'TOTAL CONTROL'], moves: [65, 75, 85, 95] },
+  { id: 'creation', name: 'CREATION', awakenedName: 'GENESIS', cost: 70, color: '#f1a86f', baseMoves: ['SPARK', 'SHAPE', 'PROTOTYPE', 'GENESIS'], awakeMoves: ['PRIMORDIAL SEED', 'NEW WORLD', 'LIFE FORGE', 'BIG BANG'], moves: [70, 80, 90, 100] },
+  { id: 'blood', name: 'BLOOD', awakenedName: 'SANGUINE', cost: 75, color: '#d84d5d', baseMoves: ['SANGUINE BOLT', 'BLOOD TIDE', 'HEART TRADE', 'RED HARVEST'], awakeMoves: ['HEARTPIERCER', 'VEIN STORM', 'LIFE EXCHANGE', 'MASSACRE'], moves: [75, 85, 95, 105] },
+  { id: 'rubber', name: 'RUBBER', awakenedName: 'BOUNCY', cost: 75, color: '#f18b74', baseMoves: ['BOUNCE SHOT', 'REBOUND', 'ELASTIC GUARD', 'PINBALL'], awakeMoves: ['RICOCHET', 'RUBBER STORM', 'INFINITE STRETCH', 'BOUNCE HOUSE'], moves: [75, 85, 95, 105] },
+  { id: 'digital', name: 'DIGITAL', awakenedName: 'QUANTUM', cost: 85, color: '#55e6df', baseMoves: ['PIXEL PULSE', 'GLITCH GRID', 'FRAME SKIP', 'SYSTEM CRASH'], awakeMoves: ['PIXEL STORM', 'DEEP WEB', 'HYPERLINK', 'BLUE SCREEN'], moves: [85, 95, 105, 115] },
+  { id: 'duality', name: 'DUALITY', awakenedName: 'CONVERGENCE', cost: 85, color: '#dbb9e8', baseMoves: ['TWIN BOLT', 'PARADOX', 'BALANCE', 'CONVERGENCE'], awakeMoves: ['TWIN NOVA', 'FALSE REALITY', 'EQUILIBRIUM', 'PERFECT UNION'], moves: [85, 95, 105, 115] },
+  { id: 'space', name: 'SPACE', awakenedName: 'COSMOS', cost: 90, color: '#9b9bec', baseMoves: ['STAR SHARD', 'WORMHOLE', 'ORBITAL GUARD', 'SUPERNOVA'], awakeMoves: ['QUASAR', 'BLACK HOLE', 'ASTRAL BODY', 'GALAXY COLLAPSE'], moves: [90, 100, 110, 120] },
+  { id: 'gas', name: 'GAS', awakenedName: 'MIST', cost: 90, color: '#b3d16f', baseMoves: ['VAPOR JET', 'MIASMA', 'FILTER', 'TOXIC CLOUD'], awakeMoves: ['NERVE AGENT', 'DEADLY FOG', 'PURE AIR', 'GREENHOUSE'], moves: [90, 100, 110, 120] },
+  { id: 'archangel', name: 'ARCHANGEL', awakenedName: 'SERAPHIM', cost: 95, color: '#f4dda1', baseMoves: ['HALO SHOT', 'DIVINE WORD', 'WING GUARD', 'JUDGMENT'], awakeMoves: ['SACRED SPEAR', 'CHOIR OF ANGELS', 'CELESTIAL AEGIS', 'FINAL JUDGMENT'], moves: [95, 105, 115, 125] },
+  { id: 'time', name: 'TIME', awakenedName: 'CHRONOS', cost: 100, color: '#bda5e8', baseMoves: ['SECOND HAND', 'TIME SNARE', 'REWIND', 'HOURGLASS'], awakeMoves: ['FUTURE SIGHT', 'TIME LOOP', 'TIMELINE SHIFT', 'ETERNAL HOURGLASS'], moves: [100, 110, 120, 130] }
 ];
 const moveKeys = ['z', 'x', 'c', 'v'];
 const rooms = ['THE SUNKEN VESTIBULE', 'MOSS LANTERN HALL', 'THE CLOCKWORK CRYPT', 'THE RED GALLERY', 'THE LAST THRESHOLD'];
-const defaultProfile = { fragments: 0, unlocked: [], awakened: [], moves: {} };
+const colorways = [
+  { id: 'ember', name: 'EMBER', color: '#cf8958' },
+  { id: 'tide', name: 'TIDE', color: '#7aaec1' },
+  { id: 'verdant', name: 'VERDANT', color: '#85aa75' },
+  { id: 'violet', name: 'VIOLET', color: '#a98bc4' },
+  { id: 'gilt', name: 'GILT', color: '#d5b54f' }
+];
+const attackStyleDescriptions = {
+  core: 'ORIGINAL ATTACKS',
+  spread: '3-SHOT VOLLEY · WIDE MELEE ARC',
+  piercing: 'PIERCING SHOTS · +12% HIT POWER',
+  seeking: 'HOMING SHOTS · SLOWS TARGETS',
+  burst: 'SPLASH DAMAGE · AREA BURSTS'
+};
+const elementColorways = {
+  fire: [{ id: 'blue-flame', name: 'BLUE FLAME', color: '#55d7f2', attack: 'spread' }, { id: 'solar-flare', name: 'SOLAR FLARE', color: '#ffd166', attack: 'burst' }],
+  ice: [{ id: 'nebula-frost', name: 'NEBULA FROST', color: '#b997ff', attack: 'seeking' }, { id: 'glacier-glass', name: 'GLACIER GLASS', color: '#79f2d5', attack: 'piercing' }],
+  nature: [{ id: 'moonbloom', name: 'MOONBLOOM', color: '#d7a4ff', attack: 'seeking' }, { id: 'bloodthorn', name: 'BLOODTHORN', color: '#f16c82', attack: 'burst' }],
+  water: [{ id: 'abyssal', name: 'ABYSSAL', color: '#34e4c4', attack: 'spread' }, { id: 'frozen-tide', name: 'FROZEN TIDE', color: '#82b9ff', attack: 'piercing' }],
+  light: [{ id: 'eclipse', name: 'ECLIPSE', color: '#9deaff', attack: 'seeking' }, { id: 'rose-dawn', name: 'ROSE DAWN', color: '#ff91c8', attack: 'burst' }],
+  dark: [{ id: 'phantom', name: 'PHANTOM', color: '#6ed8ff', attack: 'seeking' }, { id: 'blood-moon', name: 'BLOOD MOON', color: '#f26a9b', attack: 'spread' }],
+  wind: [{ id: 'sandstorm', name: 'SANDSTORM', color: '#e8c77a', attack: 'burst' }, { id: 'skybreak', name: 'SKYBREAK', color: '#bd9bff', attack: 'piercing' }],
+  poison: [{ id: 'nightshade', name: 'NIGHTSHADE', color: '#ef72d0', attack: 'seeking' }, { id: 'radioactive', name: 'RADIOACTIVE', color: '#ddff69', attack: 'spread' }],
+  electric: [{ id: 'plasma', name: 'PLASMA', color: '#ff83e3', attack: 'spread' }, { id: 'stormglass', name: 'STORMGLASS', color: '#78b9ff', attack: 'piercing' }],
+  silk: [{ id: 'widow', name: 'WIDOW', color: '#f070a2', attack: 'seeking' }, { id: 'moonweb', name: 'MOONWEB', color: '#eee1ff', attack: 'burst' }],
+  crystal: [{ id: 'opal', name: 'OPAL', color: '#f2a5ee', attack: 'spread' }, { id: 'obsidian', name: 'OBSIDIAN', color: '#aa9bf5', attack: 'piercing' }],
+  metal: [{ id: 'copper', name: 'COPPER', color: '#ff9b68', attack: 'burst' }, { id: 'cobalt', name: 'COBALT', color: '#71aaff', attack: 'piercing' }],
+  soul: [{ id: 'wisp', name: 'WISP', color: '#78f6df', attack: 'seeking' }, { id: 'haunted', name: 'HAUNTED', color: '#e787ff', attack: 'burst' }],
+  mystic: [{ id: 'star-script', name: 'STAR-SCRIPT', color: '#72bfff', attack: 'spread' }, { id: 'rune-gold', name: 'RUNE GOLD', color: '#ffdc82', attack: 'seeking' }],
+  telekinesis: [{ id: 'psionic', name: 'PSIONIC', color: '#ff78d5', attack: 'burst' }, { id: 'gravity-well', name: 'GRAVITY WELL', color: '#8e9fff', attack: 'piercing' }],
+  creation: [{ id: 'genesis', name: 'GENESIS', color: '#71e9dd', attack: 'spread' }, { id: 'wildfire', name: 'WILDFIRE', color: '#ff966e', attack: 'burst' }],
+  blood: [{ id: 'heartfire', name: 'HEARTFIRE', color: '#ff9db7', attack: 'burst' }, { id: 'crimson-edge', name: 'CRIMSON EDGE', color: '#ff6578', attack: 'piercing' }],
+  rubber: [{ id: 'bubblegum', name: 'BUBBLEGUM', color: '#ff80ad', attack: 'spread' }, { id: 'neon-bounce', name: 'NEON BOUNCE', color: '#c5f56c', attack: 'seeking' }],
+  digital: [{ id: 'eight-bit', name: 'EIGHT-BIT', color: '#ad8cff', attack: 'spread' }, { id: 'synthwave', name: 'SYNTHWAVE', color: '#ff7ed7', attack: 'piercing' }],
+  duality: [{ id: 'dawn-and-dusk', name: 'DAWN & DUSK', color: '#ffbb80', attack: 'burst' }, { id: 'paradox', name: 'PARADOX', color: '#83a7ff', attack: 'seeking' }],
+  space: [{ id: 'supernova', name: 'SUPERNOVA', color: '#ff91c8', attack: 'spread' }, { id: 'nebula', name: 'NEBULA', color: '#87f2dd', attack: 'seeking' }],
+  gas: [{ id: 'aurora', name: 'AURORA', color: '#83ddff', attack: 'piercing' }, { id: 'toxic-mist', name: 'TOXIC MIST', color: '#c37fff', attack: 'burst' }],
+  archangel: [{ id: 'seraph-gold', name: 'SERAPH GOLD', color: '#ffe17e', attack: 'burst' }, { id: 'fallen-angel', name: 'FALLEN ANGEL', color: '#ff718e', attack: 'seeking' }],
+  time: [{ id: 'rewind', name: 'REWIND', color: '#74efd2', attack: 'spread' }, { id: 'paradox-hour', name: 'PARADOX HOUR', color: '#e6a779', attack: 'piercing' }]
+};
+const defaultProfile = {
+  fragments: 0, unlocked: [], awakened: [], moves: {}, slots: [null, null, null], activeSlot: 0,
+  bestDepth: 1, colorway: 'ember',
+  elementColorways: Object.fromEntries(elements.map(element => [element.id, 'core'])),
+  hyperUnlocked: [], hyperEquipped: null
+};
 const runSaveKey = 'circlebound-elemental-run';
 let profile = loadProfile();
 let state;
@@ -29,30 +85,45 @@ let aim = { x: 0, y: 0 };
 
 function loadProfile() {
   const raw = localStorage.getItem('circlebound-elemental-profile');
-  if (!raw) return { ...defaultProfile, unlocked: [], awakened: [], moves: {} };
+  if (!raw) return { ...defaultProfile, unlocked: [], awakened: [], moves: {}, slots: [null, null, null] };
   let saved;
   try {
     saved = JSON.parse(raw);
   } catch (error) {
     if (!(error instanceof SyntaxError)) throw error;
     console.warn('Saved elemental progress was unreadable; starting a new profile.');
-    return { ...defaultProfile, unlocked: [], awakened: [], moves: {} };
+    return { ...defaultProfile, unlocked: [], awakened: [], moves: {}, slots: [null, null, null] };
   }
-  if (!saved || typeof saved !== 'object') return { ...defaultProfile, unlocked: [], awakened: [], moves: {} };
+  if (!saved || typeof saved !== 'object') return { ...defaultProfile, unlocked: [], awakened: [], moves: {}, slots: [null, null, null] };
   const validIds = new Set(elements.map(element => element.id));
   const unlocked = Array.isArray(saved.unlocked) ? saved.unlocked.filter(id => validIds.has(id)) : [];
   const awakened = Array.isArray(saved.awakened) ? saved.awakened.filter(id => elements.some(element => element.id === id && element.moves)) : [];
+  const hyperUnlocked = Array.isArray(saved.hyperUnlocked) ? [...new Set(saved.hyperUnlocked.filter(id => validIds.has(id)))] : [];
   const moves = {};
   for (const element of elements) {
     const savedMoves = saved.moves && saved.moves[element.id];
     if (element.moves && Array.isArray(savedMoves)) moves[element.id] = savedMoves.slice(0, 4).map(Boolean);
   }
+  const equipped = unlocked.includes(saved.equipped) ? saved.equipped : null;
+  const slots = Array.isArray(saved.slots) ? Array.from({ length: 3 }, (_, index) =>
+    unlocked.includes(saved.slots[index]) ? saved.slots[index] : null) : [null, null, null];
+  if (!slots.some(Boolean) && equipped) slots[Math.min(2, Math.max(0, saved.activeSlot || 0))] = equipped;
   return {
     fragments: Number.isFinite(saved.fragments) ? Math.max(0, Math.floor(saved.fragments)) : 0,
     unlocked: [...new Set(unlocked)],
     awakened: [...new Set(awakened)],
     moves,
-    equipped: unlocked.includes(saved.equipped) ? saved.equipped : null
+    equipped,
+    slots,
+    activeSlot: Number.isInteger(saved.activeSlot) && saved.activeSlot >= 0 && saved.activeSlot < 3 ? saved.activeSlot : 0,
+    bestDepth: Number.isInteger(saved.bestDepth) ? Math.max(1, saved.bestDepth) : 1,
+    colorway: colorways.some(colorway => colorway.id === saved.colorway) ? saved.colorway : 'ember',
+    hyperUnlocked,
+    hyperEquipped: hyperUnlocked.includes(saved.hyperEquipped) ? saved.hyperEquipped : null,
+    elementColorways: Object.fromEntries(elements.map(element => {
+      const selectedId = saved.elementColorways?.[element.id];
+      return [element.id, elementColorways[element.id].some(variant => variant.id === selectedId) ? selectedId : 'core'];
+    }))
   };
 }
 
@@ -61,11 +132,63 @@ function saveProfile() {
 }
 
 function getElement(id = profile.equipped) {
-  return elements.find(element => element.id === id);
+  const element = elements.find(item => item.id === id);
+  if (!element) return undefined;
+  const colorwayId = profile.elementColorways?.[element.id] || 'core';
+  const colorway = colorwayId === 'core'
+    ? { id: 'core', name: 'CORE', color: element.color, attack: 'core' }
+    : elementColorways[element.id].find(variant => variant.id === colorwayId);
+  const hyper = profile.hyperEquipped === element.id && profile.equipped === element.id;
+  return {
+    ...element,
+    name: hyper ? `HYPER-${element.name}` : element.name,
+    color: hyper ? hyperColors[element.id] : colorway.color,
+    colorway,
+    hyper
+  };
 }
 
 function elementName(element) {
+  if (element?.hyper) return element.name;
   return element && profile.awakened.includes(element.id) ? element.awakenedName : element ? element.name : 'NONE';
+}
+
+const hyperColors = Object.fromEntries(elements.map((element, index) => {
+  const hues = ['#7df9ff', '#e6a8ff', '#fff08a', '#ff91b8', '#95ffb0', '#ffb36b'];
+  return [element.id, hues[index % hues.length]];
+}));
+
+function applyElementColorwayToShots(element, firstShotIndex) {
+  if (!element || firstShotIndex < 0 || firstShotIndex >= state.shots.length) return;
+  const attack = element.colorway.attack;
+  const shots = state.shots.slice(Math.max(0, firstShotIndex));
+  const extraShots = [];
+  for (const shot of shots) {
+    shot.color = element.color;
+    shot.attackStyle = attack;
+    if (attack === 'piercing') {
+      shot.pierce = (shot.pierce || 0) + 2;
+      shot.damage *= 1.12;
+    } else if (attack === 'seeking') {
+      shot.homing = true;
+    } else if (attack === 'burst') {
+      shot.splashDamage = Math.max(shot.splashDamage || 0, shot.damage * 0.3);
+      shot.splashRadius = Math.max(shot.splashRadius || 0, 54);
+    } else if (attack === 'spread') {
+      for (const offset of [-0.16, 0.16]) {
+        const angle = Math.atan2(shot.vy, shot.vx) + offset;
+        extraShots.push({
+          ...shot,
+          vx: Math.cos(angle) * Math.hypot(shot.vx, shot.vy),
+          vy: Math.sin(angle) * Math.hypot(shot.vx, shot.vy),
+          damage: shot.damage * 0.58,
+          r: Math.max(3, shot.r * 0.85),
+          hitTargets: []
+        });
+      }
+    }
+  }
+  state.shots.push(...extraShots);
 }
 
 function loadRunSave() {
@@ -79,15 +202,20 @@ function loadRunSave() {
     console.warn('Saved dungeon run was unreadable; starting a new run.');
     return null;
   }
-  const validEntityTypes = new Set(['enemy', 'miniboss', 'awakenedBoss', 'fragment']);
+  const validEntityTypes = new Set(['enemy', 'miniboss', 'awakenedBoss', 'hyperBoss', 'fragment']);
   const validNumber = value => Number.isFinite(value) && value >= 0;
   if (!saved || !Number.isInteger(saved.room) || saved.room < 1 || saved.room > 1000000 ||
       !validNumber(saved.health) || !validNumber(saved.maxHealth) || !Number.isFinite(saved.score) ||
+      (saved.hyperRoom && !elements.some(element => element.id === saved.hyperElement)) ||
+      (saved.bossElement && !elements.some(element => element.id === saved.bossElement)) ||
       !Array.isArray(saved.entities) || saved.entities.length > 100 ||
       !saved.entities.every(entity => entity && validEntityTypes.has(entity.type) && Number.isFinite(entity.x) &&
         Number.isFinite(entity.y) && validNumber(entity.r) && (entity.type === 'fragment'
           ? validNumber(entity.value)
-          : validNumber(entity.hp) && validNumber(entity.maxHp) && validNumber(entity.speed)))) {
+          : validNumber(entity.hp) && validNumber(entity.maxHp) && validNumber(entity.speed)) &&
+          (entity.type !== 'hyperBoss' || elements.some(element => element.id === entity.hyperElementId)) &&
+          (!entity.elementId || elements.some(element => element.id === entity.elementId)) &&
+          (!entity.hyperElementId || elements.some(element => element.id === entity.hyperElementId)))) {
     console.warn('Saved dungeon run was invalid; starting a new run.');
     return null;
   }
@@ -107,7 +235,7 @@ function saveRun() {
       speed: entity.speed, hit: entity.hit, fireTimer: entity.fireTimer, burn: entity.burn,
       poison: entity.poison, slow: entity.slow, root: entity.root, mark: entity.mark,
       stun: entity.stun, glitch: entity.glitch, pause: entity.pause, spin: entity.spin, value: entity.value,
-      elementId: entity.elementId
+      elementId: entity.elementId, hyperElementId: entity.hyperElementId
     })),
     upgrades: {
       damageBoost: state.damageBoost, fireBoost: state.fireBoost, attackSpeed: state.attackSpeed,
@@ -119,7 +247,10 @@ function saveRun() {
     playerPoison: state.playerPoison, playerGlitch: state.playerGlitch,
     roomCleared: state.roomCleared,
     gateOpen: state.gateOpen,
-    bossElement: state.bossElement
+    bossElement: state.bossElement,
+    hyperRoom: state.hyperRoom,
+    hyperElement: state.hyperElement,
+    hyperPortalPending: state.hyperPortalPending
   };
   localStorage.setItem(runSaveKey, JSON.stringify(saved));
 }
@@ -133,6 +264,9 @@ function resetRun(resumeSavedRun = false) {
     score: savedRun?.score ?? 0, combo: 0, comboTimer: 0,
     lastTime: 0, runTime: 0, historySampleTimer: 0, playerHistory: [], autosaveTimer: 0, rangedTimer: 0, meleeTimer: 0, dashTimer: 0, abilityTimers: [0, 0, 0, 0],
     shake: 0, roomCleared: false, gateOpen: false,
+    hyperRoom: Boolean(savedRun?.hyperRoom),
+    hyperElement: savedRun?.hyperElement ? getElement(savedRun.hyperElement)?.id || null : null,
+    hyperPortalPending: Boolean(savedRun?.hyperPortalPending),
     damageBoost: savedRun?.upgrades?.damageBoost ?? 1, fireBoost: savedRun?.upgrades?.fireBoost ?? 1,
     attackSpeed: savedRun?.upgrades?.attackSpeed ?? 1, moveSpeed: savedRun?.upgrades?.moveSpeed ?? 180,
     dashCooldown: savedRun?.upgrades?.dashCooldown ?? 0.8, meleeRange: savedRun?.upgrades?.meleeRange ?? 80,
@@ -141,13 +275,19 @@ function resetRun(resumeSavedRun = false) {
     playerStun: savedRun?.playerStun ?? 0, playerPoison: savedRun?.playerPoison ?? 0,
     playerGlitch: savedRun?.playerGlitch ?? 0,
     bossElement: savedRun?.bossElement ? getElement(savedRun.bossElement)?.id || null : null,
-    entities: [], shots: [], enemyShots: [], particles: [], decorations: [], orbitingBlades: [], abilityEffects: [],
+    entities: [], shots: [], enemyShots: [], particles: [], decorations: [], orbitingBlades: [], abilityEffects: [], meleeEffects: [],
     player: { x: 0, y: 0, r: 14 }, keys: new Set()
   };
   keys.clear();
   resize();
   const savedBossElement = savedRun?.entities.find(entity => entity.type === 'awakenedBoss')?.elementId;
-  generateRoom(Boolean(savedRun), savedBossElement);
+  if (state.hyperRoom) generateHyperRoom(state.hyperElement);
+  else generateRoom(Boolean(savedRun), savedBossElement);
+  if (savedRun && !state.hyperRoom) {
+    state.hyperRoom = Boolean(savedRun.hyperRoom);
+    state.hyperElement = savedRun.hyperElement || null;
+    state.hyperPortalPending = Boolean(savedRun.hyperPortalPending);
+  }
   document.getElementById('upgrade-modal').classList.add('hidden');
   if (savedRun) {
     if (savedRun.player && Number.isFinite(savedRun.player.x) && Number.isFinite(savedRun.player.y)) {
@@ -167,7 +307,11 @@ function resetRun(resumeSavedRun = false) {
   }
   updateHud();
   renderElementShop();
+  renderElementColorways();
+  renderSystem();
+  renderColorways();
   renderAbilities();
+  renderHyperForm();
   document.getElementById('end-modal').classList.add('hidden');
   saveRun();
 }
@@ -185,6 +329,8 @@ function size() {
 
 function generateRoom(preserveBossElement = false, bossElementId = null) {
   const { w, h } = size();
+  profile.bestDepth = Math.max(profile.bestDepth, state.room);
+  saveProfile();
   state.player = { x: w / 2, y: h / 2, r: 14 };
   state.playerHistory = [{ x: state.player.x, y: state.player.y, time: state.runTime }];
   state.entities = [];
@@ -194,12 +340,17 @@ function generateRoom(preserveBossElement = false, bossElementId = null) {
   state.decorations = [];
   state.orbitingBlades = [];
   state.abilityEffects = [];
+  state.meleeEffects = [];
   state.roomCleared = false;
   state.gateOpen = false;
+  state.hyperRoom = false;
+  state.hyperElement = null;
+  state.hyperPortalPending = false;
   state.combo = 0;
   state.comboTimer = 0;
-  if (!preserveBossElement) state.bossElement = state.room % 10 === 0 && getElement()?.moves ? getElement().id : null;
+  if (!preserveBossElement) state.bossElement = state.room % 10 === 0 ? getAwakenedBossElementForRoom(state.room).id : null;
   const bossElement = getElement(bossElementId || state.bossElement) || getAwakenedBossElementForRoom(state.room);
+  renderColorways();
   const count = 3 + Math.min(5, state.room + 1);
   for (let i = 0; i < count; i++) state.entities.push(makeEnemy('enemy'));
   if (state.room % 10 === 0) {
@@ -222,11 +373,46 @@ function generateRoom(preserveBossElement = false, bossElementId = null) {
 }
 
 function getAwakenedBossElementForRoom(room) {
-  const awakenedElements = elements.filter(element => element.moves);
-  return awakenedElements[(Math.floor(room / 10) - 1) % awakenedElements.length];
+  return elements[Math.floor(Math.random() * elements.length)];
 }
 
-const colors = { field: '#11131b', wall: '#353340', wallLight: '#62586c', enemy: '#d9774d', boss: '#bf5262', loot: '#b78aff', shot: '#f2dfb2', text: '#e5d9c3' };
+function generateHyperRoom(elementId = state.bossElement) {
+  const element = elements.find(item => item.id === elementId);
+  if (!element) throw new Error('Cannot create a Hyper trial without a valid element.');
+  const { w, h } = size();
+  state.hyperRoom = true;
+  state.hyperElement = element.id;
+  state.hyperPortalPending = false;
+  state.bossElement = element.id;
+  state.roomCleared = false;
+  state.gateOpen = false;
+  state.player = { x: w / 2, y: h * 0.72, r: 14 };
+  state.playerHistory = [{ x: state.player.x, y: state.player.y, time: state.runTime }];
+  state.entities = [];
+  state.shots = [];
+  state.enemyShots = [];
+  state.particles = [];
+  state.decorations = [];
+  state.orbitingBlades = [];
+  state.abilityEffects = [];
+  state.meleeEffects = [];
+  state.combo = 0;
+  state.comboTimer = 0;
+  const boss = makeEnemy('hyperBoss');
+  boss.elementId = element.id;
+  boss.hyperElementId = element.id;
+  state.entities.push(boss);
+  for (let i = 0; i < 10; i++) {
+    state.decorations.push({ x: 45 + Math.random() * (w - 90), y: 45 + Math.random() * (h - 90), r: 8 + Math.random() * 18, phase: Math.random() * Math.PI * 2 });
+  }
+  document.getElementById('room-name').textContent = `HYPER-${element.name} TRIAL`;
+  document.getElementById('wave-status').textContent = 'HYPER BOSS';
+  addLog('HYPER TRIAL', `Defeat the Hyper-${element.name} guardian to claim its form.`);
+  state.shake = 0.4;
+  burst(w / 2, h / 2, hyperColors[element.id], 28);
+}
+
+const colors = { field: '#0b0b11', wall: '#292833', wallLight: '#4b4654', enemy: '#d9774d', boss: '#bf5262', loot: '#caa45c', shot: '#f2dfb2', text: '#ece4d3' };
 
 function makeEnemy(type) {
   const { w, h } = size();
@@ -236,12 +422,12 @@ function makeEnemy(type) {
   const isBoss = type !== 'enemy';
   const hpTier = Math.floor((state.room - 1) / 15);
   const hpScale = 1 + hpTier * 0.25;
-  const baseHp = type === 'awakenedBoss' ? 1500 + state.room * 15 : type === 'miniboss' ? 360 + state.room * 10 : Math.ceil((35 + state.room * 5) * 1.15);
+  const baseHp = type === 'hyperBoss' ? 2200 + state.room * 25 : type === 'awakenedBoss' ? 1500 + state.room * 15 : type === 'miniboss' ? 360 + state.room * 10 : Math.ceil((35 + state.room * 5) * 1.15);
   const hp = Math.ceil(baseHp * hpScale);
   return {
-    type, x, y, r: type === 'awakenedBoss' ? 37 : type === 'miniboss' ? 27 : 11 + Math.random() * 4,
-    hp, maxHp: hp, speed: type === 'awakenedBoss' ? 34 : type === 'miniboss' ? 27 : (38 + Math.random() * 20) * 1.15,
-    elementId: type === 'awakenedBoss' ? (state.bossElement || getAwakenedBossElementForRoom(state.room).id) : null,
+    type, x, y, r: type === 'hyperBoss' ? 42 : type === 'awakenedBoss' ? 37 : type === 'miniboss' ? 27 : 11 + Math.random() * 4,
+    hp, maxHp: hp, speed: type === 'hyperBoss' ? 42 : type === 'awakenedBoss' ? 34 : type === 'miniboss' ? 27 : (38 + Math.random() * 20) * 1.15,
+    elementId: type === 'hyperBoss' || type === 'awakenedBoss' ? (state.bossElement || getAwakenedBossElementForRoom(state.room).id) : null,
     hit: 0, fireTimer: isBoss ? 1 + Math.random() : 0, burn: 0, poison: 0, slow: 0, root: 0, mark: 0, glitch: 0, pause: 0
   };
 }
@@ -277,6 +463,47 @@ function fireAwakenedBossAttack(boss, angle) {
   } else if (element.id === 'metal') {
     shoot(-0.08, 290, 8, 16, { pierce: true });
     shoot(0.08, 290, 8, 16, { pierce: true });
+  } else if (element.id === 'gas') {
+    for (const offset of [-0.18, 0, 0.18]) shoot(offset, 190, 8, 8, { poison: 2 });
+  } else if (element.id === 'silk') {
+    shoot(0, 220, 8, 10, { root: 1 });
+  } else if (element.id === 'wind' || element.id === 'rubber') {
+    shoot(0, 260, 8, 11, { knockback: element.id === 'wind' ? 28 : 40 });
+  } else {
+    shoot(0, 205, 8, 12);
+  }
+}
+
+function fireHyperBossAttack(boss, angle) {
+  const element = elements.find(item => item.id === boss.hyperElementId);
+  if (!element) throw new Error('Hyper boss is missing its element.');
+  const color = hyperColors[element.id];
+  const shoot = (offset, speed, radius, damage, options = {}) => {
+    state.enemyShots.push({
+      x: boss.x, y: boss.y, vx: Math.cos(angle + offset) * speed, vy: Math.sin(angle + offset) * speed,
+      r: radius, damage, life: 4.5, telegraph: 0.35, color, elementId: element.id, ...options
+    });
+  };
+  const radialElements = ['nature', 'crystal', 'metal', 'creation'];
+  const seekingElements = ['dark', 'soul', 'space', 'time'];
+  const crossElements = ['digital', 'light', 'archangel', 'mystic', 'telekinesis', 'duality'];
+  if (radialElements.includes(element.id)) {
+    for (let i = 0; i < 10; i++) shoot(i * Math.PI / 5 - angle, 150, 8, 11, { pierce: true });
+    shoot(0, 245, 12, 16, { homing: true });
+  } else if (seekingElements.includes(element.id)) {
+    for (const offset of [-0.46, 0, 0.46]) shoot(offset, 135, 11, 15, { homing: true, slow: 0.8 });
+  } else if (crossElements.includes(element.id)) {
+    for (let i = 0; i < 4; i++) shoot(i * Math.PI / 2 - angle, 190, 9, 14, { stun: element.id === 'electric' ? 0.4 : 0 });
+    for (const offset of [-0.2, 0.2]) shoot(offset, 320, 6, 12, { pierce: true });
+  } else if (element.id === 'poison' || element.id === 'gas' || element.id === 'blood') {
+    for (const offset of [-0.58, -0.29, 0, 0.29, 0.58]) shoot(offset, 165, 9, 9, { poison: 2.5 });
+  } else {
+    for (const offset of [-0.72, -0.48, -0.24, 0, 0.24, 0.48, 0.72]) {
+      shoot(offset, 185, 7, 11, {
+        slow: element.id === 'ice' || element.id === 'water' ? 1.4 : 0,
+        knockback: element.id === 'water' || element.id === 'wind' ? 35 : 0
+      });
+    }
   }
 }
 
@@ -328,6 +555,8 @@ function update(dt) {
   state.reflectTimer = Math.max(0, state.reflectTimer - dt);
   for (const effect of state.abilityEffects) effect.life -= dt;
   state.abilityEffects = state.abilityEffects.filter(effect => effect.life > 0);
+  for (const effect of state.meleeEffects) effect.life -= dt;
+  state.meleeEffects = state.meleeEffects.filter(effect => effect.life > 0);
   state.shield = Math.max(0, state.shield - dt);
   state.shake = Math.max(0, state.shake - dt);
   state.comboTimer = Math.max(0, state.comboTimer - dt);
@@ -343,6 +572,7 @@ function update(dt) {
         enemy.dead = true;
         renderElementShop();
         renderAbilities();
+        renderHyperForm();
       }
       continue;
     }
@@ -368,16 +598,18 @@ function update(dt) {
       enemy.fireTimer -= dt * (enemy.slow > 0 ? 0.5 : 1) * (enemy.stun > 0 ? 0 : 1);
       if (enemy.fireTimer <= 0) {
         const aimAngle = Math.atan2(hero.y - enemy.y, hero.x - enemy.x);
-        if (enemy.type === 'awakenedBoss') {
+        if (enemy.type === 'hyperBoss') {
+          fireHyperBossAttack(enemy, aimAngle);
+        } else if (enemy.type === 'awakenedBoss') {
           fireAwakenedBossAttack(enemy, aimAngle);
         } else {
           state.enemyShots.push({ x: enemy.x, y: enemy.y, vx: Math.cos(aimAngle) * 155, vy: Math.sin(aimAngle) * 155, r: 7, life: 4, telegraph: 0.4 });
         }
-        enemy.fireTimer = enemy.type === 'awakenedBoss' ? 1.15 : 1.3;
+        enemy.fireTimer = enemy.type === 'hyperBoss' ? 0.82 : enemy.type === 'awakenedBoss' ? 1.15 : 1.3;
       }
     }
     if (dist(hero, enemy) < hero.r + enemy.r && enemy.hit === 0) {
-      takeDamage(enemy.type === 'awakenedBoss' ? 18 : enemy.type === 'miniboss' ? 14 : 8);
+      takeDamage(enemy.type === 'hyperBoss' ? 22 : enemy.type === 'awakenedBoss' ? 18 : enemy.type === 'miniboss' ? 14 : 8);
       state.combo = 0;
       state.comboTimer = 0;
       enemy.hit = 0.7;
@@ -401,6 +633,15 @@ function update(dt) {
   }
   state.orbitingBlades = state.orbitingBlades.filter(blade => blade.life > 0);
   for (const shot of state.shots) {
+    if (shot.homing) {
+      const speed = Math.hypot(shot.vx, shot.vy);
+      const target = nearestEnemy();
+      if (target) {
+        const angle = Math.atan2(target.y - shot.y, target.x - shot.x);
+        shot.vx += (Math.cos(angle) * speed - shot.vx) * dt * 1.8;
+        shot.vy += (Math.sin(angle) * speed - shot.vy) * dt * 1.8;
+      }
+    }
     shot.x += shot.vx * dt;
     shot.y += shot.vy * dt;
     for (const enemy of state.entities) {
@@ -412,10 +653,10 @@ function update(dt) {
           enemy.y += (state.player.y - enemy.y) / distance * 44;
         }
         applyElementalHit(enemy, shot.damage, shot.elementId, shot.abilityIndex, shot.awakened);
-        if (shot.style === 'fire') {
+        if (shot.splashDamage) {
           for (const nearby of state.entities) {
-            if (nearby !== enemy && nearby.type !== 'fragment' && !nearby.dead && dist(enemy, nearby) < 48) {
-              applyElementalHit(nearby, shot.splashDamage, shot.elementId, shot.abilityIndex, shot.awakened);
+            if (nearby !== enemy && nearby.type !== 'fragment' && !nearby.dead && dist(enemy, nearby) < (shot.splashRadius || 48)) {
+              damageEnemy(nearby, shot.splashDamage);
               burst(nearby.x, nearby.y, shot.color, 4);
             }
           }
@@ -463,6 +704,11 @@ function update(dt) {
           hero.x = Math.max(25, Math.min(w - 25, hero.x + Math.cos(angle) * shot.knockback));
           hero.y = Math.max(25, Math.min(h - 25, hero.y + Math.sin(angle) * shot.knockback));
         }
+        if ((shot.elementId === 'wind' || shot.elementId === 'rubber') && shot.knockback) {
+          const angle = Math.atan2(shot.vy, shot.vx);
+          hero.x = Math.max(25, Math.min(w - 25, hero.x + Math.cos(angle) * shot.knockback));
+          hero.y = Math.max(25, Math.min(h - 25, hero.y + Math.sin(angle) * shot.knockback));
+        }
         if (shot.elementId === 'fire' && shot.splash) {
           takeDamage(shot.splash);
           state.shake = Math.max(state.shake, 0.12);
@@ -472,9 +718,13 @@ function update(dt) {
           if (boss) boss.hp = Math.min(boss.maxHp, boss.hp + shot.damage * shot.healBoss);
         }
         if (shot.elementId === 'poison') state.playerPoison = Math.max(state.playerPoison || 0, shot.poison || 0);
+        if (shot.elementId === 'gas') state.playerPoison = Math.max(state.playerPoison || 0, shot.poison || 2);
         if (shot.elementId === 'ice') state.playerSlow = Math.max(state.playerSlow || 0, shot.slow || 0);
         if (shot.elementId === 'nature') state.playerRoot = Math.max(state.playerRoot || 0, shot.root || 0);
+        if (shot.elementId === 'silk') state.playerRoot = Math.max(state.playerRoot || 0, shot.root || 1);
         if (shot.elementId === 'electric') state.playerStun = Math.max(state.playerStun || 0, shot.stun || 0);
+        if (shot.elementId === 'mystic' || shot.elementId === 'space') state.playerSlow = Math.max(state.playerSlow || 0, 1.2);
+        if (shot.elementId === 'archangel') state.playerStun = Math.max(state.playerStun || 0, 0.3);
         if (shot.elementId === 'time') state.playerSlow = Math.max(state.playerSlow || 0, 1.2);
         if (shot.elementId === 'digital') state.playerGlitch = Math.max(state.playerGlitch || 0, 1.4);
         state.combo = 0;
@@ -495,8 +745,12 @@ function update(dt) {
     addLog('ROOM CLEAR', 'Choose an upgrade before the next room.');
   }
   if (state.gateOpen && dist(hero, { x: w / 2, y: 25 }) < 32) {
-    state.room++;
-    generateRoom();
+    if (state.hyperPortalPending) {
+      generateHyperRoom(state.bossElement);
+    } else {
+      state.room++;
+      generateRoom();
+    }
     updateHud();
     saveRun();
   }
@@ -518,21 +772,45 @@ function defeatEnemy(enemy) {
   state.combo++;
   state.comboTimer = 2.2;
   const isAwakenedBoss = enemy.type === 'awakenedBoss';
+  const isHyperBoss = enemy.type === 'hyperBoss';
   const isMiniboss = enemy.type === 'miniboss';
-  const value = isAwakenedBoss ? 20 : isMiniboss ? 5 : 1;
-  state.entities.push({ type: 'fragment', x: enemy.x, y: enemy.y, r: 9, value: value + state.fragmentBonus, spin: 0 });
-  state.score += isAwakenedBoss ? 2000 : isMiniboss ? 600 : 150;
+  const value = isHyperBoss ? 50 : isAwakenedBoss ? 20 : isMiniboss ? 5 : 1;
+  if (isHyperBoss) {
+    profile.fragments += value;
+    saveProfile();
+  } else {
+    state.entities.push({ type: 'fragment', x: enemy.x, y: enemy.y, r: 9, value: value + state.fragmentBonus, spin: 0 });
+  }
+  state.score += isHyperBoss ? 5000 : isAwakenedBoss ? 2000 : isMiniboss ? 600 : 150;
   state.shake = isBoss(enemy) ? 0.35 : 0.06;
   burst(enemy.x, enemy.y, isBoss(enemy) ? colors.boss : colors.enemy, isBoss(enemy) ? 24 : 8);
-  addLog(isAwakenedBoss ? 'AWAKENED BOSS DOWN' : isMiniboss ? 'MINIBOSS DOWN' : 'FOE DOWN', `Drops ${value} ${value === 1 ? 'fragment' : 'fragments'}.`);
+  addLog(isHyperBoss ? 'HYPER BOSS DOWN' : isAwakenedBoss ? 'AWAKENED BOSS DOWN' : isMiniboss ? 'MINIBOSS DOWN' : 'FOE DOWN', `Drops ${value} ${value === 1 ? 'fragment' : 'fragments'}.`);
   if (isAwakenedBoss && state.bossElement) {
     const element = getElement(state.bossElement);
+    state.hyperPortalPending = true;
+    addLog('HYPER GATE', `A Hyper-${element?.name || 'ELEMENT'} trial awaits beyond this room.`);
     if (element && !profile.awakened.includes(element.id)) {
       profile.awakened.push(element.id);
       saveProfile();
       renderElementShop();
       renderAbilities();
+      renderHyperForm();
       addLog('ELEMENT AWAKENED', `${element.awakenedName} moves are now available to buy.`);
+    }
+  }
+  if (isHyperBoss && enemy.hyperElementId) {
+    const element = elements.find(item => item.id === enemy.hyperElementId);
+    if (element) {
+      if (!profile.unlocked.includes(element.id)) profile.unlocked.push(element.id);
+      if (!profile.awakened.includes(element.id)) profile.awakened.push(element.id);
+      if (!profile.hyperUnlocked.includes(element.id)) profile.hyperUnlocked.push(element.id);
+      saveProfile();
+      renderElementShop();
+      renderAbilities();
+      renderHyperForm();
+      renderSystem();
+      updateHud();
+      addLog('HYPER UNLOCKED', `HYPER-${element.name} is ready to equip.`);
     }
   }
 }
@@ -556,9 +834,21 @@ function takeDamage(amount) {
 function applyElementalHit(enemy, damage, elementId, abilityIndex, awakened) {
   if (enemy.dead) return;
   const element = getElement(elementId);
+  const attack = element?.colorway.attack || 'core';
   const markedDamage = enemy.mark > 0 ? 1.35 : 1;
-  const dealt = Math.min(enemy.hp, damage * markedDamage);
+  const variantDamage = attack === 'piercing' ? damage * 1.12 : damage;
+  const dealt = Math.min(enemy.hp, variantDamage * markedDamage);
   damageEnemy(enemy, dealt);
+  if (attack === 'burst' || attack === 'spread') {
+    const radius = attack === 'burst' ? 54 : 28;
+    const splashDamage = dealt * (attack === 'burst' ? 0.3 : 0.14);
+    for (const nearby of state.entities) {
+      if (nearby !== enemy && nearby.type !== 'fragment' && !nearby.dead && dist(enemy, nearby) < radius) {
+        damageEnemy(nearby, Math.min(nearby.hp, splashDamage));
+        burst(nearby.x, nearby.y, element.color, 3);
+      }
+    }
+  }
   if (elementId === 'blood') {
     const lifeSteal = abilityIndex === 3 ? 0.24 : 0.16;
     state.health = Math.min(state.maxHealth, state.health + dealt * lifeSteal);
@@ -579,6 +869,24 @@ function applyElementalHit(enemy, damage, elementId, abilityIndex, awakened) {
   if (element.id === 'crystal' && abilityIndex === 0) enemy.hit = Math.max(enemy.hit, 0.16);
   if (element.id === 'digital') enemy.glitch = Math.max(enemy.glitch || 0, awakened ? 4 : 2.5);
   if (element.id === 'time') enemy.slow = Math.max(enemy.slow, (awakened ? 5 : 3) * bonus);
+  if (element.id === 'wind' || element.id === 'rubber') {
+    const distance = dist(state.player, enemy) || 1;
+    const force = element.id === 'wind' ? 36 : 52;
+    enemy.x += (enemy.x - state.player.x) / distance * force;
+    enemy.y += (enemy.y - state.player.y) / distance * force;
+  }
+  if (element.id === 'silk') enemy.root = Math.max(enemy.root, (awakened ? 3 : 1.5) * bonus);
+  if (element.id === 'soul') state.health = Math.min(state.maxHealth, state.health + damage * 0.035);
+  if (element.id === 'mystic' || element.id === 'space') enemy.slow = Math.max(enemy.slow, awakened ? 3 : 1.5);
+  if (element.id === 'telekinesis') {
+    const distance = dist(state.player, enemy) || 1;
+    enemy.x += (state.player.x - enemy.x) / distance * 28;
+    enemy.y += (state.player.y - enemy.y) / distance * 28;
+  }
+  if (element.id === 'gas') enemy.poison = Math.max(enemy.poison, awakened ? 5 : 2.5);
+  if (element.id === 'duality') enemy.mark = Math.max(enemy.mark, awakened ? 5 : 2.5);
+  if (element.id === 'archangel') state.health = Math.min(state.maxHealth, state.health + damage * 0.025);
+  if (attack === 'seeking') enemy.slow = Math.max(enemy.slow, 0.65);
 }
 
 function chainLightning(firstEnemy, damage, maxTargets) {
@@ -620,6 +928,7 @@ function rangedAttack() {
   const target = enemies.reduce((nearest, enemy) => dist(state.player, enemy) < dist(state.player, nearest) ? enemy : nearest);
   const angle = Math.atan2(target.y - state.player.y, target.x - state.player.x);
   const element = getElement();
+  const firstColorwayShot = state.shots.length;
   const origin = state.player;
   const boost = state.damageBoost;
   const makeShot = (offset, speed, radius, damage, style, pierce = 0, extras = {}) => {
@@ -662,7 +971,10 @@ function rangedAttack() {
       if (along > 0 && across < enemy.r + 9) applyElementalHit(enemy, 21 * boost, element.id, -1, false);
     }
     burst(target.x, target.y, element.color, 8);
+  } else {
+    makeShot(0, 360, 6, 24, 'element');
   }
+  applyElementColorwayToShots(element, firstColorwayShot);
   state.rangedTimer = (element?.id === 'light' ? 0.16 : element?.id === 'dark' || element?.id === 'metal' ? 0.34 : 0.24) * state.fireBoost;
 }
 
@@ -675,6 +987,12 @@ function meleeAttack(event) {
   }
   const hero = state.player;
   const angle = Math.atan2(aim.y - hero.y, aim.x - hero.x);
+  const element = getElement();
+  const meleeArc = element?.colorway.attack === 'spread' ? 1.32 : 1.05;
+  state.meleeEffects.push({
+    x: hero.x, y: hero.y, angle, arc: meleeArc, range: state.meleeRange,
+    color: element ? element.color : '#f2dfb2', life: 0.22, duration: 0.22
+  });
   let target = null;
   let bestDistance = state.meleeRange;
   for (const enemy of state.entities) {
@@ -682,13 +1000,12 @@ function meleeAttack(event) {
     const distance = dist(hero, enemy);
     const enemyAngle = Math.atan2(enemy.y - hero.y, enemy.x - hero.x);
     const difference = Math.atan2(Math.sin(enemyAngle - angle), Math.cos(enemyAngle - angle));
-    if (distance < bestDistance && Math.abs(difference) < 1.05) {
+    if (distance < bestDistance && Math.abs(difference) < meleeArc) {
       target = enemy;
       bestDistance = distance;
     }
   }
   if (target) {
-    const element = getElement();
     if (element) applyElementalHit(target, 34 * state.damageBoost, element.id, -1, false);
     else damageEnemy(target, 34 * state.damageBoost);
     target.hit = 0.18;
@@ -710,6 +1027,7 @@ function useAbility(index) {
   const targetPoint = target ? { x: target.x, y: target.y } : null;
   const bonus = awakened ? 1.65 : 1;
   const damage = value => value * bonus * state.damageBoost;
+  const firstColorwayShot = state.shots.length;
   if (element.id === 'time') {
     const slowDuration = awakened ? 7 : 4;
     for (const enemy of enemies) enemy.slow = Math.max(enemy.slow, slowDuration);
@@ -735,6 +1053,58 @@ function useAbility(index) {
     }
     burst(hero.x, hero.y, color, 18);
   };
+  if (element.hyper) {
+    const direction = movementDirection();
+    const aimedAngle = targetPoint ? Math.atan2(targetPoint.y - hero.y, targetPoint.x - hero.x) : Math.atan2(direction.y, direction.x);
+    if (index === 0) {
+      projectile(target, 74, { offsets: [-0.16, 0, 0.16], speed: 500, radius: 8, pierce: 3 });
+    } else if (index === 1) {
+      projectile(target, 40, { offsets: Array.from({ length: 10 }, (_, i) => i * Math.PI / 5 - aimedAngle), speed: 300, radius: 7, pierce: 1 });
+    } else if (index === 2) {
+      const start = { x: hero.x, y: hero.y };
+      if (target) {
+        const distance = dist(hero, target) || 1;
+        hero.x = Math.max(25, Math.min(size().w - 25, target.x - (target.x - hero.x) / distance * 48));
+        hero.y = Math.max(25, Math.min(size().h - 25, target.y - (target.y - hero.y) / distance * 48));
+      } else {
+        hero.x = Math.max(25, Math.min(size().w - 25, hero.x + direction.x * 80));
+        hero.y = Math.max(25, Math.min(size().h - 25, hero.y + direction.y * 80));
+      }
+      state.shield = Math.max(state.shield, 14);
+      for (const enemy of enemies) {
+        if (dist(hero, enemy) < 100) {
+          applyElementalHit(enemy, damage(70), element.id, index, true);
+          enemy.stun = Math.max(enemy.stun || 0, 0.6);
+        }
+      }
+      burst(start.x, start.y, color, 12);
+      burst(hero.x, hero.y, color, 24);
+    } else {
+      for (const enemy of enemies) {
+        if (dist(hero, enemy) < 255) {
+          applyElementalHit(enemy, damage(145), element.id, index, true);
+          if (element.id === 'nature' || element.id === 'silk') enemy.root = Math.max(enemy.root, 3);
+          if (element.id === 'ice' || element.id === 'time') enemy.pause = Math.max(enemy.pause || 0, 1);
+          if (element.id === 'poison' || element.id === 'gas') enemy.poison = Math.max(enemy.poison || 0, 5);
+          burst(enemy.x, enemy.y, color, 10);
+        }
+      }
+      state.health = Math.min(state.maxHealth, state.health + (element.id === 'light' || element.id === 'nature' || element.id === 'soul' ? 12 : 0));
+      burst(hero.x, hero.y, color, 38);
+    }
+    applyElementColorwayToShots(element, firstColorwayShot);
+    state.abilityEffects.push({
+      kind: ['projectile', 'area', 'guard', 'ultimate'][index],
+      x: targetPoint?.x ?? hero.x, y: targetPoint?.y ?? hero.y,
+      fromX: castOrigin.x, fromY: castOrigin.y, toX: hero.x, toY: hero.y,
+      color, elementId: element.id, attackStyle: element.colorway.attack,
+      label: `HYPER-${element.baseMoves[index]}`, key: moveKeys[index].toUpperCase(),
+      life: 0.75, duration: 0.75, angle: aimedAngle
+    });
+    state.abilityTimers[index] = [4, 7, 10, 15][index] * state.attackSpeed;
+    updateHud();
+    return;
+  }
   if (index === 0) {
     if (element.id === 'electric') {
       if (target) {
@@ -1136,6 +1506,7 @@ function useAbility(index) {
       burst(hero.x, hero.y, color, 26);
     }
   }
+  applyElementColorwayToShots(element, firstColorwayShot);
   const castDestination = { x: hero.x, y: hero.y };
   const moved = dist(castOrigin, castDestination) > 20;
   state.abilityEffects.push({
@@ -1148,6 +1519,7 @@ function useAbility(index) {
     toY: castDestination.y,
     color,
     elementId: element.id,
+    attackStyle: element.colorway.attack,
     label: element.moves && profile.awakened.includes(element.id) && profile.moves[element.id]?.[index]
       ? element.awakeMoves[index]
       : element.baseMoves[index],
@@ -1278,6 +1650,33 @@ function drawElementMotif(effect, progress) {
     }
     context.stroke();
   }
+  if (effect.attackStyle && effect.attackStyle !== 'core') {
+    context.globalAlpha *= 0.8;
+    context.lineWidth = 2;
+    context.beginPath();
+    if (effect.attackStyle === 'spread') {
+      for (const offset of [-0.55, 0, 0.55]) {
+        const angle = effect.angle + offset;
+        context.moveTo(x + Math.cos(angle) * 8, y + Math.sin(angle) * 8);
+        context.lineTo(x + Math.cos(angle) * radius, y + Math.sin(angle) * radius);
+      }
+    } else if (effect.attackStyle === 'piercing') {
+      const direction = effect.angle;
+      for (const offset of [-7, 0, 7]) {
+        const sideX = Math.cos(direction + Math.PI / 2) * offset;
+        const sideY = Math.sin(direction + Math.PI / 2) * offset;
+        context.moveTo(x + sideX - Math.cos(direction) * radius, y + sideY - Math.sin(direction) * radius);
+        context.lineTo(x + sideX + Math.cos(direction) * radius, y + sideY + Math.sin(direction) * radius);
+      }
+    } else if (effect.attackStyle === 'seeking') {
+      context.arc(x, y, radius * 0.65, progress * Math.PI * 4, progress * Math.PI * 4 + Math.PI * 1.6);
+      context.arc(x, y, radius, progress * Math.PI * 3, progress * Math.PI * 3 + Math.PI * 1.4);
+    } else {
+      context.arc(x, y, radius * 0.58, 0, Math.PI * 2);
+      context.arc(x, y, radius, 0, Math.PI * 2);
+    }
+    context.stroke();
+  }
 }
 
 function draw() {
@@ -1313,7 +1712,7 @@ function draw() {
     context.stroke();
     context.fillStyle = colors.loot;
     context.font = '9px DM Mono';
-    context.fillText('EXIT', w / 2 - 11, 56);
+    context.fillText(state.hyperPortalPending ? 'HYPER GATE' : 'EXIT', w / 2 - 29, 56);
   }
   for (const effect of state.abilityEffects) {
     const progress = 1 - effect.life / effect.duration;
@@ -1372,6 +1771,35 @@ function draw() {
     context.font = '600 9px DM Mono';
     context.textAlign = 'center';
     context.fillText(`${effect.key} · ${effect.label}`, effect.x, effect.y - 27 - progress * 12);
+    context.restore();
+  }
+  for (const effect of state.meleeEffects) {
+    const progress = 1 - effect.life / effect.duration;
+    const alpha = Math.max(0, 1 - progress);
+    const start = effect.angle - effect.arc;
+    const end = effect.angle + effect.arc;
+    context.save();
+    context.globalAlpha = alpha * 0.7;
+    context.fillStyle = effect.color;
+    context.strokeStyle = effect.color;
+    context.lineWidth = 3;
+    context.shadowColor = effect.color;
+    context.shadowBlur = 16;
+    context.beginPath();
+    context.moveTo(effect.x, effect.y);
+    context.arc(effect.x, effect.y, effect.range, start, end);
+    context.closePath();
+    context.fill();
+    context.globalAlpha = alpha;
+    context.beginPath();
+    context.arc(effect.x, effect.y, effect.range, start, end);
+    context.stroke();
+    context.beginPath();
+    context.moveTo(effect.x, effect.y);
+    context.lineTo(effect.x + Math.cos(start) * effect.range, effect.y + Math.sin(start) * effect.range);
+    context.moveTo(effect.x, effect.y);
+    context.lineTo(effect.x + Math.cos(end) * effect.range, effect.y + Math.sin(end) * effect.range);
+    context.stroke();
     context.restore();
   }
   for (const shot of state.shots) {
@@ -1442,7 +1870,9 @@ function draw() {
     }
     const boss = isBoss(entity);
     const enemyElement = entity.type === 'awakenedBoss' ? getElement(entity.elementId || state.bossElement) : null;
-    context.fillStyle = enemyElement ? enemyElement.color : boss ? colors.boss : colors.enemy;
+    const hyperElement = entity.type === 'hyperBoss' ? elements.find(item => item.id === entity.hyperElementId) : null;
+    const bossColor = hyperElement ? hyperColors[hyperElement.id] : enemyElement?.color;
+    context.fillStyle = bossColor || (boss ? colors.boss : colors.enemy);
     context.globalAlpha = entity.hit ? 0.5 : 1;
     context.beginPath();
     context.arc(entity.x, entity.y, entity.r, 0, Math.PI * 2);
@@ -1450,13 +1880,13 @@ function draw() {
     context.globalAlpha = 1;
     if (boss) {
       const bossElement = enemyElement;
-      context.strokeStyle = entity.type === 'awakenedBoss' && bossElement ? bossElement.color : '#edb394';
+      context.strokeStyle = bossColor || (entity.type === 'awakenedBoss' && bossElement ? bossElement.color : '#edb394');
       context.lineWidth = 3;
       context.stroke();
       context.fillStyle = colors.text;
       context.font = '9px DM Mono';
       context.textAlign = 'center';
-      context.fillText(entity.type === 'awakenedBoss' && bossElement ? bossElement.awakenedName : entity.type === 'awakenedBoss' ? 'AWAKENED' : 'MINIBOSS', entity.x, entity.y + 3);
+      context.fillText(entity.type === 'hyperBoss' && hyperElement ? `HYPER-${hyperElement.name}` : entity.type === 'awakenedBoss' && bossElement ? bossElement.awakenedName : entity.type === 'awakenedBoss' ? 'AWAKENED' : 'MINIBOSS', entity.x, entity.y + 3);
       context.fillStyle = '#392b3a';
       context.fillRect(entity.x - 32, entity.y - entity.r - 10, 64, 4);
       context.fillStyle = colors.loot;
@@ -1515,7 +1945,9 @@ function updateHud() {
   document.getElementById('element-name').style.color = element ? element.color : '';
   document.getElementById('element-orb').style.color = element ? element.color : '';
   document.getElementById('element-orb').style.borderColor = element ? element.color : '';
-  document.getElementById('element-desc').textContent = element ? (profile.awakened.includes(element.id) ? 'AWAKENED ELEMENT' : element.moves ? 'ELEMENT EQUIPPED' : 'NO AWAKENING · BASE MOVES') : 'NO ELEMENT · NO ABILITIES';
+  document.getElementById('element-desc').textContent = element
+    ? element.hyper ? 'HYPER FORM EQUIPPED' : profile.awakened.includes(element.id) ? 'AWAKENED ELEMENT' : element.moves ? 'ELEMENT EQUIPPED' : 'NO AWAKENING · BASE MOVES'
+    : 'NO ELEMENT · NO ABILITIES';
   if (state.health <= 0) endRun();
 }
 
@@ -1523,19 +1955,132 @@ function renderElementShop() {
   const list = document.getElementById('element-list');
   list.replaceChildren();
   for (const element of elements) {
+    const selectedElement = getElement(element.id);
     const owned = profile.unlocked.includes(element.id);
     const equipped = profile.equipped === element.id;
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `element-option${owned ? '' : ' locked'}${equipped ? ' selected' : ''}`;
     button.dataset.element = element.id;
+    button.style.setProperty('--element-color', selectedElement.color);
+    button.style.setProperty('--element-name', `"${selectedElement.colorway.name}"`);
     const name = document.createElement('strong');
-    name.textContent = elementName(element);
+    name.textContent = elementName(selectedElement);
     const cost = document.createElement('span');
     cost.textContent = owned ? (equipped ? 'EQUIPPED' : 'SWAP FREE') : `${element.cost} FRAGMENTS`;
     button.append(name, cost);
     list.append(button);
   }
+}
+
+function renderSystem() {
+  const slots = document.getElementById('system-slots');
+  slots.replaceChildren();
+  const occupied = profile.slots.filter(Boolean).length;
+  document.getElementById('system-count').textContent = `${occupied}/3 SLOTS`;
+  profile.slots.forEach((elementId, index) => {
+    const element = getElement(elementId);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `system-slot${element ? '' : ' empty'}${profile.activeSlot === index ? ' active' : ''}`;
+    button.dataset.systemSlot = String(index);
+    button.textContent = element ? elementName(element) : 'EMPTY SLOT';
+    button.setAttribute('aria-label', element
+      ? `Slot ${index + 1}: ${elementName(element)}. Select to equip.`
+      : `Empty slot ${index + 1}. Select, then choose an element.`);
+    slots.append(button);
+  });
+}
+
+function renderElementColorways() {
+  const element = getElement();
+  const list = document.getElementById('element-colorway-list');
+  list.replaceChildren();
+  document.getElementById('element-colorway-name').textContent = element
+    ? element.colorway.name : 'NO ELEMENT';
+  document.getElementById('element-colorway-hint').textContent = element
+    ? `${attackStyleDescriptions[element.colorway.attack]} · SAVED PER ELEMENT`
+    : 'EQUIP AN ELEMENT TO CUSTOMIZE ITS COLOR AND ATTACK';
+  if (!element) return;
+  const variants = [
+    { id: 'core', name: 'CORE', color: elements.find(item => item.id === element.id).color },
+    ...elementColorways[element.id]
+  ];
+  for (const variant of variants) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `element-colorway-option${element.colorway.id === variant.id ? ' selected' : ''}`;
+    button.style.setProperty('--swatch', variant.color);
+    button.dataset.elementColorway = variant.id;
+    button.textContent = variant.name;
+    button.title = `${variant.name} · ${attackStyleDescriptions[variant.attack]}`;
+    button.setAttribute('aria-label', `${element.name} ${variant.name} colorway`);
+    button.setAttribute('aria-pressed', String(element.colorway.id === variant.id));
+    list.append(button);
+  }
+}
+
+function handleElementColorwayClick(event) {
+  const button = event.target.closest('[data-element-colorway]');
+  const element = getElement();
+  if (!button || !element || !['core', ...elementColorways[element.id].map(variant => variant.id)].includes(button.dataset.elementColorway)) return;
+  profile.elementColorways[element.id] = button.dataset.elementColorway;
+  saveProfile();
+  renderElementColorways();
+  renderElementShop();
+  renderAbilities();
+  renderHyperForm();
+  updateHud();
+  addLog('COLORWAY', `${element.name} · ${getElement().colorway.name} equipped.`);
+}
+
+function renderColorways() {
+  const list = document.getElementById('colorway-list');
+  const unlocked = profile.bestDepth >= 10;
+  list.replaceChildren();
+  for (const colorway of colorways) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `colorway-option${profile.colorway === colorway.id ? ' selected' : ''}`;
+    button.style.setProperty('--swatch', colorway.color);
+    button.dataset.colorway = colorway.id;
+    button.textContent = colorway.name;
+    button.disabled = !unlocked;
+    button.title = unlocked ? colorway.name : `Reach depth 10 to unlock ${colorway.name}`;
+    button.setAttribute('aria-label', `${colorway.name} colorway${unlocked ? '' : ', locked until depth 10'}`);
+    list.append(button);
+  }
+  document.getElementById('colorway-hint').textContent = unlocked
+    ? `BEST DEPTH ${String(profile.bestDepth).padStart(2, '0')} · CHOOSE YOUR COLORWAY`
+    : 'REACH DEPTH 10 TO UNLOCK COLORWAYS';
+  document.documentElement.dataset.colorway = profile.colorway;
+}
+
+function handleSystemSlotClick(event) {
+  const button = event.target.closest('[data-system-slot]');
+  if (!button) return;
+  const index = Number(button.dataset.systemSlot);
+  if (!Number.isInteger(index) || index < 0 || index >= profile.slots.length) return;
+  profile.activeSlot = index;
+  profile.equipped = profile.slots[index];
+  saveProfile();
+  renderSystem();
+  renderElementShop();
+  renderElementColorways();
+  renderAbilities();
+  renderHyperForm();
+  updateHud();
+  addLog('SYSTEM', profile.equipped ? `${elementName(getElement())} equipped from slot ${index + 1}.` : `Slot ${index + 1} selected. Choose an element to fill it.`);
+}
+
+function handleColorwayClick(event) {
+  const button = event.target.closest('[data-colorway]');
+  if (!button || profile.bestDepth < 10) return;
+  const colorway = colorways.find(item => item.id === button.dataset.colorway);
+  if (!colorway) return;
+  profile.colorway = colorway.id;
+  saveProfile();
+  renderColorways();
 }
 
 function renderAbilities() {
@@ -1549,7 +2094,9 @@ function renderAbilities() {
     key.textContent = moveKeys[index].toUpperCase();
     const name = document.createElement('span');
     const hasAwakenedMove = Boolean(element && element.moves && profile.awakened.includes(element.id) && profile.moves[element.id]?.[index]);
-    const moveName = element ? hasAwakenedMove ? element.awakeMoves[index] : element.baseMoves[index] : `ELEMENT MOVE ${index + 1}`;
+    const moveName = element
+      ? element.hyper ? `HYPER-${element.baseMoves[index]}` : hasAwakenedMove ? element.awakeMoves[index] : element.baseMoves[index]
+      : `ELEMENT MOVE ${index + 1}`;
     name.textContent = element ? `${elementName(element)} · ${moveName}` : moveName;
     const mobileButton = document.querySelector(`[data-mobile-ability="${index}"]`);
     mobileButton.dataset.castMove = String(index);
@@ -1583,6 +2130,30 @@ function renderAbilities() {
     }
     list.append(row);
   }
+}
+
+function renderHyperForm() {
+  const panel = document.getElementById('hyper-form');
+  panel.replaceChildren();
+  const element = getElement();
+  if (!element) {
+    panel.textContent = 'UNLOCK A HYPER FORM BY DEFEATING ITS TRIAL BOSS.';
+    panel.classList.add('locked');
+    return;
+  }
+  panel.classList.toggle('locked', !profile.hyperUnlocked.includes(element.id));
+  if (!profile.hyperUnlocked.includes(element.id)) {
+    panel.textContent = `DEFEAT AN AWAKENED BOSS TO OPEN A HYPER-${element.name} TRIAL.`;
+    return;
+  }
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.dataset.hyperToggle = 'true';
+  button.setAttribute('aria-pressed', String(profile.hyperEquipped === element.id));
+  button.textContent = profile.hyperEquipped === element.id ? 'RETURN TO BASE FORM' : `EQUIP HYPER-${element.name}`;
+  const hint = document.createElement('span');
+  hint.textContent = `HYPER MOVES · ${element.baseMoves.map((move, index) => `${moveKeys[index].toUpperCase()}: HYPER-${move}`).join(' · ')}`;
+  panel.append(button, hint);
 }
 
 function addLog(label, message) {
@@ -1644,9 +2215,13 @@ function handleElementClick(event) {
       addLog('ELEMENT UNLOCKED', `${element.name} joins your collection.`);
     }
     profile.equipped = element.id;
+    profile.slots[profile.activeSlot] = element.id;
     saveProfile();
     renderElementShop();
+    renderElementColorways();
+    renderSystem();
     renderAbilities();
+    renderHyperForm();
     updateHud();
     return;
   }
@@ -1691,6 +2266,22 @@ canvas.addEventListener('pointerdown', event => {
 document.getElementById('element-list').addEventListener('click', handleElementClick);
 document.getElementById('ability-list').addEventListener('click', handleElementClick);
 document.getElementById('mobile-abilities').addEventListener('click', handleElementClick);
+document.getElementById('element-colorway-list').addEventListener('click', handleElementColorwayClick);
+document.getElementById('system-slots').addEventListener('click', handleSystemSlotClick);
+document.getElementById('colorway-list').addEventListener('click', handleColorwayClick);
+document.getElementById('hyper-form').addEventListener('click', event => {
+  const button = event.target.closest('[data-hyper-toggle]');
+  const element = getElement();
+  if (!button || !element || !profile.hyperUnlocked.includes(element.id)) return;
+  profile.hyperEquipped = profile.hyperEquipped === element.id ? null : element.id;
+  saveProfile();
+  renderElementShop();
+  renderElementColorways();
+  renderAbilities();
+  renderHyperForm();
+  updateHud();
+  addLog('HYPER FORM', profile.hyperEquipped ? `HYPER-${element.name} equipped.` : `${element.name} base form restored.`);
+});
 document.querySelectorAll('[data-control-mode]').forEach(button => button.addEventListener('click', () => {
   controlMode = button.dataset.controlMode;
   controlsChosen = true;
