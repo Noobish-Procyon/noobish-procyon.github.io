@@ -60,6 +60,24 @@ function saveProfile() {
   localStorage.setItem('circlebound-elemental-profile', JSON.stringify(profile));
 }
 
+window.NoobishAdmin.registerTool({
+  id: 'awaken-all-elements',
+  title: 'Instantly awaken all elements',
+  description: 'Unlock every element, awaken those with awakened forms, and unlock their moves.',
+  buttonLabel: 'Awaken all',
+  apply() {
+    profile.unlocked = elements.map(element => element.id);
+    profile.awakened = elements.filter(element => element.moves).map(element => element.id);
+    profile.moves = Object.fromEntries(elements.filter(element => element.moves).map(element => [element.id, [true, true, true, true]]));
+    profile.equipped = profile.equipped && profile.unlocked.includes(profile.equipped) ? profile.equipped : 'fire';
+    saveProfile();
+    renderElementShop();
+    renderAbilities();
+    updateHud();
+    return 'All available elements awakened and saved.';
+  }
+});
+
 function getElement(id = profile.equipped) {
   return elements.find(element => element.id === id);
 }

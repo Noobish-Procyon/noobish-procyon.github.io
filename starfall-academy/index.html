@@ -93,6 +93,7 @@
   </style>
 </head>
 <body>
+  <script src="../admin-tools.js"></script>
   <main class="app">
     <header><div><p class="eyebrow">A pocket learning quest / 001</p><h1>STARFALL<br>ACADEMY</h1></div><p class="mission">A tiny world of curious heroes, clever spells, and one very important tower.</p></header>
     <section class="layout">
@@ -252,6 +253,29 @@
     applyPetTheme();
     const savedVisual = document.getElementById('spell-visual'); savedVisual.className = `spell-visual ${state.spell === 'spark' ? '' : state.spell}`; savedVisual.dataset.spell = state.spell; savedVisual.textContent = state.spell === 'spark' ? '✦' : state.spell === 'tide' ? '≈' : '✣';
     if (!answers.children.length) { state.location = 'meadow'; goToLocation('meadow'); }
+  </script>
+  <script>
+    window.NoobishAdmin.registerTool({
+      id: "set-starfall-progression",
+      title: "Set academy progression",
+      fields: [
+        { name: "level", label: "Level", min: 1, max: 999, step: 1, value: 1 },
+        { name: "stars", label: "Stars", min: 0, max: 1000000, step: 1, value: 0 }
+      ],
+      apply({ level, stars }) {
+        if (!Number.isInteger(level) || level < 1 ||
+            !Number.isInteger(stars) || stars < 0) {
+          throw new RangeError("Enter a level of at least 1 and a non-negative star count.");
+        }
+        state.level = level;
+        state.levelGoal = nextLevelGoal(level);
+        state.xp = 0;
+        state.stars = stars;
+        saveState();
+        updateHud();
+        return "Academy level and stars updated and saved.";
+      }
+    });
   </script>
 </body>
 </html>

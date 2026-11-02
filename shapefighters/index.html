@@ -10,6 +10,30 @@
   <script src="game.js" defer></script>
 </head>
 <body>
+  <script src="../admin-tools.js"></script>
+  <script>
+    window.NoobishAdmin.registerTool({
+      id: "unlock-shapefighters-content",
+      title: "Unlock fighter content",
+      description: "Grants all shapes, elements, auras, and both evolutions for every shape.",
+      fields: [{ name: "coins", label: "Coins", min: 0, max: 1000000000, step: 1, value: 0 }],
+      apply({ coins }) {
+        if (!Number.isInteger(coins) || coins < 0) {
+          throw new RangeError("Coins must be a non-negative whole number.");
+        }
+        state.coins = coins;
+        state.ownedShapes = ["circle", "square", "triangle", "star"];
+        state.ownedElements = ["storm", "fire", "ice", "water"];
+        state.ownedAuras = auraData.map((aura) => aura.id);
+        state.evolutions = Object.fromEntries(
+          ["circle", "square", "triangle", "star"].map((shape) => [shape, 2])
+        );
+        renderAll();
+        saveState();
+        return "All ShapeFighters content unlocked and saved.";
+      }
+    });
+  </script>
   <main class="app">
     <header class="masthead">
       <a class="brand" href="../index.html" aria-label="Noobish Procyon Games home">

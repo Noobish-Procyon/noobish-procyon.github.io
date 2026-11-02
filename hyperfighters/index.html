@@ -7,6 +7,32 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <script src="../admin-tools.js"></script>
+    <script>
+      window.NoobishAdmin.registerTool({
+        id: "set-hyperfighter-progression",
+        title: "Set Hyper Fighters progression",
+        fields: [
+          { name: "gold", label: "Gold", min: 0, max: 1000000000, step: 1, value: 0 },
+          { name: "transformUpgrades", label: "Transform upgrades to buy", min: 0, max: 100, step: 1, value: 0 }
+        ],
+        apply({ gold, transformUpgrades }) {
+          if (![gold, transformUpgrades].every(Number.isInteger) || gold < 0 || transformUpgrades < 0) {
+            throw new RangeError("Enter non-negative whole numbers.");
+          }
+          game.gold = gold;
+          let purchased = 0;
+          for (let index = 0; index < transformUpgrades; index += 1) {
+            const previousLevel = game.upgrades.transform;
+            game.buyUpgrade("transform");
+            if (game.upgrades.transform === previousLevel) break;
+            purchased += 1;
+          }
+          game.updateUpgradeDisplay();
+          return `Gold set. Transform upgrades purchased: ${purchased}.`;
+        }
+      });
+    </script>
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
         

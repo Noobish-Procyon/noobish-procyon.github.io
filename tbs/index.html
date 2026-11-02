@@ -97,6 +97,7 @@
   </style>
 </head>
 <body>
+  <script src="../admin-tools.js"></script>
   <main class="shell">
     <header>
       <div><p class="eyebrow">Tiny tactical arena / 001</p><h1>ORBFRONT</h1></div>
@@ -231,6 +232,28 @@
     document.getElementById('restart').addEventListener('click', reset);
     window.addEventListener('resize', resize);
     reset(); resize(); requestAnimationFrame(loop);
+  </script>
+  <script>
+    window.NoobishAdmin.registerTool({
+      id: "set-orbfront-progression",
+      title: "Set Orbfront progression",
+      fields: [
+        { name: "energy", label: "Energy", min: 0, max: 1000000, step: 1, value: 100 },
+        { name: "economyLevel", label: "Economy level", min: 1, max: 5, step: 1, value: 1 },
+        { name: "wave", label: "Wave", min: 1, max: 1000000, step: 1, value: 1 }
+      ],
+      apply({ energy, economyLevel, wave }) {
+        if (![energy, economyLevel, wave].every(Number.isInteger) ||
+            energy < 0 || economyLevel < 1 || economyLevel > 5 || wave < 1) {
+          throw new RangeError("Enter valid energy, economy level (1-5), and wave values.");
+        }
+        state.energy = energy;
+        state.economyLevel = economyLevel;
+        state.wave = wave;
+        updateHud();
+        return "Orbfront progression updated for this match.";
+      }
+    });
   </script>
 </body>
 </html>
