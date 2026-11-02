@@ -131,7 +131,10 @@ Launch: [`shapefighters/index.html`](shapefighters/index.html)
 
 A lightweight browser-based player account manager that supports sign-up,
 log-in, logout, and local profile persistence for the project hub. Accounts are
-stored in localStorage so the system works without a backend.
+stored in localStorage so the system works without a backend. Accounts using
+`justin.mo313@education.nsw.gov.au` receive client-side admin progression tools
+in supported games. These local tools are not secure authentication; game
+progress and account data can be changed through the browser.
 
 Launch: [`account-system.html`](account-system.html)
 

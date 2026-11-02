@@ -213,6 +213,7 @@
   </style>
 </head>
 <body>
+  <script src="../admin-tools.js"></script>
   <canvas id="gameCanvas"></canvas>
 
   <div id="ui">
@@ -246,5 +247,29 @@
   <script src="fusionSystem.js"></script>
   <script src="saveSystem.js"></script>
   <script src="game.js"></script>
+  <script>
+    window.NoobishAdmin.registerTool({
+      id: "set-fusion-progression",
+      title: "Set fusion progression",
+      fields: [
+        { name: "fusionEnergy", label: "Fusion energy", min: 0, max: 1000000, step: 1, value: 0 },
+        { name: "experience", label: "Experience to grant", min: 0, max: 1000000, step: 1, value: 0 }
+      ],
+      apply({ fusionEnergy: nextEnergy, experience }) {
+        if (!Number.isInteger(nextEnergy) || nextEnergy < 0 ||
+            !Number.isInteger(experience) || experience < 0) {
+          throw new RangeError("Enter non-negative whole numbers.");
+        }
+        fusionEnergy = nextEnergy;
+        const circle = circles[selectedCircleIndex] || circles[0];
+        if (circle) {
+          circle.gainExp(experience);
+        }
+        updateUI();
+        saveGame(circles);
+        return "Fusion progression updated and saved.";
+      }
+    });
+  </script>
 </body>
 </html>

@@ -13,6 +13,29 @@
   <script src="game.js" defer></script>
 </head>
 <body>
+  <script src="../admin-tools.js"></script>
+  <script>
+    window.NoobishAdmin.registerTool({
+      id: "set-orb-trading-progression",
+      title: "Set Orb Trading progression",
+      fields: [
+        { name: "coins", label: "Coins", min: 0, max: 1000000000, step: 1, value: 0 },
+        { name: "mysticGems", label: "Mystic gems", min: 0, max: 1000000000, step: 1, value: 0 }
+      ],
+      apply({ coins, mysticGems }) {
+        if (![coins, mysticGems].every(Number.isInteger) || coins < 0 || mysticGems < 0) {
+          throw new RangeError("Enter non-negative whole numbers.");
+        }
+        state.coins = coins;
+        state.mysticGems = mysticGems;
+        state.unlockedSkills = restoreUnlockedSkills(skillTreeNodes.map((node) => node.id));
+        render();
+        renderSkillTree();
+        saveGame();
+        return "Orb Trading currencies and available skills updated and saved.";
+      }
+    });
+  </script>
   <div class="app-shell">
     <header class="topbar">
       <a class="brand" href="../index.html" aria-label="Back to Noobish Procyon games">

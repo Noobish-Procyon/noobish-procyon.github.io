@@ -137,6 +137,7 @@
     </style>
 </head>
 <body>
+    <script src="../admin-tools.js"></script>
     <div id="score" role="status" aria-live="polite">
         <span class="score-label">Matter collected</span>
         <strong class="score-value" id="scoreValue">0</strong>
@@ -159,5 +160,31 @@
     </div>
     <canvas id="game"></canvas>
     <script src="game.js"></script>
+    <script>
+      window.NoobishAdmin.registerTool({
+        id: "set-arcade-progression",
+        title: "Set arcade score and upgrades",
+        fields: [
+          { name: "score", label: "Score", min: 0, max: 1000000000, step: 1, value: 0 },
+          { name: "scoreMultiplierLevel", label: "Score multiplier level", min: 0, max: 5, step: 1, value: 0 },
+          { name: "autoCollectorLevel", label: "Auto collector level", min: 0, max: 5, step: 1, value: 0 }
+        ],
+        apply({ score: nextScore, scoreMultiplierLevel: nextMultiplierLevel, autoCollectorLevel: nextCollectorLevel }) {
+          if (![nextScore, nextMultiplierLevel, nextCollectorLevel].every(Number.isInteger) ||
+              nextScore < 0 || nextMultiplierLevel < 0 || nextMultiplierLevel > 5 ||
+              nextCollectorLevel < 0 || nextCollectorLevel > 5) {
+            throw new RangeError("Score must be non-negative; upgrade levels must be between 0 and 5.");
+          }
+          score = nextScore;
+          scoreMultiplierLevel = nextMultiplierLevel;
+          scoreMultiplier = 1 + scoreMultiplierLevel;
+          autoCollectorLevel = nextCollectorLevel;
+          autoCollector = autoCollectorLevel > 0;
+          scoreDisplay.textContent = score.toLocaleString();
+          refreshUpgradeButtons();
+          return "Arcade score and upgrades updated for this session.";
+        }
+      });
+    </script>
 </body>
 </html>

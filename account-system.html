@@ -435,6 +435,7 @@
     <script>
         const ACCOUNTS_KEY = 'noobish-procyon-accounts';
         const CURRENT_ACCOUNT_KEY = 'noobish-procyon-current-account';
+        const ADMIN_EMAIL = 'justin.mo313@education.nsw.gov.au';
 
         const state = {
             accounts: loadAccounts(),
@@ -616,6 +617,7 @@
                 accountSummary.className = 'account-card';
                 accountSummary.innerHTML = `
                     <h2>${escapeHtml(currentAccount.displayName || currentAccount.username)}</h2>
+                    <span class="pill">${isAdminAccount(currentAccount) ? 'Admin' : 'Player'}</span>
                     <div class="account-meta">
                         <div><strong>Username:</strong> ${escapeHtml(currentAccount.username)}</div>
                         <div><strong>Email:</strong> ${escapeHtml(currentAccount.email)}</div>
@@ -649,10 +651,11 @@
                 item.className = 'account-item';
                 const active = account.id === state.currentAccountId;
                 const removeButton = active ? '' : `<button class="danger-button" type="button" data-remove-id="${account.id}">Remove</button>`;
+                const role = isAdminAccount(account) ? 'Admin' : 'Player';
                 item.innerHTML = `
                     <div class="account-item-header">
                         <strong>${escapeHtml(account.displayName || account.username)}</strong>
-                        ${active ? '<span class="pill">Active</span>' : ''}
+                        <span class="pill">${role}${active ? ' · Active' : ''}</span>
                     </div>
                     <div>${escapeHtml(account.username)}</div>
                     <small>${escapeHtml(account.email)}</small>
@@ -713,6 +716,10 @@
 
         function getCurrentAccount() {
             return state.accounts.find((account) => account.id === state.currentAccountId) || null;
+        }
+
+        function isAdminAccount(account) {
+            return typeof account.email === 'string' && account.email.trim().toLowerCase() === ADMIN_EMAIL;
         }
 
         function showMessage(message, type = '') {

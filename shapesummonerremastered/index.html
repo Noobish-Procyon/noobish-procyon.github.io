@@ -67,6 +67,7 @@
   </style>
 </head>
 <body>
+  <script src="../admin-tools.js"></script>
   <canvas id="game"></canvas>
   <div class="hud">
     <div class="topbar"><div class="brand">ORBITFALL <span>// SECTOR 07</span></div><div class="stats"><div class="stat"><label>Wave</label><strong id="wave">01</strong></div><div class="stat"><label>Score</label><strong id="score">00000</strong></div><div class="stat"><label>Threats</label><strong id="threats">00</strong></div></div></div>
@@ -147,6 +148,31 @@
     fireButton.addEventListener('pointerup',releaseFire);fireButton.addEventListener('pointercancel',releaseFire);
     document.getElementById('mobileBarrier').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();setMobileAim();if(player&&running&&!paused)addBarrier(mouse.x,mouse.y)});
     addEventListener('resize',resize); addEventListener('pagehide',saveRun); addEventListener('keydown',e=>{if(!controlsChosen)return;keys[e.key]=true;if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();if(e.key==='p'&&running){paused=!paused;saveRun()}}); addEventListener('keyup',e=>keys[e.key]=false); addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});canvas.addEventListener('click',e=>{if(running&&!paused)addBarrier(e.clientX,e.clientY)});document.getElementById('start-btn').onclick=start;document.getElementById('continue-btn').onclick=continueRun;document.getElementById('restart-btn').onclick=start;try{if(localStorage.getItem(SAVE_KEY)){const continueButton=document.getElementById('continue-btn');continueButton.dataset.hasSave='true';}}catch(error){} resize();
+  </script>
+  <script>
+    window.NoobishAdmin.registerTool({
+      id: "set-remastered-run",
+      title: "Set remastered run progress",
+      description: "Requires an active run. Changes are saved with the current run.",
+      fields: [
+        { name: "wave", label: "Wave", min: 1, max: 1000000, step: 1, value: 1 },
+        { name: "score", label: "Score", min: 0, max: 1000000000, step: 1, value: 0 }
+      ],
+      apply({ wave: nextWave, score: nextScore }) {
+        if (!running || !player) {
+          throw new Error("Start or continue a run before changing its progression.");
+        }
+        if (!Number.isInteger(nextWave) || nextWave < 1 ||
+            !Number.isInteger(nextScore) || nextScore < 0) {
+          throw new RangeError("Enter a positive wave and non-negative score.");
+        }
+        wave = nextWave;
+        score = nextScore;
+        hud();
+        saveRun();
+        return "Remastered run progress updated and saved.";
+      }
+    });
   </script>
 </body>
 </html>

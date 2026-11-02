@@ -62,6 +62,7 @@ body.mobile-mode #saveHint { display:none; }
 </style>
 </head>
 <body>
+<script src="../admin-tools.js"></script>
 <canvas id="game"></canvas>
 <div id="saveHint">Press [F] to save — auto‑save every 10s — [ESC] for pause</div>
 <div id="controlsModal" class="controls-modal">
@@ -208,6 +209,34 @@ function loadGame() {
 
 loadGame();
 setInterval(saveGame, 10000);
+
+window.NoobishAdmin.registerTool({
+  id: "set-player-level",
+  title: "Set player level",
+  description: "Set the current save slot's level and clear its current XP progress.",
+  fields: [{ name: "level", label: "Level", min: 1, max: 999, step: 1, value: 1 }],
+  apply({ level }) {
+    if (!Number.isInteger(level) || level < 1 || level > 999) {
+      throw new RangeError("Choose a level between 1 and 999.");
+    }
+    const currentLevel = Number.isInteger(p.lvl) && p.lvl > 0 ? p.lvl : 1;
+    const levelChange = level - currentLevel;
+    p.maxHp = Math.max(100, (Number.isFinite(p.maxHp) ? p.maxHp : 100) + levelChange * 10);
+    p.hp = p.maxHp;
+    p.maxMana = Math.max(50, (Number.isFinite(p.maxMana) ? p.maxMana : 50) + levelChange * 10);
+    p.mana = p.maxMana;
+    p.dmg = Math.max(1, (Number.isFinite(p.dmg) ? p.dmg : 1) + levelChange * 0.5);
+    p.regen = Math.max(0.1, (Number.isFinite(p.regen) ? p.regen : 0.1) + levelChange * 0.02);
+    p.lvl = level;
+    p.xp = 0;
+    p.xpNext = 20;
+    for (let currentLevel = 1; currentLevel < level; currentLevel += 1) {
+      p.xpNext = Math.floor(p.xpNext * 1.5);
+    }
+    saveGame();
+    return `Player level set to ${level} and saved to slot ${currentSlot}.`;
+  }
+});
 
 // BOSS SYSTEM
 function godShot(boss) {

@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <script src="../admin-tools.js"></script>
   <main class="shell">
     <header class="topbar">
       <div class="brand"><span class="brand-mark"></span><span>ORBIT WARDENS</span></div>
@@ -47,5 +48,26 @@
     <footer><span>ORBITAL DEFENSE NETWORK</span><span>v.1.0.7</span></footer>
   </main>
   <script src="game.js?v=4"></script>
+  <script>
+    window.NoobishAdmin.registerTool({
+      id: "set-defense-progression",
+      title: "Set defense progression",
+      fields: [
+        { name: "money", label: "Credits", min: 0, max: 1000000000, step: 1, value: 100 },
+        { name: "wave", label: "Wave", min: 1, max: 1000000, step: 1, value: 1 }
+      ],
+      apply({ money: nextMoney, wave: nextWave }) {
+        if (!Number.isInteger(nextMoney) || nextMoney < 0 ||
+            !Number.isInteger(nextWave) || nextWave < 1) {
+          throw new RangeError("Credits must be non-negative and wave must be at least 1.");
+        }
+        money = nextMoney;
+        wave = nextWave;
+        updateUI();
+        saveGame();
+        return "Defense credits and wave updated and saved.";
+      }
+    });
+  </script>
 </body>
 </html>
