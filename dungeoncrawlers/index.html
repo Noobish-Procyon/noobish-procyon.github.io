@@ -1,81 +1,225 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Descend through an unstable elemental dungeon, collect fragments, unlock elements, and awaken their powers.">
-  <title>Elemental Descent — an elemental dungeon</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <script src="../admin-tools.js"></script>
-  <main class="shell">
-    <header class="topbar">
-      <a class="brand" href="../index.html"><span class="brand-mark"></span><span>ELEMENTAL DESCENT</span></a>
-      <div class="run-status"><span class="pulse"></span><span id="run-state">RUN IN PROGRESS</span><b id="room-label">ROOM 01</b></div>
-    </header>
-    <section class="game-layout">
-      <aside class="intro-panel">
-        <p class="eyebrow">ELEMENTAL DUNGEON / 01</p>
-        <h1>Claim your<br><em>element.</em></h1>
-        <p class="lede">Fight through shifting rooms. Gather fragments, unlock an element, and face its awakened boss.</p>
-        <div class="legend">
-          <div><span class="legend-dot hero-dot"></span><span>YOU</span><b>move + attack</b></div>
-          <div><span class="legend-dot enemy-dot"></span><span>FOE</span><b>defeat for fragments</b></div>
-          <div><span class="legend-dot loot-dot"></span><span>FRAGMENT</span><b>walk over to collect</b></div>
-        </div>
-      </aside>
-      <section class="arena-wrap">
-        <div class="arena-head"><span id="room-name">THE SUNKEN VESTIBULE</span><span id="wave-status">CLEAR THE ROOM</span></div>
-        <div class="canvas-frame"><canvas id="game-canvas" aria-label="Elemental Descent dungeon game"></canvas><div class="canvas-hint" id="canvas-hint">WASD / ARROWS TO MOVE · Q RANGED · CLICK MELEE</div><div class="mobile-controls" id="mobile-controls" aria-label="Mobile game controls"><div class="virtual-stick" id="move-stick" aria-label="Movement joystick"><div class="virtual-stick-knob"></div></div><div class="mobile-abilities" id="mobile-abilities" aria-label="Element abilities"><button class="mobile-action mobile-ability" type="button" data-mobile-ability="0"><kbd>Z</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="1"><kbd>X</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="2"><kbd>C</kbd><span>LOCKED</span></button><button class="mobile-action mobile-ability" type="button" data-mobile-ability="3"><kbd>V</kbd><span>LOCKED</span></button></div><button class="mobile-action mobile-ranged" id="mobile-ranged" type="button">Q · RANGED</button><button class="mobile-action mobile-dash" id="mobile-dash" type="button">DASH</button></div></div>
-        <div class="arena-foot"><span><i class="key" id="arena-move-label">WASD</i> MOVE</span><span><i class="key">Q</i> RANGED · <i class="key">CLICK</i> MELEE</span><span><i class="key">SPACE</i> DASH</span><span><i class="key">R</i> NEW RUN</span></div>
-      </section>
-      <aside class="control-panel">
-        <div class="identity"><div class="class-orb" id="element-orb">●</div><div><p class="eyebrow">CURRENT ELEMENT</p><h2 id="element-name">NONE</h2><span id="element-desc">NO ELEMENT · NO ABILITIES</span></div></div>
-        <div class="element-colorway-block">
-          <div class="block-heading"><p class="eyebrow">ELEMENT COLORWAY</p><span id="element-colorway-name">NO ELEMENT</span></div>
-          <div class="element-colorway-list" id="element-colorway-list" aria-label="Current element colorways"></div>
-          <p class="colorway-hint" id="element-colorway-hint">EQUIP AN ELEMENT TO CUSTOMIZE ITS COLOR AND ATTACK</p>
-        </div>
-        <div class="resource"><span>VITALITY</span><strong id="health-value">100</strong><div class="meter"><span id="health-meter"></span></div></div>
-        <div class="stats"><div><span>FRAGMENTS</span><strong id="fragments-value">00</strong></div><div><span>DEPTH</span><strong id="depth-value">01</strong></div></div>
-        <div class="system-block">
-          <div class="block-heading"><p class="eyebrow">SYSTEM</p><span id="system-count">0/3 SLOTS</span></div>
-          <div class="system-slots" id="system-slots" aria-label="Element loadout slots"></div>
-        </div>
-        <div class="colorway-block">
-          <div class="block-heading"><p class="eyebrow">COLORWAY</p><span id="colorway-unlock">DEPTH 10</span></div>
-          <div class="colorway-list" id="colorway-list" aria-label="Dungeon colorways"></div>
-          <p class="colorway-hint" id="colorway-hint">REACH DEPTH 10 TO UNLOCK COLORWAYS</p>
-        </div>
-        <div class="element-block">
-          <div class="block-heading"><p class="eyebrow">ELEMENTS</p><span>UNLOCK / SWAP</span></div>
-          <div class="element-list" id="element-list" aria-label="Element unlocks and selection"></div>
-        </div>
-        <div class="ability-block">
-          <div class="block-heading"><p class="eyebrow">ELEMENT MOVES</p><span>BASE + AWAKENED + HYPER</span></div>
-          <div class="ability-list" id="ability-list" aria-label="Element awakening moves"></div>
-          <div class="hyper-form" id="hyper-form"></div>
-        </div>
-        <div class="feed"><p class="eyebrow">FIELD NOTES</p><div id="log-lines"><p><span>NOW</span> No element equipped.</p><p><span>TIP</span> Q fires · click to melee.</p></div></div>
-      </aside>
-    </section>
-    <footer><span>AN UNSTABLE DUNGEON CARTOGRAPHY</span><span>v.1.0.0</span></footer>
-  </main>
-  <div class="modal hidden" id="end-modal"><div class="modal-inner"><p class="eyebrow">RUN COMPLETE</p><h2 id="end-title">THE DUNGEON REMEMBERS</h2><p id="end-copy">Your circle made it further than most.</p><button class="primary-button" id="restart-button">START A NEW RUN <span>↗</span></button></div></div>
-  <div class="modal hidden" id="upgrade-modal"><div class="modal-inner"><p class="eyebrow">ROOM CLEARED / CHOOSE ONE</p><h2>CLAIM AN UPGRADE</h2><div class="upgrade-choices">
-    <button class="upgrade-choice" data-upgrade="vitality"><strong>VITALITY</strong><span>Restore 25 health.</span></button>
-    <button class="upgrade-choice" data-upgrade="power"><strong>SHARP EDGE</strong><span>Deal 20% more damage.</span></button>
-    <button class="upgrade-choice" data-upgrade="haste"><strong>QUICKEN</strong><span>Attack and cast 12% faster.</span></button>
-    <button class="upgrade-choice" data-upgrade="fleet"><strong>FLEET FOOT</strong><span>Move 15% faster.</span></button>
-    <button class="upgrade-choice" data-upgrade="reach"><strong>LONG REACH</strong><span>Melee reaches 25% farther.</span></button>
-    <button class="upgrade-choice" data-upgrade="quickstep"><strong>QUICKSTEP</strong><span>Dash cooldown is 20% shorter.</span></button>
-    <button class="upgrade-choice" data-upgrade="scavenger"><strong>SCAVENGER</strong><span>Every enemy drops 1 extra fragment.</span></button>
-  </div></div></div>
-  <div class="modal controls-modal" id="controls-modal"><div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="controls-title"><p class="eyebrow">ELEMENTAL DUNGEON / 01</p><h2 id="controls-title">Claim your element.</h2><p>Fight through shifting rooms, gather fragments, unlock an element, and face its awakened boss.</p><div class="control-options"><button type="button" data-control-mode="computer"><strong>COMPUTER</strong><span>WASD / ARROWS · Q RANGED · CLICK MELEE · SPACE DASH</span></button><button type="button" data-control-mode="mobile"><strong>MOBILE</strong><span>JOYSTICK · Q BUTTON · TAP THE ARENA TO MELEE</span></button></div><p class="controls-footnote">Z X C V CAST ELEMENT MOVES · R STARTS A NEW RUN · FRAGMENTS PERSIST BETWEEN RUNS</p></div></div>
-  <script src="game.js"></script>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><link data-precedence="default" href="/assets/index-BbLycs5c.css" rel="stylesheet"/><link data-precedence="default" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><title>Elemental Descent — an elemental dungeon</title><meta content="Fight through elemental rooms, collect fragments, unlock elements and face awakened bosses in a circular dungeon crawler." name="description"/><link href="/assets/index-Bpqcx_79.js" rel="modulepreload"/><link href="/assets/routes-B3kuRW8U.js" rel="modulepreload"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://media.base44.com/images/public/6ae2d50fe100c3239af125e3/5d7a69522_logo.png/v1/fit/w_180,h_180/5d7a69522_logo.png" rel="icon"/><script async="true" data-app-id="6ae2d50fe100c3239af125e3" data-platform-url="https://app.base44.com" src="/static/js/badge.js"></script><meta content="on" name="base44-analytics"/><script id="b44-consent-listener">(function () {
+  if (window.__b44Consent) return;
+  var state = {};
+  var listeners = [];
+  function notify(listener) {
+    try {
+      (state[listener.category] === "granted" ? listener.grant : listener.revoke)();
+    } catch (e) {}
+  }
+  function read(entry) {
+    if (!entry || entry[0] !== "consent" || entry[1] !== "update" || !entry[2]) return;
+    for (var category in entry[2]) {
+      state[category] = entry[2][category];
+      for (var i = 0; i < listeners.length; i++) {
+        if (listeners[i].category === category) notify(listeners[i]);
+      }
+    }
+  }
+  var dataLayer = (window.dataLayer = window.dataLayer || []);
+  // The banner may have restored the visitor's saved choice before this script ran.
+  for (var i = 0; i < dataLayer.length; i++) read(dataLayer[i]);
+  var push = dataLayer.push;
+  dataLayer.push = function () {
+    var result = push.apply(dataLayer, arguments);
+    for (var j = 0; j < arguments.length; j++) read(arguments[j]);
+    return result;
+  };
+  window.__b44Consent = {
+    on: function (category, grant, revoke) {
+      var listener = { category: category, grant: grant, revoke: revoke };
+      listeners.push(listener);
+      if (category in state) notify(listener);
+    },
+  };
+})();
+</script><meta content="on" data-source="default" name="base44-visitor-tracking"/><script id="b44-visitor-tracking">(function () {
+  try {
+    if (window.top !== window) return;
+    var CONSENT_CATEGORY = "analytics_storage";
+    var attributes = "; Path=/; Secure; SameSite=Lax";
+    var keep = "; Max-Age=2592000" + attributes;
+    // Read now: the app's router may drop ?ref= before the visitor consents.
+    var referrerId = new URLSearchParams(window.location.search).get("ref");
+    var referrerOrigin = document.referrer && new URL(document.referrer).origin;
+    function write() {
+      if (referrerId && /^[0-9a-f]{24}$/i.test(referrerId)) {
+        document.cookie = "base44_referrer_id=" + referrerId + keep;
+      }
+      // First touch: a return from a sign-in or checkout page must not replace who sent the visitor.
+      var hasOrigin = /(?:^|;\s*)base44_referrer_origin=/.test(document.cookie);
+      if (!hasOrigin && /^https?:\/\//.test(referrerOrigin) && referrerOrigin !== window.location.origin) {
+        document.cookie = "base44_referrer_origin=" + referrerOrigin + keep;
+      }
+    }
+    function clear() {
+      document.cookie = "base44_referrer_id=; Max-Age=0" + attributes;
+      document.cookie = "base44_referrer_origin=; Max-Age=0" + attributes;
+    }
+    var meta = document.querySelector('meta[name="base44-visitor-tracking"]');
+    // Global Privacy Control opts the visitor out of tracking Base44 turned on by default.
+    if (meta && meta.getAttribute("data-source") === "default" && navigator.globalPrivacyControl) {
+      clear();
+    } else if (meta && meta.content === "consent") {
+      window.__b44Consent.on(CONSENT_CATEGORY, write, clear);
+    } else {
+      write();
+    }
+  } catch (e) {}
+})();
+</script></head><body data-react-root="true"><!--$--><div class="min-h-screen bg-[#08080d] text-[#ece4d3]"><div class="mx-auto flex min-h-screen max-w-[1440px] flex-col gap-5 px-4 py-5 sm:px-6 lg:gap-6 lg:py-8"><header class="flex flex-wrap items-center justify-between gap-3"><div class="flex items-center gap-3"><span class="relative grid h-9 w-9 place-items-center rounded-full border border-[#c9a86a]/45"><span class="h-2 w-2 rounded-full bg-[#c9a86a] shadow-[0_0_12px_2px_rgba(201,168,106,0.5)]"></span></span><div><p class="font-heading text-sm tracking-[0.18em] text-[#f0e9d8]">ELEMENTAL DESCENT</p><p class="font-mono text-[8px] tracking-[0.22em] text-[#6d6879]">AN UNSTABLE DUNGEON CARTOGRAPHY</p></div></div><div class="flex items-center gap-3 font-mono text-[9px] tracking-[0.2em] text-[#8b8598]"><span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-[#7fd3a0]"></span>AWAITING ENTRY</span><span class="rounded-full border border-white/10 px-2.5 py-1 text-[#c9a86a]">ROOM <!-- -->01</span></div></header><div class="grid flex-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px]"><section class="flex min-w-0 flex-col gap-3"><div class="overflow-hidden rounded-[22px] border border-white/10 bg-[#0b0c12] shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)]"><div class="flex items-center justify-between gap-3 border-b border-white/[0.08] px-4 py-3"><span class="font-mono text-[10px] tracking-[0.22em] text-[#d6cdb9]">THE SUNKEN VESTIBULE</span><span class="font-mono text-[10px] tracking-[0.22em] text-[#c9a86a]">CLEAR THE ROOM</span></div><div class="relative aspect-[4/3] w-full sm:aspect-[16/10] lg:aspect-[16/9]"><canvas class="block h-full w-full touch-none cursor-crosshair"></canvas><div class="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center px-2"><span class="rounded-full border border-white/10 bg-black/50 px-3 py-1 font-mono text-[9px] tracking-[0.16em] text-[#bdb5a4] backdrop-blur-sm">WASD MOVE · Q RANGED · CLICK MELEE</span></div></div><div class="hidden flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.08] px-4 py-3 font-mono text-[9px] tracking-[0.18em] text-[#7f7a8c] sm:flex"><span class="text-[#b9b1a0]">WASD / ARROWS <span class="text-[#6d6879]">MOVE</span></span><span class="text-[#b9b1a0]">Q <span class="text-[#6d6879]">RANGED</span></span><span class="text-[#b9b1a0]">CLICK <span class="text-[#6d6879]">MELEE</span></span><span class="text-[#b9b1a0]">SPACE <span class="text-[#6d6879]">DASH</span></span><span class="text-[#b9b1a0]">Z X C V <span class="text-[#6d6879]">ELEMENT MOVES</span></span><span class="text-[#b9b1a0]">R <span class="text-[#6d6879]">NEW RUN</span></span></div><div class="flex items-center justify-between gap-3 border-t border-white/[0.08] px-4 py-4 lg:hidden"><div class="relative h-28 w-28 shrink-0 touch-none rounded-full border border-white/15 bg-white/[0.03]" aria-label="Movement joystick"><span class="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#c9a86a]/50 bg-[#c9a86a]/20"></span><span class="pointer-events-none absolute left-1/2 top-1/2 h-9 w-9 rounded-full bg-[#e6d7b4] shadow-[0_0_20px_rgba(201,168,106,0.5)]" style="transform:translate(calc(-50% + 0px), calc(-50% + 0px))"></span></div><div class="grid flex-1 grid-cols-3 gap-1.5"><button type="button" disabled="" class="flex flex-col items-center gap-0.5 rounded-lg border border-white/10 bg-white/[0.04] px-1 py-2 disabled:opacity-40"><span class="font-mono text-[10px] text-[#c9a86a]">Z</span><span class="w-full truncate text-center font-mono text-[8px] tracking-[0.06em] text-[#c9c2b1]">LOCKED</span></button><button type="button" disabled="" class="flex flex-col items-center gap-0.5 rounded-lg border border-white/10 bg-white/[0.04] px-1 py-2 disabled:opacity-40"><span class="font-mono text-[10px] text-[#c9a86a]">X</span><span class="w-full truncate text-center font-mono text-[8px] tracking-[0.06em] text-[#c9c2b1]">LOCKED</span></button><button type="button" disabled="" class="flex flex-col items-center gap-0.5 rounded-lg border border-white/10 bg-white/[0.04] px-1 py-2 disabled:opacity-40"><span class="font-mono text-[10px] text-[#c9a86a]">C</span><span class="w-full truncate text-center font-mono text-[8px] tracking-[0.06em] text-[#c9c2b1]">LOCKED</span></button><button type="button" disabled="" class="flex flex-col items-center gap-0.5 rounded-lg border border-white/10 bg-white/[0.04] px-1 py-2 disabled:opacity-40"><span class="font-mono text-[10px] text-[#c9a86a]">V</span><span class="w-full truncate text-center font-mono text-[8px] tracking-[0.06em] text-[#c9c2b1]">LOCKED</span></button><button type="button" class="rounded-lg border border-white/10 bg-white/[0.04] py-2 font-mono text-[9px] tracking-[0.1em] text-[#c9c2b1]">Q · RANGED</button><button type="button" class="rounded-lg border border-white/10 bg-white/[0.04] py-2 font-mono text-[9px] tracking-[0.1em] text-[#c9c2b1]">DASH</button></div></div></div><p class="px-1 font-mono text-[8px] leading-relaxed tracking-[0.16em] text-[#5f5a6b]">FRAGMENTS DROP FROM EVERY FOE · WALK OVER THEM TO COLLECT · BOSSES EVERY 10 ROOMS AWAKEN AN ELEMENT</p></section><aside class="flex flex-col gap-3"><div class="rounded-2xl border border-white/10 bg-white/[0.025] p-4"><div class="flex items-center gap-3"><div class="grid h-12 w-12 shrink-0 place-items-center rounded-full border" style="border-color:#7f7a8c;box-shadow:0 0 22px -4px #7f7a8c"><span class="h-2.5 w-2.5 rounded-full" style="background:#7f7a8c"></span></div><div class="min-w-0"><p class="font-mono text-[9px] tracking-[0.22em] text-[#7f7a8c]">CURRENT ELEMENT</p><p class="font-heading text-lg leading-tight tracking-[0.06em]" style="color:#7f7a8c">NONE</p><p class="font-mono text-[8px] tracking-[0.16em] text-[#7f7a8c]">NO ELEMENT · NO ABILITIES</p></div></div><div class="mt-4 flex items-end justify-between"><span class="font-mono text-[9px] tracking-[0.22em] text-[#7f7a8c]">VITALITY</span><span class="font-heading text-sm tabular-nums text-[#efe5cf]">100<span class="text-[#6d6879]"> / <!-- -->100</span></span></div><div class="mt-2 h-[3px] w-full overflow-hidden rounded-full bg-white/10"><div class="h-full rounded-full bg-gradient-to-r from-[#c9a86a] to-[#efe0bd] transition-[width] duration-200" style="width:100%"></div></div><div class="mt-4 grid grid-cols-2 gap-2"><div class="rounded-xl border border-white/[0.08] bg-black/20 px-3 py-2"><p class="font-mono text-[8px] tracking-[0.2em] text-[#7f7a8c]">FRAGMENTS</p><p class="font-heading text-base tabular-nums text-[#b78aff]">00</p></div><div class="rounded-xl border border-white/[0.08] bg-black/20 px-3 py-2"><p class="font-mono text-[8px] tracking-[0.2em] text-[#7f7a8c]">DEPTH</p><p class="font-heading text-base tabular-nums text-[#efe5cf]">01</p></div></div><div class="mt-4 border-t border-white/[0.08] pt-3"><div class="flex items-baseline justify-between"><p class="font-mono text-[9px] tracking-[0.22em] text-[#7f7a8c]">SYSTEM</p><span class="font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]">0<!-- -->/<!-- -->3<!-- --> SLOTS</span></div><div class="mt-2 space-y-1"><div class="flex items-center justify-between gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5"><span class="min-w-0 truncate font-mono text-[9px] tracking-[0.1em] text-[#4f4a5c]">EMPTY SLOT</span><span class="flex shrink-0 gap-1"><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span></span></div><div class="flex items-center justify-between gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5"><span class="min-w-0 truncate font-mono text-[9px] tracking-[0.1em] text-[#4f4a5c]">EMPTY SLOT</span><span class="flex shrink-0 gap-1"><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span></span></div><div class="flex items-center justify-between gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5"><span class="min-w-0 truncate font-mono text-[9px] tracking-[0.1em] text-[#4f4a5c]">EMPTY SLOT</span><span class="flex shrink-0 gap-1"><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span><span class="h-1.5 w-1.5 rounded-full bg-white/10"></span></span></div></div></div><div class="mt-4 border-t border-white/[0.08] pt-3"><div class="flex items-baseline justify-between"><p class="font-mono text-[9px] tracking-[0.22em] text-[#7f7a8c]">COLORWAY</p><span class="font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]">DEPTH 10</span></div><div class="mt-2 flex gap-1.5"><button type="button" aria-label="EMBER" title="Reach depth 10" disabled="" class="h-6 flex-1 rounded-md border transition cursor-not-allowed border-white/[0.06] opacity-30 " style="background:#e08a5a;box-shadow:none"></button><button type="button" aria-label="TIDE" title="Reach depth 10" disabled="" class="h-6 flex-1 rounded-md border transition cursor-not-allowed border-white/[0.06] opacity-30 " style="background:#5fa8d8;box-shadow:none"></button><button type="button" aria-label="VERDANT" title="Reach depth 10" disabled="" class="h-6 flex-1 rounded-md border transition cursor-not-allowed border-white/[0.06] opacity-30 " style="background:#79b47c;box-shadow:none"></button><button type="button" aria-label="VIOLET" title="Reach depth 10" disabled="" class="h-6 flex-1 rounded-md border transition cursor-not-allowed border-white/[0.06] opacity-30 " style="background:#a98be0;box-shadow:none"></button><button type="button" aria-label="GILT" title="Reach depth 10" disabled="" class="h-6 flex-1 rounded-md border transition cursor-not-allowed border-white/[0.06] opacity-30 " style="background:#c9a86a;box-shadow:none"></button></div><p class="mt-2 font-mono text-[8px] leading-relaxed tracking-[0.14em] text-[#5f5a6b]">REACH DEPTH 10 TO UNLOCK COLORWAYS</p></div><div class="mt-4 border-t border-white/[0.08] pt-3"><p class="font-mono text-[9px] tracking-[0.22em] text-[#7f7a8c]">FIELD NOTES</p><div class="mt-2 space-y-1.5"></div></div></div><div class="rounded-2xl border border-white/10 bg-white/[0.025] p-4"><div class="flex items-baseline justify-between"><p class="font-mono text-[9px] tracking-[0.22em] text-[#7f7a8c]">ELEMENTS</p><span class="font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]">UNLOCK / SWAP</span></div><div class="mt-2 grid grid-cols-2 gap-1.5"><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#f07846"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#f07846">FIRE</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">10</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#80c9e8"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#80c9e8">ICE</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">10</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#68a76c"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#68a76c">NATURE</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">15</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#4b9fe0"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#4b9fe0">WATER</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">15</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#f4d777"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#f4d777">LIGHT</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">20</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#a18bd3"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#a18bd3">DARK</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">20</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#8ed9c4"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#8ed9c4">WIND</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">25</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#9ec84e"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#9ec84e">POISON</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">30</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#f4cf54"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#f4cf54">ELECTRIC</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">40</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#e6c7d4"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#e6c7d4">SILK</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">45</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#61c9a2"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#61c9a2">CRYSTAL</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">50</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#aeb8c5"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#aeb8c5">METAL</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">55</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#b3a2f0"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#b3a2f0">SOUL</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">60</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#7c5fc4"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#7c5fc4">MYSTIC</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">60</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#cf7fd8"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#cf7fd8">TELEKINESIS</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">65</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#e8c98a"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#e8c98a">CREATION</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">70</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#d84d5d"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#d84d5d">BLOOD</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">75</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#f273b0"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#f273b0">RUBBER</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">75</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#55e6df"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#55e6df">DIGITAL</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">85</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#d9c9a8"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#d9c9a8">DUALITY</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">85</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#5d7ce8"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#5d7ce8">SPACE</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">90</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#b071f0"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#b071f0">GAS</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">90</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#f3e9c6"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#f3e9c6">ARCHANGEL</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">95</span></button><button type="button" disabled="" class="flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2 text-left transition border-white/[0.08] bg-white/[0.02] hover:border-white/20 opacity-40"><span class="flex min-w-0 items-center gap-1.5"><span class="h-1.5 w-1.5 shrink-0 rounded-full" style="background:#bda5e8"></span><span class="truncate font-heading text-[11px] tracking-[0.05em]" style="color:#bda5e8">TIME</span></span><span class="shrink-0 font-mono text-[8px] tracking-[0.08em] text-[#8b8598]">100</span></button></div><div class="mt-4 border-t border-white/[0.08] pt-3"><div class="flex items-baseline justify-between"><p class="font-mono text-[9px] tracking-[0.22em] text-[#7f7a8c]">ELEMENT MOVES</p><span class="font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]">BASE + AWAKENED</span></div><div class="mt-2 space-y-1.5"><div class="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5"><span class="grid h-5 w-5 shrink-0 place-items-center rounded border border-white/15 font-mono text-[9px] text-[#c9a86a]">Z</span><span class="min-w-0 flex-1 truncate font-mono text-[9px] tracking-[0.08em] text-[#5f5a6b]">ELEMENT MOVE 1</span><span class="shrink-0 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]">LOCKED</span></div><div class="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5"><span class="grid h-5 w-5 shrink-0 place-items-center rounded border border-white/15 font-mono text-[9px] text-[#c9a86a]">X</span><span class="min-w-0 flex-1 truncate font-mono text-[9px] tracking-[0.08em] text-[#5f5a6b]">ELEMENT MOVE 2</span><span class="shrink-0 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]">LOCKED</span></div><div class="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5"><span class="grid h-5 w-5 shrink-0 place-items-center rounded border border-white/15 font-mono text-[9px] text-[#c9a86a]">C</span><span class="min-w-0 flex-1 truncate font-mono text-[9px] tracking-[0.08em] text-[#5f5a6b]">ELEMENT MOVE 3</span><span class="shrink-0 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]">LOCKED</span></div><div class="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5"><span class="grid h-5 w-5 shrink-0 place-items-center rounded border border-white/15 font-mono text-[9px] text-[#c9a86a]">V</span><span class="min-w-0 flex-1 truncate font-mono text-[9px] tracking-[0.08em] text-[#5f5a6b]">ELEMENT MOVE 4</span><span class="shrink-0 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]">LOCKED</span></div></div><p class="mt-2 font-mono text-[8px] leading-relaxed tracking-[0.1em] text-[#6d6879]">COLLECT FRAGMENTS, THEN UNLOCK AN ELEMENT ABOVE.</p></div></div></aside></div></div><div class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#04050a]/85 p-4 backdrop-blur-sm"><div class="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0f1017] p-6 shadow-[0_40px_120px_-40px_rgba(0,0,0,1)]"><p class="font-mono text-[9px] tracking-[0.28em] text-[#c9a86a]">ELEMENTAL DUNGEON / 01</p><h2 class="mt-3 font-heading text-3xl leading-[1.05] tracking-[-0.02em] text-[#f0e9d8]">Claim your element.</h2><p class="mt-3 max-w-sm text-sm leading-relaxed text-[#9d97a8]">Fight through shifting rooms, gather fragments, unlock an element, and face its awakened boss.</p><div class="mt-6 grid gap-2 sm:grid-cols-2"><button type="button" class="group rounded-xl border border-[#c9a86a]/40 bg-[#c9a86a]/10 px-4 py-3 text-left transition hover:border-[#c9a86a]/80 hover:bg-[#c9a86a]/15"><span class="font-heading text-sm tracking-[0.06em] text-[#efe0bd]">COMPUTER</span><span class="mt-1 block font-mono text-[9px] leading-relaxed tracking-[0.08em] text-[#9d97a8]">WASD / ARROWS · Q RANGED · CLICK MELEE · SPACE DASH</span></button><button type="button" class="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left transition hover:border-white/25"><span class="font-heading text-sm tracking-[0.06em] text-[#efe0bd]">MOBILE</span><span class="mt-1 block font-mono text-[9px] leading-relaxed tracking-[0.08em] text-[#9d97a8]">JOYSTICK · Q BUTTON · TAP THE ARENA TO MELEE</span></button></div><p class="mt-5 font-mono text-[8px] leading-relaxed tracking-[0.14em] text-[#6d6879]">Z X C V CAST ELEMENT MOVES · R STARTS A NEW RUN · FRAGMENTS PERSIST BETWEEN RUNS</p></div></div></div><!--/$--><section aria-label="Notifications alt+T" tabindex="-1" aria-live="polite" aria-relevant="additions text" aria-atomic="false"></section><script type="module">
+if (window.self === window.top) {
+  let lastPath = "";
+  // The visitor's analytics_storage choice from window.__b44Consent; null until one is known.
+  let consentGranted = null;
+  function getPageNameFromPath(path) {
+    const segments = path.split("/").filter(Boolean);
+    return segments[0] || null;
+  }
+  // Same rules as @base44/sdk analytics. Read on every send: the server sets the meta.
+  function analyticsMode() {
+    const meta = document.querySelector('meta[name="base44-analytics"]');
+    return meta ? meta.getAttribute("content") : null;
+  }
+  function deniedBefore() {
+    try {
+      return window.localStorage.getItem("base44_analytics_denied") === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+  function mayTrack() {
+    const mode = analyticsMode();
+    if (mode === "off") return false;
+    if (mode === "consent") return consentGranted === true;
+    if (mode === "on") return consentGranted === null ? !deniedBefore() : consentGranted;
+    return true;
+  }
+  function trackPageView() {
+    if (!mayTrack()) return;
+    const path = window.location.pathname;
+    if (path === lastPath) return;
+    lastPath = path;
+    const pageName = getPageNameFromPath(path) || "home";
+    const appId = "6ae2d50fe100c3239af125e3";
+    if (!appId) return;
+    fetch(`/api/app-logs/${appId}/log-user-in-app/${pageName}`, {
+      method: "POST",
+    }).catch(() => {});
+  }
+  const originalPushState = history.pushState.bind(history);
+  history.pushState = function (...args) {
+    originalPushState(...args);
+    trackPageView();
+  };
+  const originalReplaceState = history.replaceState.bind(history);
+  history.replaceState = function (...args) {
+    originalReplaceState(...args);
+    trackPageView();
+  };
+  window.addEventListener("popstate", trackPageView);
+  // A module script runs after the head's classic scripts, so the listener exists by now.
+  // Without it, "consent" never sends and "on" relies on the saved Decline only.
+  try {
+    if (window.__b44Consent) {
+      window.__b44Consent.on(
+        "analytics_storage",
+        function () {
+          consentGranted = true;
+          trackPageView();
+        },
+        function () {
+          consentGranted = false;
+          // A later grant sends the page the visitor is on, even one they saw before.
+          lastPath = "";
+        }
+      );
+    }
+  } catch (e) {}
+  trackPageView();
+}
+</script><script data-tsr-stream-part="">(self.$R=self.$R||{})["tsr"]=[];self.$_TSR={h(){this.hydrated=!0,this.c()},e(){this.streamEnded=!0,this.c()},c(){this.hydrated&&this.streamEnded&&(delete self.$_TSR,delete self.$R.tsr)},p(e){this.initialized?e():this.buffer.push(e)},buffer:[]};$_TSR.router=($R=>$R[0]={manifest:$R[1]={routes:$R[2]={__root__:$R[3]={preloads:$R[4]=["/assets/index-Bpqcx_79.js"],scripts:$R[5]=[$R[6]={attrs:$R[7]={type:"module",async:!0,src:"/assets/index-Bpqcx_79.js"}}]},"/":$R[8]={preloads:$R[9]=["/assets/routes-B3kuRW8U.js"]}}},matches:$R[10]=[$R[11]={i:"__root__ ",u:1793949745858,s:"success",ssr:!0},$R[12]={i:"  ",u:1793949745858,s:"success",ssr:!0}],dehydratedData:$R[13]={query:$R[14]={stream:$R[15]=($R[16]=(stream) => new ReadableStream({ start(controller) {
+	stream.on({
+		next(value) {
+			try {
+				controller.enqueue(value);
+			} catch (_error) {}
+		},
+		throw(value) {
+			controller.error(value);
+		},
+		return() {
+			try {
+				controller.close();
+			} catch (_error) {}
+		}
+	});
+} }))($R[17]=($R[18]=() => {
+	const buffer = [];
+	const listeners = [];
+	let alive = true;
+	let success = false;
+	let count = 0;
+	const internal = {
+		flush(value, mode, x) {
+			for (x = 0; x < count; x++) {
+				const listener = listeners[x];
+				if (listener) listener[mode](value);
+			}
+		},
+		up(listener, x, z, current) {
+			for (x = 0, z = buffer.length; x < z; x++) {
+				current = buffer[x];
+				if (!alive && x === z - 1) listener[success ? "return" : "throw"](current);
+				else listener.next(current);
+			}
+		},
+		on(listener, temp = 0) {
+			let subscribed = alive;
+			if (alive) {
+				for (temp = 0; temp < count; temp++) if (!listeners[temp]) break;
+				if (temp === count) count++;
+				listeners[temp] = listener;
+			}
+			internal.up(listener);
+			return () => {
+				if (alive && subscribed) {
+					subscribed = false;
+					listeners[temp] = void 0;
+					while (count > 0 && !listeners[count - 1]) count--;
+					listeners.length = count;
+				}
+			};
+		}
+	};
+	return {
+		__SEROVAL_STREAM__: true,
+		on(listener) {
+			return internal.on(listener);
+		},
+		next(value) {
+			if (alive) {
+				buffer.push(value);
+				internal.flush(value, "next");
+			}
+		},
+		throw(value) {
+			if (alive) {
+				buffer.push(value);
+				internal.flush(value, "throw");
+				alive = false;
+				success = false;
+				listeners.length = 0;
+			}
+		},
+		return(value) {
+			if (alive) {
+				buffer.push(value);
+				internal.flush(value, "return");
+				alive = false;
+				success = true;
+				listeners.length = 0;
+			}
+		}
+	};
+})())}}})($R["tsr"]);{let s=document.currentScript,p;while((p=s.previousElementSibling)&&p.hasAttribute('data-tsr-stream-part'))p.remove();s.remove()}</script><script type="module" async="" src="/assets/index-Bpqcx_79.js"></script><script>document.currentScript.remove();/*$tsr-stream-boundary*/</script><script>($R=>$R[17].return(void 0))($R["tsr"]);$_TSR.e();document.currentScript.remove()</script></body></html>

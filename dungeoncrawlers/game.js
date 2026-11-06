@@ -2303,6 +2303,7 @@ document.getElementById('hyper-form').addEventListener('click', event => {
 document.querySelectorAll('[data-control-mode]').forEach(button => button.addEventListener('click', () => {
   controlMode = button.dataset.controlMode;
   controlsChosen = true;
+  document.getElementById('run-state').textContent = 'RUN IN PROGRESS';
   document.getElementById('controls-modal').classList.add('hidden');
   document.getElementById('mobile-controls').classList.toggle('active', controlMode === 'mobile');
   document.getElementById('canvas-hint').textContent = controlMode === 'mobile' ? 'JOYSTICK · Q BUTTON · TAP TO MELEE' : 'WASD / ARROWS TO MOVE · Q RANGED · CLICK MELEE';

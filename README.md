@@ -93,13 +93,11 @@ Launch: [`hyperfighters/index.html`](hyperfighters/index.html)
 
 ### Elemental Descent
 
-Descend through shifting rooms, defeat bosses to awaken elements, and collect
-fragments to unlock a 24-element roster. Save a three-element loadout, unlock
-colorways at depth 10, and customize each element with two attack-changing
-colorways of its own. Melee swings display their directional hit arc. Awakened
-boss elements are randomized; defeating one opens a matching Hyper trial.
-Defeat its boss for 50 fragments and the persistent HYPER-<ELEMENT> form, with
-four upgraded moves. Use keyboard or mobile controls to survive the run.
+Descend through shifting rooms, collect fragments, and unlock the same 24-element
+roster, moves, awakenings, rooms, and upgrades as the current Base44 version,
+plus the non-awakenable Math element with its own four moves. Progress is saved
+in browser storage. The local page uses the published app's compiled assets so
+its combat behavior and controls stay in sync with that build.
 
 Launch: [`dungeoncrawlers/index.html`](dungeoncrawlers/index.html)
 
