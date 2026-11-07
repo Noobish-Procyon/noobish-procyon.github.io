@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111b2d">
-  <meta name="description" content="Choose an element, evolve your shape, and battle in ShapeFighters.">
-  <title>ShapeFighters</title>
+  <meta name="theme-color" content="#10111d">
+  <meta name="description" content="Choose Light or Void, train your fighter, unlock abilities, and survive the final war in ShapeFighters.">
+  <title>ShapeFighters — The Final War</title>
   <link rel="stylesheet" href="style.css">
   <script src="game.js" defer></script>
 </head>
@@ -13,160 +13,160 @@
   <script src="../admin-tools.js"></script>
   <script>
     window.NoobishAdmin.registerTool({
-      id: "unlock-shapefighters-content",
-      title: "Unlock fighter content",
-      description: "Grants all shapes, elements, auras, and both evolutions for every shape.",
-      fields: [{ name: "coins", label: "Coins", min: 0, max: 1000000000, step: 1, value: 0 }],
-      apply({ coins }) {
-        if (!Number.isInteger(coins) || coins < 0) {
-          throw new RangeError("Coins must be a non-negative whole number.");
-        }
-        state.coins = coins;
-        state.ownedShapes = ["circle", "square", "triangle", "star"];
-        state.ownedElements = ["storm", "fire", "ice", "water"];
-        state.ownedAuras = auraData.map((aura) => aura.id);
-        state.evolutions = Object.fromEntries(
-          ["circle", "square", "triangle", "star"].map((shape) => [shape, 2])
-        );
-        renderAll();
-        saveState();
-        return "All ShapeFighters content unlocked and saved.";
-      }
+      id: "unlock-shapefighters-campaign",
+      title: "Unlock campaign content",
+      description: "Maxes out your fighter, unlocks every ability, and completes the final war.",
+      fields: [],
+      apply() { return window.unlockShapefightersCampaign(); }
     });
   </script>
-  <main class="app">
+  <main class="app" id="app">
     <header class="masthead">
       <a class="brand" href="../index.html" aria-label="Noobish Procyon Games home">
         <span class="brand-mark" aria-hidden="true">✦</span>
-        <span>SHAPE<span class="brand-accent">FIGHTERS</span><small>ELEMENTAL LEAGUE</small></span>
+        <span>SHAPE<span class="brand-accent">FIGHTERS</span><small>THE FINAL WAR</small></span>
       </a>
-      <div class="wallet" aria-label="Coin balance"><span aria-hidden="true">◈</span><strong id="coins">0</strong><small>COINS</small></div>
-    </header>
-
-    <section class="hero">
-      <div>
-        <p class="eyebrow">PICK YOUR SHAPE. MASTER YOUR ELEMENT.</p>
-        <h1>Every shape has<br><span>a fighting spirit.</span></h1>
-        <p class="hero-copy">Build your fighter, learn the elemental matchups, and climb the league one turn at a time.</p>
+      <div class="top-status">
+        <span class="faction-badge" id="faction-badge" hidden></span>
+        <span class="level-badge" id="level-badge" hidden>LEVEL 1</span>
       </div>
-      <div class="hero-art" aria-hidden="true"><i class="hero-orbit"></i><i class="hero-shape"></i><i class="hero-spark spark-one">✦</i><i class="hero-spark spark-two">✧</i></div>
-    </section>
-
-    <nav class="main-nav" aria-label="Main menu">
-      <button class="nav-button active" type="button" data-screen="menu">00 <span>Menu</span></button>
-      <button class="nav-button" type="button" data-screen="battle">01 <span>Arena</span></button>
-      <button class="nav-button" type="button" data-screen="shapes">02 <span>My shape</span></button>
-      <button class="nav-button" type="button" data-screen="auras">03 <span>Aura shop</span></button>
-      <div class="record"><span id="record">0 W</span><i aria-hidden="true">·</i><span id="losses">0 L</span></div>
-    </nav>
+    </header>
 
     <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
 
-    <section class="screen active" id="screen-menu" aria-labelledby="menu-title">
-      <div class="section-heading">
-        <div><p class="eyebrow">LEAGUE HUB</p><h2 id="menu-title">Your fighter is ready</h2></div>
-        <span class="pill" id="menu-record">0 W · 0 L</span>
-      </div>
-      <div class="menu-panel">
-        <div class="menu-fighter">
-          <div class="shape-emblem" id="menu-emblem" aria-hidden="true"><span></span></div>
-          <div><h3 id="menu-fighter-name">Storm Circle</h3><p id="menu-fighter-element">Storm · BASE</p></div>
+    <section class="screen" id="screen-intro" aria-labelledby="intro-title">
+      <div class="cinematic">
+        <div class="cinematic-sky" aria-hidden="true">
+          <span class="sun-disc"></span><span class="void-disc"></span>
+          <span class="duelist duelist-light"><i></i><b></b></span>
+          <span class="duelist duelist-void"><i></i><b></b></span>
+          <span class="clash-flare"></span>
         </div>
-        <div class="stat-grid menu-stats" id="menu-stats"></div>
-        <div class="menu-actions">
-          <button class="primary-button" id="enter-arena" type="button">Enter the arena <span aria-hidden="true">→</span></button>
-          <button class="menu-link" type="button" data-screen="shapes">My shape</button>
-          <button class="menu-link" type="button" data-screen="auras">Aura shop</button>
-        </div>
-      </div>
-      <p class="menu-feedback" id="menu-feedback" role="status" aria-live="polite"></p>
-    </section>
-
-    <section class="screen" id="screen-battle" aria-labelledby="battle-title" hidden>
-      <div class="section-heading">
-        <div><p class="eyebrow">THE ARENA</p><h2 id="battle-title">Ready for a challenge?</h2></div>
-        <span class="pill" id="battle-state">YOUR TURN</span>
-      </div>
-      <div class="arena">
-        <article class="fighter-card player-card" id="player-card">
-          <div class="fighter-heading"><span>YOUR FIGHTER</span><span class="fighter-level" id="player-stage">BASE</span></div>
-          <div class="health-label"><span>HP</span><span id="player-hp-label">100 / 100</span></div>
-          <div class="health-track"><i id="player-hp-bar"></i></div>
-          <div class="fighter-profile">
-            <div><h3 id="player-name">Circle</h3><p id="player-element">Storm · Circle</p></div>
-            <div class="shape-emblem" id="player-emblem" aria-hidden="true"><span></span></div>
+        <div class="cinematic-copy">
+          <p class="eyebrow">THE OLD WAR / PROLOGUE</p>
+          <p class="scene-count" id="scene-count">SCENE 01 / 03</p>
+          <h1 id="intro-title">When the sky<br><span>split in two.</span></h1>
+          <p class="story-line" id="story-line" aria-live="polite"></p>
+          <div class="cinematic-actions">
+            <button class="primary-button" id="next-scene" type="button">Continue <span aria-hidden="true">→</span></button>
+            <button class="quiet-button" id="skip-intro" type="button">Skip prologue</button>
           </div>
-          <div class="moves" id="moves" aria-label="Choose an attack" hidden></div>
-          <p class="aura-equipped" id="equipped-aura">No aura equipped</p>
-        </article>
-        <div class="versus" aria-hidden="true">VS</div>
-        <article class="fighter-card rival-card" id="rival-card">
-          <div class="fighter-heading"><span>CHALLENGER</span><span class="fighter-level" id="rival-stage">—</span></div>
-          <div class="health-label"><span>HP</span><span id="rival-hp-label">—</span></div>
-          <div class="health-track rival-health"><i id="rival-hp-bar"></i></div>
-          <div class="fighter-profile">
-            <div><h3 id="rival-name">No rival yet</h3><p id="rival-element">Start a battle to meet your opponent.</p></div>
-            <div class="shape-emblem" id="rival-emblem" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="cinematic-caption"><span>THE ASCENDED LIGHT</span><i aria-hidden="true">×</i><span>THE VOID MASTER</span></div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-faction" aria-labelledby="faction-title" hidden>
+      <div class="page-heading">
+        <p class="eyebrow">THE WORLD NEEDS A CHAMPION</p>
+        <h1 id="faction-title">Pick a side.<br><span>Shape what comes next.</span></h1>
+        <p class="intro-copy">The old guardians are gone. Choose the power you will carry into the war.</p>
+      </div>
+      <div class="faction-grid">
+        <button class="faction-card light-card" type="button" data-faction="light">
+          <span class="faction-symbol" aria-hidden="true">✧</span>
+          <span class="eyebrow">THE DAWNBORN</span>
+          <strong>Light</strong>
+          <span class="faction-description">Stand with the last guardians. Strike with radiant power, restore your strength, and bring back the dawn.</span>
+          <span class="faction-choose">CHOOSE LIGHT <b aria-hidden="true">→</b></span>
+        </button>
+        <button class="faction-card void-card" type="button" data-faction="void">
+          <span class="faction-symbol" aria-hidden="true">◉</span>
+          <span class="eyebrow">THE UNBOUND</span>
+          <strong>Void</strong>
+          <span class="faction-description">Embrace the starless dark. Bend the void to your will, drain your foes, and write a new order.</span>
+          <span class="faction-choose">CHOOSE VOID <b aria-hidden="true">→</b></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-hub" aria-labelledby="hub-title" hidden>
+      <div class="hub-hero">
+        <div>
+          <p class="eyebrow" id="hub-eyebrow">YOUR FACTION / THE DAWNBORN</p>
+          <h1 id="hub-title">The calm<br><span>before the storm.</span></h1>
+          <p class="intro-copy" id="hub-copy">Every battle begins with the fighter you become here.</p>
+        </div>
+        <div class="hub-orb" aria-hidden="true"><span></span></div>
+      </div>
+      <div class="progress-panel">
+        <div class="progress-heading"><div><p class="eyebrow">YOUR TRAINING</p><h2 id="fighter-level">Level 1 fighter</h2></div><span class="level-count" id="xp-label">0 / 60 XP</span></div>
+        <div class="xp-track" role="progressbar" id="xp-progress" aria-label="Experience to next level" aria-valuemin="0" aria-valuemax="60" aria-valuenow="0"><span id="xp-bar"></span></div>
+        <div class="abilities-heading"><div><p class="eyebrow">YOUR ABILITIES</p><h3>Power is earned.</h3></div><span class="muted-copy">Train to unlock the next move.</span></div>
+        <div class="ability-list" id="hub-abilities"></div>
+      </div>
+      <div class="hub-actions">
+        <button class="action-card train-action" type="button" data-screen="training"><span class="action-icon" aria-hidden="true">✳</span><span><strong>Train</strong><small>Take on a training dummy. Grow stronger.</small></span><b aria-hidden="true">→</b></button>
+        <button class="action-card war-action" type="button" id="open-war"><span class="action-icon" aria-hidden="true">⚔</span><span><strong id="war-action-title">Prepare for war</strong><small id="war-action-copy">Reach level 3 to answer the call.</small></span><b aria-hidden="true">→</b></button>
+      </div>
+      <p class="hub-log" id="hub-log" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="screen" id="screen-training" aria-labelledby="training-title" hidden>
+      <div class="page-heading compact-heading">
+        <p class="eyebrow">THE LAST SAFE PLACE</p>
+        <h1 id="training-title">Make every strike<br><span>count.</span></h1>
+        <p class="intro-copy">Choose a dummy to train against. Each hit earns experience and brings a new ability closer.</p>
+      </div>
+      <div class="training-layout">
+        <div class="dummy-stage" id="dummy-stage" data-faction="light">
+          <div class="training-sun" aria-hidden="true"></div>
+          <div class="dummy-shape" id="dummy-shape" aria-hidden="true"><span></span><i></i></div>
+          <p class="dummy-impact" id="dummy-impact" aria-hidden="true">POW!</p>
+          <div class="dummy-caption"><span class="eyebrow" id="dummy-type-label">TRAINING TARGET</span><strong id="dummy-name">Practice Dummy</strong><small id="dummy-description">A simple target for steady progress.</small></div>
+        </div>
+        <div class="training-controls">
+          <p class="eyebrow">PICK A TRAINING PARTNER</p>
+          <div class="dummy-options">
+            <button class="dummy-option selected" type="button" data-dummy="straw" aria-pressed="true"><span class="dummy-icon straw-icon" aria-hidden="true">♟</span><span><strong>Straw Dummy</strong><small>Steady practice · +12 XP</small></span></button>
+            <button class="dummy-option" type="button" data-dummy="stone" aria-pressed="false"><span class="dummy-icon stone-icon" aria-hidden="true">⬡</span><span><strong>Stone Golem</strong><small>Hard hits · +20 XP</small></span></button>
+            <button class="dummy-option" type="button" data-dummy="rift" aria-pressed="false"><span class="dummy-icon rift-icon" aria-hidden="true">◈</span><span><strong>Rift Echo</strong><small>Dangerous drill · +28 XP</small></span></button>
           </div>
-          <div class="rival-quote" id="rival-quote">Your next challenger is waiting in the arena.</div>
-        </article>
-      </div>
-
-      <div class="battle-controls">
-        <div class="battle-copy"><p class="eyebrow">YOUR MOVE</p><p id="battle-prompt">Start a match to choose an attack.</p></div>
-        <button class="primary-button" id="start-battle" type="button">Find an opponent <span aria-hidden="true">→</span></button>
-      </div>
-      <div class="battle-log" id="battle-log" aria-live="polite"><span class="log-marker" aria-hidden="true">✦</span><p>Choose your shape and element, then jump into the arena. Win battles to earn coins for auras.</p></div>
-      <p class="matchup-note">ELEMENTAL EDGE <span>Storm &gt; Water &gt; Fire &gt; Ice &gt; Storm</span> · Advantage deals 1.5× damage; disadvantage deals 0.75×.</p>
-    </section>
-
-    <section class="screen" id="screen-shapes" aria-labelledby="shapes-title" hidden>
-      <div class="section-heading">
-        <div><p class="eyebrow">BUILD YOUR FIGHTER</p><h2 id="shapes-title">Choose your shape</h2></div>
-        <span class="pill" id="wins-until-evolution">0 WINS</span>
-      </div>
-      <p class="section-copy">Pick one free shape and element to start. Win arena battles to earn coins and unlock the rest. Shapes cost 100 coins; elements cost 75.</p>
-      <div class="starter-banner" id="starter-banner">
-        <div><strong>Your first fighter is free.</strong><span>Choose any shape and element below. You can unlock more with coins after you start battling.</span></div>
-        <button class="primary-button" id="lock-starter" type="button">Lock in Circle of Storm <span aria-hidden="true">→</span></button>
-      </div>
-      <div class="shape-options" id="shape-options"></div>
-      <div class="loadout">
-        <div class="element-panel">
-          <p class="eyebrow">CHOOSE AN ELEMENT</p>
-          <h3 id="element-heading">Circle of Storm</h3>
-          <div class="element-options" id="element-options"></div>
-          <p class="element-hint" id="element-hint"></p>
-        </div>
-        <div class="evolution-panel" id="evolution-panel">
-          <p class="eyebrow">EVOLUTION PATH</p>
-          <h3 id="evolution-heading">Circle evolution</h3>
-          <div class="evolution-list" id="evolution-list"></div>
+          <div class="training-ready"><span><span class="ready-dot"></span> READY TO TRAIN</span><span id="training-level">LEVEL 1</span></div>
+          <button class="primary-button train-button" id="train-hit" type="button">Strike the dummy <span aria-hidden="true">→</span></button>
+          <p class="training-feedback" id="training-feedback" role="status" aria-live="polite">Pick your target, then land a hit.</p>
         </div>
       </div>
-      <p class="loadout-feedback" id="loadout-feedback" role="status" aria-live="polite"></p>
-      <div class="base-stats-panel" id="base-stats-panel"><p class="eyebrow">SHAPE STATS · BEFORE AURA</p><div class="stat-grid" id="shape-stats"></div></div>
+      <button class="back-button" type="button" data-screen="hub">← Return to sanctuary</button>
     </section>
 
-    <section class="screen" id="screen-auras" aria-labelledby="auras-title" hidden>
-      <div class="section-heading">
-        <div><p class="eyebrow">SPEND YOUR BATTLE COINS</p><h2 id="auras-title">Aura shop</h2></div>
-        <span class="pill"><span id="shop-coins">0</span> COINS</span>
+    <section class="screen" id="screen-war" aria-labelledby="war-title" hidden>
+      <div class="war-topline"><span class="war-live"><i></i> THE FINAL WAR</span><span class="war-step" id="war-step">BATTLE 1 / 3</span></div>
+      <div class="war-heading"><p class="eyebrow" id="war-eyebrow">THE VOID LEGION IS HERE</p><h1 id="war-title">No turning<br><span>back now.</span></h1><p class="intro-copy" id="war-copy">You answered the call. Stand your ground.</p></div>
+      <div class="combat-arena" id="combat-arena" data-faction="light">
+        <div class="combat-fighter player-fighter">
+          <span class="fighter-tag" id="player-tag">YOUR SIDE</span>
+          <div class="combat-emblem player-emblem" id="player-emblem" aria-hidden="true"><span></span></div>
+          <strong id="player-combat-name">Dawnborn Fighter</strong>
+          <div class="combat-health"><span id="player-health-label">100 / 100 HP</span><i><b id="player-health-bar"></b></i></div>
+        </div>
+        <div class="combat-versus">VS</div>
+        <div class="combat-fighter enemy-fighter">
+          <span class="fighter-tag">THE ENEMY</span>
+          <div class="combat-emblem enemy-emblem" id="enemy-emblem" aria-hidden="true"><span></span></div>
+          <strong id="enemy-name">Void Scout</strong>
+          <div class="combat-health"><span id="enemy-health-label">70 / 70 HP</span><i><b id="enemy-health-bar"></b></i></div>
+        </div>
       </div>
-      <p class="section-copy">Auras add a permanent stat bonus to your fighter while equipped. Own multiple auras, but equip one at a time between fights.</p>
-      <div class="aura-grid" id="aura-grid"></div>
-      <div class="aura-footnote"><span aria-hidden="true">✧</span><p><strong>Earn coins in the arena.</strong> Victories award 25 coins; even a defeat earns 8 for showing up.</p></div>
+      <div class="combat-controls">
+        <div class="combat-prompt"><p class="eyebrow" id="combat-eyebrow">CHOOSE YOUR ATTACK</p><p id="combat-message" role="status" aria-live="polite">The enemy closes in. Make your move.</p></div>
+        <div class="combat-abilities" id="combat-abilities" aria-label="Choose a combat ability"></div>
+        <button class="primary-button start-war-button" id="start-war" type="button">Enter the war <span aria-hidden="true">→</span></button>
+        <button class="primary-button retry-war-button" id="retry-war" type="button" hidden>Fight again <span aria-hidden="true">→</span></button>
+        <button class="quiet-button return-hub-button" id="return-hub" type="button" hidden>Return to sanctuary</button>
+      </div>
+      <p class="war-log" id="war-log" aria-live="polite">Every ability you unlock will matter here.</p>
+      <div class="war-bottom"><span>YOUR SIDE: <strong id="war-faction-name">LIGHT</strong></span><span id="war-reminder">When the war begins, the only way forward is to fight.</span></div>
     </section>
 
-    <footer><span>SHAPE FIGHTERS / ELEMENTAL LEAGUE</span><a href="../index.html">← BACK TO GAMES</a><button id="reset-save" type="button">RESET SAVE</button></footer>
+    <footer><span>SHAPEFIGHTERS / THE FINAL WAR</span><a href="../index.html">← BACK TO GAMES</a><button id="reset-save" type="button">RESET SAVE</button></footer>
   </main>
-
   <dialog id="reset-dialog" aria-labelledby="reset-title">
     <form method="dialog">
-      <p class="eyebrow">START FRESH?</p>
-      <h2 id="reset-title">Reset your league save?</h2>
-      <p>This removes your coins, auras, wins, and shape evolutions from this browser.</p>
-      <div class="dialog-actions"><button class="secondary-button" value="cancel">Keep my save</button><button class="danger-button" id="confirm-reset" value="reset">Reset progress</button></div>
+      <p class="eyebrow">START OVER?</p>
+      <h2 id="reset-title">Reset your campaign?</h2>
+      <p>This clears your faction, training, unlocked abilities, and war progress from this browser.</p>
+      <div class="dialog-actions"><button class="secondary-button" value="cancel">Keep my save</button><button class="danger-button" id="confirm-reset" value="reset">Reset campaign</button></div>
     </form>
   </dialog>
 </body>

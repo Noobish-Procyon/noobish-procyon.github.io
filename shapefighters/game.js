@@ -1,121 +1,116 @@
 "use strict";
 
-const SAVE_KEY = "noobish-shapefighters-save-v1";
-const shapeData = {
-  circle: { name: "Circle", stats: { strength: 100, hp: 100, magic: 100, defense: 100 }, color: "#a99bff" },
-  square: { name: "Square", stats: { strength: 100, hp: 125, magic: 75, defense: 150 }, color: "#ffad74" },
-  triangle: { name: "Triangle", stats: { strength: 125, hp: 100, magic: 150, defense: 100 }, color: "#6bd4c4" },
-  star: { name: "Star", stats: { strength: 125, hp: 125, magic: 100, defense: 100 }, color: "#f1d26e" }
-};
-const elementData = {
-  storm: { name: "Storm", beats: "water", weakTo: "ice", color: "#a99bff", hint: "Storm strikes hardest against Water." },
-  fire: { name: "Fire", beats: "ice", weakTo: "water", color: "#ff936d", hint: "Fire burns brightest against Ice." },
-  ice: { name: "Ice", beats: "storm", weakTo: "fire", color: "#93e4f5", hint: "Ice freezes Storm in its tracks." },
-  water: { name: "Water", beats: "fire", weakTo: "storm", color: "#65c2ef", hint: "Water puts out Fire." }
-};
-const spells = {
-  storm: [
-    { name: "Spark Jolt", power: 22, kind: "magic" },
-    { name: "Thunderclap", power: 34, kind: "magic" },
-    { name: "Tempest Core", power: 48, kind: "magic" },
-    { name: "Charged Slam", power: 28, kind: "physical" }
+const SAVE_KEY = "noobish-shapefighters-war-save-v1";
+const levelCap = 5;
+const shapeNames = ["circle", "square", "triangle", "star"];
+const factionNames = { light: "Light", void: "Void" };
+const abilityData = {
+  light: [
+    { name: "Dawnstrike", level: 1, power: 26, description: "A fast, focused blade of light." },
+    { name: "Sunflare", level: 2, power: 36, description: "A burst of scorching radiance." },
+    { name: "Radiant Nova", level: 3, power: 43, heal: 12, description: "Blast your foe. Restore 12 HP." },
+    { name: "Phoenix Guard", level: 4, power: 45, heal: 20, description: "Strike and recover 20 HP." },
+    { name: "Celestial Break", level: 5, power: 62, description: "Unleash the full force of the dawn." }
   ],
-  fire: [
-    { name: "Ember Shot", power: 22, kind: "magic" },
-    { name: "Flare Burst", power: 34, kind: "magic" },
-    { name: "Inferno Wave", power: 48, kind: "magic" },
-    { name: "Blazing Bash", power: 28, kind: "physical" }
-  ],
-  ice: [
-    { name: "Frost Shard", power: 22, kind: "magic" },
-    { name: "Glacier Crash", power: 34, kind: "magic" },
-    { name: "Whiteout", power: 48, kind: "magic" },
-    { name: "Frozen Strike", power: 28, kind: "physical" }
-  ],
-  water: [
-    { name: "Water Dart", power: 22, kind: "magic" },
-    { name: "Tidal Surge", power: 34, kind: "magic" },
-    { name: "Maelstrom", power: 48, kind: "magic" },
-    { name: "Riptide Rush", power: 28, kind: "physical" }
+  void: [
+    { name: "Umbral Bolt", level: 1, power: 26, description: "A quick shot of starless energy." },
+    { name: "Nightfall", level: 2, power: 36, description: "Smother your foe in living shadow." },
+    { name: "Void Rend", level: 3, power: 43, heal: 12, description: "Tear through your foe. Drain 12 HP." },
+    { name: "Eclipse Veil", level: 4, power: 45, heal: 20, description: "Strike from the dark. Drain 20 HP." },
+    { name: "Oblivion", level: 5, power: 62, description: "Let the endless dark consume everything." }
   ]
 };
-const auraData = [
-  { id: "ember", name: "Ember Aura", stat: "strength", bonus: 15, cost: 45, color: "#ff936d", icon: "✹", description: "+15 Strength · heavier physical hits." },
-  { id: "tide", name: "Tide Aura", stat: "hp", bonus: 20, cost: 55, color: "#65c2ef", icon: "≈", description: "+20 HP · more room to stay in the fight." },
-  { id: "bastion", name: "Bastion Aura", stat: "defense", bonus: 15, cost: 60, color: "#b6ea78", icon: "⬡", description: "+15 Defense · take less damage." },
-  { id: "arcane", name: "Arcane Aura", stat: "magic", bonus: 15, cost: 65, color: "#b6aaff", icon: "✦", description: "+15 Magic · more powerful spells." }
+const enemies = {
+  light: [
+    { name: "Void Scout", shape: "triangle", hp: 72, power: 13 },
+    { name: "Rift Warden", shape: "square", hp: 100, power: 17 },
+    { name: "Void Master", shape: "star", hp: 132, power: 21 }
+  ],
+  void: [
+    { name: "Dawn Sentinel", shape: "circle", hp: 72, power: 13 },
+    { name: "Sunblade Knight", shape: "triangle", hp: 100, power: 17 },
+    { name: "Ascended Light", shape: "star", hp: 132, power: 21 }
+  ]
+};
+const dummyData = {
+  straw: { name: "Practice Dummy", label: "TRAINING TARGET", description: "A simple target for steady progress.", xp: 12 },
+  stone: { name: "Stone Golem", label: "HEAVY TARGET", description: "A sturdy opponent. Strong hits earn more.", xp: 20 },
+  rift: { name: "Rift Echo", label: "RIFT TARGET", description: "A dangerous drill. High risk, high reward.", xp: 28 }
+};
+const openingScenes = [
+  "At the edge of the last dawn, the Ascended Light stepped forward to face the one who had swallowed the stars.",
+  "The Void Master answered with a wave of living night. Light and shadow collided—and the old world broke between them.",
+  "Their battle vanished into legend. Now the rifts are opening again. Before the final war, you must choose who you will become."
 ];
-const shapeCost = 100;
-const elementCost = 75;
-const statLabels = { strength: "STR", hp: "HP", magic: "MAGIC", defense: "DEF" };
-const shapeKeys = Object.keys(shapeData);
-const elementKeys = Object.keys(elementData);
-const defaultState = () => ({
-  shape: "circle",
-  element: "storm",
-  started: false,
-  coins: 0,
-  wins: 0,
-  losses: 0,
-  evolutions: { circle: 0, square: 0, triangle: 0, star: 0 },
-  ownedShapes: [],
-  ownedElements: [],
-  ownedAuras: [],
-  equippedAura: null
-});
 
 const notice = document.getElementById("notice");
+const freshState = () => ({
+  introSeen: false,
+  faction: null,
+  level: 1,
+  xp: 0,
+  dummy: "straw",
+  warAccess: false,
+  warStarted: false,
+  warComplete: false,
+  warFailed: false,
+  warWave: 0,
+  warHp: 0,
+  warEnemyHp: 0,
+  warTurn: "player"
+});
 
 function loadState() {
   let saved;
   try {
     saved = localStorage.getItem(SAVE_KEY);
   } catch (error) {
-    showNotice(`Your progress could not be read from this browser: ${error.message}`);
-    return defaultState();
+    showNotice(`Your campaign could not be read from this browser: ${error.message}`);
+    return freshState();
   }
-  if (saved === null) return defaultState();
+  if (saved === null) return freshState();
   try {
     const parsed = JSON.parse(saved);
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new SyntaxError("Invalid save data");
-    const fresh = defaultState();
-    const ownedAuras = Array.isArray(parsed.ownedAuras) ? [...new Set(parsed.ownedAuras.filter(id => auraData.some(aura => aura.id === id)))] : [];
-    const started = typeof parsed.started === "boolean" ? parsed.started : true;
-    const ownedShapes = Array.isArray(parsed.ownedShapes) ? [...new Set(parsed.ownedShapes.filter(key => shapeKeys.includes(key)))] : [];
-    const ownedElements = Array.isArray(parsed.ownedElements) ? [...new Set(parsed.ownedElements.filter(key => elementKeys.includes(key)))] : [];
-    if (started) {
-      if (!ownedShapes.includes(parsed.shape)) ownedShapes.push(shapeKeys.includes(parsed.shape) ? parsed.shape : fresh.shape);
-      if (!ownedElements.includes(parsed.element)) ownedElements.push(elementKeys.includes(parsed.element) ? parsed.element : fresh.element);
-    }
+    const fresh = freshState();
+    const faction = ["light", "void"].includes(parsed.faction) ? parsed.faction : null;
+    const warStarted = Boolean(parsed.warStarted);
+    const warComplete = Boolean(parsed.warComplete);
     return {
       ...fresh,
-      shape: shapeKeys.includes(parsed.shape) ? parsed.shape : fresh.shape,
-      element: elementKeys.includes(parsed.element) ? parsed.element : fresh.element,
-      started,
-      coins: Number.isSafeInteger(parsed.coins) && parsed.coins >= 0 ? parsed.coins : 0,
-      wins: Number.isSafeInteger(parsed.wins) && parsed.wins >= 0 ? parsed.wins : 0,
-      losses: Number.isSafeInteger(parsed.losses) && parsed.losses >= 0 ? parsed.losses : 0,
-      evolutions: Object.fromEntries(shapeKeys.map(key => [key, Number.isInteger(parsed.evolutions?.[key]) ? Math.max(0, Math.min(2, parsed.evolutions[key])) : 0])),
-      ownedShapes,
-      ownedElements,
-      ownedAuras,
-      equippedAura: ownedAuras.includes(parsed.equippedAura) ? parsed.equippedAura : null
+      introSeen: Boolean(parsed.introSeen),
+      faction,
+      level: Number.isInteger(parsed.level) ? Math.max(1, Math.min(levelCap, parsed.level)) : 1,
+      xp: Number.isInteger(parsed.xp) ? Math.max(0, Math.min(100000, parsed.xp)) : 0,
+      dummy: Object.hasOwn(dummyData, parsed.dummy) ? parsed.dummy : fresh.dummy,
+      warAccess: Boolean(parsed.warAccess) || warStarted || warComplete,
+      warStarted: warStarted && !warComplete,
+      warComplete,
+      warFailed: Boolean(parsed.warFailed) && !warStarted && !warComplete,
+      warWave: Number.isInteger(parsed.warWave) ? Math.max(0, Math.min(2, parsed.warWave)) : 0,
+      warHp: Number.isInteger(parsed.warHp) ? Math.max(0, parsed.warHp) : 0,
+      warEnemyHp: Number.isInteger(parsed.warEnemyHp) ? Math.max(0, parsed.warEnemyHp) : 0,
+      warTurn: parsed.warTurn === "enemy" ? "enemy" : "player"
     };
   } catch (error) {
     if (error instanceof SyntaxError) {
-      showNotice("Your saved game could not be read. A fresh ShapeFighters save has started.");
-      return defaultState();
+      showNotice("Your campaign save could not be read. A new campaign has started.");
+      return freshState();
     }
     throw error;
   }
 }
 
 let state = loadState();
-let battle = null;
+let openingScene = 0;
+let enemyTurnTimer = null;
+let noticeTimer = null;
 
 function showNotice(message) {
   notice.textContent = message;
   notice.hidden = false;
+  window.clearTimeout(noticeTimer);
+  noticeTimer = window.setTimeout(() => { notice.hidden = true; }, 6000);
 }
 
 function saveState() {
@@ -123,552 +118,425 @@ function saveState() {
     localStorage.setItem(SAVE_KEY, JSON.stringify(state));
     notice.hidden = true;
   } catch (error) {
-    showNotice(`Your progress could not be saved in this browser: ${error.message}`);
+    showNotice(`Your campaign could not be saved in this browser: ${error.message}`);
   }
 }
 
-function currentAura() {
-  return auraData.find(aura => aura.id === state.equippedAura) ?? null;
+function xpForNextLevel(level = state.level) {
+  return level * 60;
 }
 
-function statsFor(shape, stage, includeAura = true) {
-  const base = shapeData[shape].stats;
-  const stats = Object.fromEntries(Object.entries(base).map(([key, value]) => [key, value + stage * 25]));
-  const aura = includeAura && shape === state.shape ? currentAura() : null;
-  if (aura) stats[aura.stat] += aura.bonus;
-  return stats;
+function awardExperience(amount) {
+  if (state.level >= levelCap) return [];
+  state.xp += amount;
+  const unlocked = [];
+  while (state.level < levelCap && state.xp >= xpForNextLevel()) {
+    state.xp -= xpForNextLevel();
+    state.level += 1;
+    unlocked.push(state.level);
+  }
+  if (state.level >= levelCap) state.xp = 0;
+  return unlocked;
 }
 
-function playerStage(shape = state.shape) {
-  return state.evolutions[shape];
+function unlockedAbilities(faction = state.faction) {
+  return faction ? abilityData[faction].filter(ability => ability.level <= state.level) : [];
 }
 
-function renderStats(container, stats) {
-  container.replaceChildren(...Object.entries(statLabels).map(([key, label]) => {
-    const chip = document.createElement("div");
-    chip.className = "stat-chip";
-    const value = document.createElement("strong");
-    value.textContent = String(stats[key]);
-    const name = document.createElement("small");
-    name.textContent = label;
-    chip.append(value, name);
-    return chip;
-  }));
-}
-
-function setShapeEmblem(element, shape, color) {
-  element.dataset.shape = shape;
-  element.style.setProperty("--shape-color", color);
-}
-
-function fighterName(shape, element, stage) {
-  const prefix = ["", "Evolved ", "Ascended "][stage];
-  return `${prefix}${elementData[element].name} ${shapeData[shape].name}`;
+function showScreen(name) {
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.hidden = screen.id !== `screen-${name}`;
+  });
+  document.getElementById("app").dataset.faction = state.faction ?? "none";
 }
 
 function renderHeader() {
-  document.getElementById("coins").textContent = String(state.coins);
-  document.getElementById("record").textContent = `${state.wins} W`;
-  document.getElementById("losses").textContent = `${state.losses} L`;
+  const factionBadge = document.getElementById("faction-badge");
+  const levelBadge = document.getElementById("level-badge");
+  factionBadge.hidden = !state.faction;
+  factionBadge.textContent = state.faction ? `${factionNames[state.faction]} SIDE` : "";
+  levelBadge.hidden = !state.faction;
+  levelBadge.textContent = `LEVEL ${state.level}`;
 }
 
-function renderMenu() {
-  const stage = playerStage();
-  const element = elementData[state.element];
-  document.getElementById("menu-record").textContent = `${state.wins} W · ${state.losses} L`;
-  document.getElementById("menu-fighter-name").textContent = fighterName(state.shape, state.element, stage);
-  document.getElementById("menu-fighter-element").textContent = `${element.name} · ${["BASE", "EVOLVED", "ASCENDED"][stage]}`;
-  setShapeEmblem(document.getElementById("menu-emblem"), state.shape, element.color);
-  renderStats(document.getElementById("menu-stats"), statsFor(state.shape, stage));
-}
-
-function renderPlayerCard() {
-  const stage = playerStage();
-  const stats = statsFor(state.shape, stage);
-  const color = elementData[state.element].color;
-  const hp = battle?.playerHp ?? stats.hp;
-  document.getElementById("player-name").textContent = fighterName(state.shape, state.element, stage);
-  document.getElementById("player-element").textContent = `${elementData[state.element].name} · ${shapeData[state.shape].name}`;
-  document.getElementById("player-stage").textContent = ["BASE", "EVOLVED", "ASCENDED"][stage];
-  document.getElementById("player-hp-label").textContent = `${hp} / ${stats.hp}`;
-  document.getElementById("player-hp-bar").style.width = `${Math.max(0, hp / stats.hp * 100)}%`;
-  setShapeEmblem(document.getElementById("player-emblem"), state.shape, color);
-  const aura = currentAura();
-  document.getElementById("equipped-aura").textContent = aura ? `✧ ${aura.name} equipped · +${aura.bonus} ${statLabels[aura.stat]}` : "No aura equipped";
-}
-
-function renderBattle() {
-  renderPlayerCard();
-  const rivalCard = document.getElementById("rival-card");
-  const arena = document.querySelector(".arena");
-  const controls = document.getElementById("moves");
-  const startButton = document.getElementById("start-battle");
-  const prompt = document.getElementById("battle-prompt");
-  const stateLabel = document.getElementById("battle-state");
-  if (!battle) {
-    arena.dataset.turn = "idle";
-    rivalCard.classList.remove("in-match");
-    document.getElementById("rival-name").textContent = "No rival yet";
-    document.getElementById("rival-element").textContent = "Start a battle to meet your opponent.";
-    document.getElementById("rival-stage").textContent = "—";
-    document.getElementById("rival-hp-label").textContent = "—";
-    document.getElementById("rival-hp-bar").style.width = "0%";
-    document.getElementById("rival-quote").textContent = "Your next challenger is waiting in the arena.";
-    controls.hidden = true;
-    startButton.hidden = !state.started;
-    startButton.textContent = "Find an opponent  →";
-    stateLabel.textContent = "YOUR TURN";
-    prompt.textContent = state.started ? "Start a match to choose an attack." : "Choose your free starter shape and element first.";
-    return;
+function renderHub() {
+  if (!state.faction) return;
+  const name = factionNames[state.faction];
+  document.getElementById("hub-eyebrow").textContent = `YOUR FACTION / ${state.faction === "light" ? "THE DAWNBORN" : "THE UNBOUND"}`;
+  document.getElementById("hub-title").innerHTML = state.faction === "light"
+    ? "The calm<br><span>before the storm.</span>"
+    : "The hush<br><span>before the storm.</span>";
+  document.getElementById("hub-copy").textContent = state.faction === "light"
+    ? "The Dawnborn are counting on you. Every battle begins with the fighter you become here."
+    : "The Unbound are counting on you. Every battle begins with the fighter you become here.";
+  document.getElementById("fighter-level").textContent = `Level ${state.level} fighter`;
+  document.getElementById("training-level").textContent = `LEVEL ${state.level}`;
+  const needed = xpForNextLevel();
+  const progress = state.level >= levelCap ? 100 : Math.min(100, state.xp / needed * 100);
+  document.getElementById("xp-label").textContent = state.level >= levelCap ? "MAX LEVEL" : `${state.xp} / ${needed} XP`;
+  document.getElementById("xp-bar").style.width = `${progress}%`;
+  const progressBar = document.getElementById("xp-progress");
+  progressBar.setAttribute("aria-valuemax", String(state.level >= levelCap ? 100 : needed));
+  progressBar.setAttribute("aria-valuenow", String(state.level >= levelCap ? 100 : state.xp));
+  const abilities = document.getElementById("hub-abilities");
+  abilities.replaceChildren(...abilityData[state.faction].map(ability => {
+    const row = document.createElement("div");
+    row.className = `ability-row${ability.level <= state.level ? " unlocked" : " locked"}`;
+    const icon = document.createElement("span");
+    icon.className = "ability-symbol";
+    icon.textContent = ability.level <= state.level ? (state.faction === "light" ? "✧" : "◈") : "·";
+    const copy = document.createElement("span");
+    const title = document.createElement("strong");
+    title.textContent = ability.name;
+    const description = document.createElement("small");
+    description.textContent = ability.level <= state.level ? ability.description : `Unlocks at level ${ability.level}`;
+    copy.append(title, description);
+    const rank = document.createElement("span");
+    rank.className = "ability-rank";
+    rank.textContent = ability.level <= state.level ? "READY" : `LVL ${ability.level}`;
+    row.append(icon, copy, rank);
+    return row;
+  }));
+  const warTitle = document.getElementById("war-action-title");
+  const warCopy = document.getElementById("war-action-copy");
+  const warButton = document.getElementById("open-war");
+  warButton.disabled = state.level < 3 && !state.warAccess && !state.warComplete;
+  if (state.warComplete) {
+    warTitle.textContent = "The war is over";
+    warCopy.textContent = "You changed the fate of the world.";
+  } else if (state.warFailed) {
+    warTitle.textContent = "Return to the front";
+    warCopy.textContent = "You can train more, or take another stand.";
+  } else if (state.level >= 3 || state.warAccess) {
+    warTitle.textContent = "Enter the final war";
+    warCopy.textContent = state.warAccess ? "The front line is waiting. There is no retreat." : "You are strong enough. The front line is waiting.";
+  } else {
+    warTitle.textContent = "Prepare for war";
+    warCopy.textContent = `Reach level 3 to answer the call · level ${3 - state.level} more to go.`;
   }
-  arena.dataset.turn = battle.result || battle.turn;
-  rivalCard.classList.add("in-match");
-  const rival = battle.rival;
-  document.getElementById("rival-name").textContent = fighterName(rival.shape, rival.element, rival.stage);
-  document.getElementById("rival-element").textContent = `${elementData[rival.element].name} · ${shapeData[rival.shape].name}`;
-  document.getElementById("rival-stage").textContent = ["BASE", "EVOLVED", "ASCENDED"][rival.stage];
-  document.getElementById("rival-hp-label").textContent = `${battle.rivalHp} / ${rival.stats.hp}`;
-  document.getElementById("rival-hp-bar").style.width = `${Math.max(0, battle.rivalHp / rival.stats.hp * 100)}%`;
-  setShapeEmblem(document.getElementById("rival-emblem"), rival.shape, elementData[rival.element].color);
-  document.getElementById("rival-quote").textContent = battle.turn === "enemy"
-    ? "Their aura flares... the counterattack is coming."
-    : "The challenger circles, waiting for an opening.";
-  if (battle.result) {
-    controls.hidden = true;
-    startButton.hidden = false;
-    startButton.textContent = battle.result === "win" ? "Battle again  →" : "Try again  →";
-    stateLabel.textContent = battle.result === "win" ? "VICTORY" : "DEFEAT";
-    prompt.textContent = battle.result === "win" ? "You won the match and earned 25 coins." : "The match is over. You earned 8 coins for fighting.";
-    return;
-  }
-  controls.hidden = false;
-  startButton.hidden = true;
-  const enemyTurn = battle.turn === "enemy";
-  stateLabel.textContent = enemyTurn ? "RIVAL TURN" : "YOUR TURN";
-  prompt.textContent = enemyTurn
-    ? "The rival is gathering energy. Brace for their counterattack..."
-    : `Choose an attack for ${fighterName(state.shape, state.element, playerStage())}.`;
-  renderMoves();
+  document.getElementById("war-faction-name").textContent = name.toUpperCase();
 }
 
-function renderMoves() {
-  const container = document.getElementById("moves");
-  const moveSet = spells[state.element];
-  container.replaceChildren(...moveSet.map((spell, index) => {
+function renderTraining() {
+  const dummy = dummyData[state.dummy];
+  const stage = document.getElementById("dummy-stage");
+  stage.dataset.faction = state.faction ?? "light";
+  stage.dataset.dummy = state.dummy;
+  document.getElementById("dummy-name").textContent = dummy.name;
+  document.getElementById("dummy-type-label").textContent = dummy.label;
+  document.getElementById("dummy-description").textContent = dummy.description;
+  document.querySelectorAll(".dummy-option").forEach(button => {
+    const selected = button.dataset.dummy === state.dummy;
+    button.classList.toggle("selected", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+  document.getElementById("train-hit").disabled = state.level >= levelCap;
+  if (state.level >= levelCap) {
+    document.getElementById("training-feedback").textContent = "You have mastered every ability. The final war is waiting.";
+  }
+}
+
+function currentEnemy() {
+  return enemies[state.faction][state.warWave];
+}
+
+function renderCombatAbilities() {
+  const container = document.getElementById("combat-abilities");
+  container.replaceChildren(...unlockedAbilities().map((ability, index) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = `move-button${spell.kind === "physical" ? " physical" : ""}`;
-    button.dataset.move = String(index);
-    button.disabled = battle.turn !== "player";
-    const info = document.createElement("span");
-    const name = document.createElement("span");
-    name.className = "move-name";
-    name.textContent = spell.name;
-    const kind = document.createElement("span");
-    kind.className = "move-kind";
-    kind.textContent = spell.kind === "magic" ? "Magic spell" : "Physical spell";
-    info.append(name, kind);
-    const power = document.createElement("span");
-    power.className = "move-power";
-    power.textContent = `${spell.power} PWR`;
-    button.append(info, power);
+    button.className = "combat-ability";
+    button.disabled = state.warTurn !== "player" || !state.warStarted;
+    const name = document.createElement("strong");
+    name.textContent = ability.name;
+    const detail = document.createElement("small");
+    detail.textContent = ability.heal ? `${ability.power} PWR · +${ability.heal} HP` : `${ability.power} POWER`;
+    button.append(name, detail);
     button.addEventListener("click", () => playerAttack(index));
     return button;
   }));
 }
 
-function renderShapeMenu() {
-  const shapes = document.getElementById("shape-options");
-  shapes.replaceChildren(...shapeKeys.map(key => {
-    const shape = shapeData[key];
-    const owned = !state.started || state.ownedShapes.includes(key);
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `shape-option${state.shape === key ? " selected" : ""}${owned ? "" : " locked"}`;
-    button.setAttribute("aria-pressed", String(state.shape === key));
-    button.disabled = Boolean(battle && !battle.result);
-    const emblem = document.createElement("span");
-    emblem.className = "shape-emblem";
-    emblem.setAttribute("aria-hidden", "true");
-    setShapeEmblem(emblem, key, shape.color);
-    const copy = document.createElement("span");
-    const name = document.createElement("strong");
-    name.textContent = shape.name;
-    const stage = document.createElement("small");
-    stage.textContent = !state.started ? "Free starter" : owned ? ["Base form", "Evolved", "Ascended"][state.evolutions[key]] : `🔒 ${shapeCost} coins`;
-    copy.append(name, stage);
-    button.append(emblem, copy);
-    button.addEventListener("click", () => {
-      if (battle && !battle.result) return;
-      if (!state.started || owned) {
-        battle = null;
-        state.shape = key;
-        saveState();
-        renderAll();
-      } else {
-        buyShape(key);
-      }
-    });
-    return button;
-  }));
-  const elementOptions = document.getElementById("element-options");
-  elementOptions.replaceChildren(...elementKeys.map(key => {
-    const owned = !state.started || state.ownedElements.includes(key);
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `element-button${state.element === key ? " selected" : ""}${owned ? "" : " locked"}`;
-    button.dataset.element = key;
-    button.setAttribute("aria-pressed", String(state.element === key));
-    button.disabled = Boolean(battle && !battle.result);
-    button.textContent = `${owned ? "" : "🔒 "}${elementData[key].name}${owned || !state.started ? "" : ` · ${elementCost}◈`}`;
-    button.addEventListener("click", () => {
-      if (battle && !battle.result) return;
-      if (!state.started || owned) {
-        battle = null;
-        state.element = key;
-        saveState();
-        renderAll();
-      } else {
-        buyElement(key);
-      }
-    });
-    return button;
-  }));
-  const element = elementData[state.element];
-  const loadoutLocked = Boolean(battle && !battle.result);
-  const starterBanner = document.getElementById("starter-banner");
-  starterBanner.hidden = state.started;
-  document.getElementById("lock-starter").textContent = `Lock in ${element.name} ${shapeData[state.shape].name}  →`;
-  document.getElementById("loadout-feedback").textContent = "";
-  document.getElementById("element-heading").textContent = `${shapeData[state.shape].name} of ${element.name}`;
-  document.getElementById("element-hint").textContent = `${element.hint} Strong against ${elementData[element.beats].name}; vulnerable to ${elementData[element.weakTo].name}.${loadoutLocked ? " Loadout changes unlock after the match." : ""}`;
-  document.getElementById("evolution-heading").textContent = `${shapeData[state.shape].name} evolution`;
-  document.getElementById("wins-until-evolution").textContent = `${state.wins} TOTAL WINS`;
-  renderEvolution();
-  renderStats(document.getElementById("shape-stats"), statsFor(state.shape, state.evolutions[state.shape], false));
-  document.getElementById("evolution-panel").hidden = !state.started;
-}
-
-function renderEvolution() {
-  const container = document.getElementById("evolution-list");
-  const stage = playerStage();
-  const unlocks = [3, 8];
-  container.replaceChildren(...unlocks.map((winsNeeded, index) => {
-    const nextStage = index + 1;
-    const row = document.createElement("div");
-    row.className = "evolution-step";
-    const info = document.createElement("div");
-    const name = document.createElement("strong");
-    name.textContent = nextStage === 1 ? "Evolved form" : "Ascended form";
-    const detail = document.createElement("small");
-    detail.textContent = `+25 to every base stat · ${winsNeeded} league wins`;
-    info.append(name, detail);
-    const button = document.createElement("button");
-    button.type = "button";
-    button.disabled = Boolean(battle && !battle.result);
-    const unlocked = state.wins >= winsNeeded;
-    if (stage >= nextStage) {
-      button.textContent = "UNLOCKED";
-      button.disabled = true;
-    } else if (unlocked) {
-      button.textContent = "EVOLVE";
-      button.addEventListener("click", () => evolve(nextStage));
-    } else {
-      button.textContent = `${winsNeeded - state.wins} WINS`;
-      button.disabled = true;
-    }
-    row.append(info, button);
-    return row;
-  }));
-}
-
-function renderAuraShop() {
-  document.getElementById("shop-coins").textContent = String(state.coins);
-  const container = document.getElementById("aura-grid");
-  container.replaceChildren(...auraData.map(aura => {
-    const owned = state.ownedAuras.includes(aura.id);
-    const equipped = state.equippedAura === aura.id;
-    const card = document.createElement("article");
-    card.className = "aura-card";
-    const gem = document.createElement("span");
-    gem.className = "aura-gem";
-    gem.style.setProperty("--aura-color", aura.color);
-    gem.setAttribute("aria-hidden", "true");
-    gem.textContent = aura.icon;
-    const copy = document.createElement("div");
-    const title = document.createElement("h3");
-    title.textContent = aura.name;
-    const description = document.createElement("p");
-    description.textContent = aura.description;
-    copy.append(title, description);
-    const button = document.createElement("button");
-    button.type = "button";
-    if (equipped) {
-      button.textContent = "EQUIPPED";
-      button.disabled = true;
-    } else if (owned) {
-      button.textContent = "EQUIP";
-      button.disabled = Boolean(battle && !battle.result);
-      button.addEventListener("click", () => {
-        if (battle && !battle.result) return;
-        battle = null;
-        state.equippedAura = aura.id;
-        saveState();
-        renderAll();
-      });
-    } else {
-      button.textContent = `◈ ${aura.cost}`;
-      button.disabled = state.coins < aura.cost || Boolean(battle && !battle.result);
-      button.setAttribute("aria-label", `Buy ${aura.name} for ${aura.cost} coins`);
-      button.addEventListener("click", () => buyAura(aura));
-    }
-    card.append(gem, copy, button);
-    return card;
-  }));
+function renderWar() {
+  if (!state.faction) return;
+  const isLight = state.faction === "light";
+  const active = state.warStarted && !state.warComplete;
+  const maxHp = 100 + state.level * 15;
+  const enemy = currentEnemy();
+  const playerName = isLight ? "Dawnborn Fighter" : "Unbound Fighter";
+  document.getElementById("player-tag").textContent = isLight ? "THE DAWNBORN" : "THE UNBOUND";
+  document.getElementById("player-combat-name").textContent = playerName;
+  document.getElementById("player-health-label").textContent = `${Math.max(0, active ? state.warHp : maxHp)} / ${maxHp} HP`;
+  document.getElementById("player-health-bar").style.width = `${Math.max(0, Math.min(100, (active ? state.warHp : maxHp) / maxHp * 100))}%`;
+  document.getElementById("enemy-name").textContent = enemy.name;
+  document.getElementById("enemy-health-label").textContent = `${Math.max(0, active ? state.warEnemyHp : enemy.hp)} / ${enemy.hp} HP`;
+  document.getElementById("enemy-health-bar").style.width = `${Math.max(0, Math.min(100, (active ? state.warEnemyHp : enemy.hp) / enemy.hp * 100))}%`;
+  document.getElementById("war-step").textContent = state.warComplete ? "CAMPAIGN COMPLETE" : `BATTLE ${state.warWave + 1} / 3`;
+  document.getElementById("war-eyebrow").textContent = isLight ? "THE VOID LEGION IS HERE" : "THE DAWNBORN HAVE ARRIVED";
+  document.getElementById("war-title").innerHTML = state.warComplete ? "A new<br><span>beginning.</span>" : "No turning<br><span>back now.</span>";
+  document.getElementById("war-copy").textContent = state.warComplete
+    ? (isLight ? "The Void Master has fallen. Light returns to the world." : "The Ascended Light has fallen. The void remakes the world.")
+    : active ? "You answered the call. Stand your ground." : "When you enter the war, the only way forward is to fight.";
+  document.getElementById("combat-arena").dataset.faction = state.faction;
+  document.getElementById("player-emblem").dataset.shape = isLight ? "star" : "square";
+  document.getElementById("enemy-emblem").dataset.shape = enemy.shape;
+  document.getElementById("war-log").textContent = state.warComplete
+    ? (isLight ? "The Void Master was defeated. The Dawnborn victory will be remembered." : "The Ascended Light was defeated. The Unbound have claimed the future.")
+    : state.warFailed ? "You were driven from the front. Train, then choose when to return."
+      : state.warAccess && !active ? "Your forces are waiting. Once you enter, you must fight through to the end." : "Every ability you unlock will matter here.";
+  document.getElementById("combat-eyebrow").textContent = state.warComplete ? "VICTORY" : state.warFailed ? "THE FRONT STILL NEEDS YOU" : state.warTurn === "enemy" ? "ENEMY TURN" : "CHOOSE YOUR ATTACK";
+  document.getElementById("combat-message").textContent = state.warComplete
+    ? "You survived the final battle and changed the fate of the world."
+    : state.warFailed ? "You may train before entering the war again."
+      : active ? state.warTurn === "enemy" ? `${enemy.name} is striking back...` : `${enemy.name} closes in. Make your move.`
+        : state.warAccess ? "There is no retreat after you enter the war." : `Level 3 reached. Fight for the future of ${factionNames[state.faction]}.`;
+  document.getElementById("start-war").hidden = active || state.warComplete || state.warFailed;
+  document.getElementById("retry-war").hidden = !state.warFailed;
+  document.getElementById("return-hub").hidden = active;
+  document.querySelector("footer a").hidden = active;
+  const abilities = document.getElementById("combat-abilities");
+  abilities.hidden = !active;
+  renderCombatAbilities();
+  if (active && state.warTurn === "enemy") scheduleEnemyAttack();
 }
 
 function renderAll() {
   renderHeader();
-  renderMenu();
-  renderBattle();
-  renderShapeMenu();
-  renderAuraShop();
+  renderHub();
+  renderTraining();
+  renderWar();
 }
 
-function showScreen(name) {
-  if (!state.started && name !== "shapes") {
-    showNotice("Choose and lock in your free starter shape and element first.");
-    return;
-  }
-  document.querySelectorAll(".screen").forEach(screen => {
-    const active = screen.id === `screen-${name}`;
-    screen.hidden = !active;
-    screen.classList.toggle("active", active);
-  });
-  document.querySelectorAll(".nav-button").forEach(button => {
-    const active = button.dataset.screen === name;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-current", active ? "page" : "false");
-  });
+function finishIntro() {
+  state.introSeen = true;
+  saveState();
+  showScreen("faction");
 }
 
-function setLog(message) {
-  const log = document.getElementById("battle-log");
-  const text = document.createElement("p");
-  text.textContent = message;
-  const marker = document.createElement("span");
-  marker.className = "log-marker";
-  marker.textContent = "✦";
-  marker.setAttribute("aria-hidden", "true");
-  log.replaceChildren(marker, text);
-}
-
-function chooseRival() {
-  const shape = shapeKeys[Math.floor(Math.random() * shapeKeys.length)];
-  const element = elementKeys[Math.floor(Math.random() * elementKeys.length)];
-  const stage = playerStage();
-  const stats = statsFor(shape, stage, false);
-  return { shape, element, stage, stats };
-}
-
-function startBattle() {
-  if (!state.started) {
-    showNotice("Choose and lock in your free starter shape and element first.");
-    return;
-  }
-  const stats = statsFor(state.shape, playerStage());
-  battle = { rival: chooseRival(), playerHp: stats.hp, rivalHp: 0, result: null, turn: "player" };
-  battle.rivalHp = battle.rival.stats.hp;
-  setLog(`The crowd roars as ${fighterName(battle.rival.shape, battle.rival.element, battle.rival.stage)} steps into the arena. Choose your opening attack!`);
-  document.getElementById("menu-feedback").textContent = "";
+function selectFaction(faction) {
+  if (!["light", "void"].includes(faction)) return;
+  state.faction = faction;
+  state.introSeen = true;
+  saveState();
   renderAll();
-  showScreen("battle");
+  showScreen("hub");
 }
 
-function affinityMultiplier(attackerElement, defenderElement) {
-  if (elementData[attackerElement].beats === defenderElement) return 1.5;
-  if (elementData[defenderElement].beats === attackerElement) return 0.75;
-  return 1;
+function train() {
+  if (!state.faction || state.level >= levelCap) return;
+  const target = dummyData[state.dummy];
+  const oldLevel = state.level;
+  const unlocked = awardExperience(target.xp);
+  const message = unlocked.length
+    ? `Training complete! +${target.xp} XP. Level ${state.level} reached—${abilityData[state.faction][state.level - 1].name} unlocked.`
+    : state.level > oldLevel
+      ? `Training complete! +${target.xp} XP. You reached level ${state.level}.`
+      : `Solid hit! +${target.xp} XP. ${state.level >= levelCap ? "All abilities unlocked." : `${state.xp} / ${xpForNextLevel()} XP to level ${state.level + 1}.`}`;
+  document.getElementById("dummy-stage").classList.remove("struck");
+  void document.getElementById("dummy-stage").offsetWidth;
+  document.getElementById("dummy-stage").classList.add("struck");
+  document.getElementById("training-feedback").textContent = message;
+  document.getElementById("hub-log").textContent = unlocked.length
+    ? `LEVEL UP! ${abilityData[state.faction][state.level - 1].name} is yours.`
+    : `Training paid off: +${target.xp} XP.`;
+  saveState();
+  renderAll();
 }
 
-function calculateDamage(spell, attackerStats, attackerElement, defenderStats, defenderElement) {
-  const offense = spell.kind === "magic" ? attackerStats.magic : attackerStats.strength;
-  const base = spell.power * offense / 100;
-  const defenseFactor = 100 / (100 + defenderStats.defense);
-  return Math.max(1, Math.floor(base * defenseFactor * affinityMultiplier(attackerElement, defenderElement)));
-}
-
-function playerAttack(moveIndex) {
-  if (!battle || battle.result || battle.turn !== "player") return;
-  const move = spells[state.element][moveIndex];
-  if (!move) return;
-  const activeBattle = battle;
-  const playerStats = statsFor(state.shape, playerStage());
-  const damage = calculateDamage(move, playerStats, state.element, battle.rival.stats, battle.rival.element);
-  battle.rivalHp = Math.max(0, battle.rivalHp - damage);
-  animateSpell(move, state.element, "player");
-  animateFighter("player-card", "attacking");
-  animateFighter("rival-card", "taking-hit");
-  const matchup = affinityMultiplier(state.element, battle.rival.element);
-  const edge = matchup > 1 ? " Elemental advantage!" : matchup < 1 ? " Elemental disadvantage." : "";
-  if (battle.rivalHp === 0) {
-    battle.turn = "enemy";
-    setLog(`${fighterName(state.shape, state.element, playerStage())} unleashes ${move.name} for ${damage} damage!${edge} The rival is down!`);
-    renderBattle();
-    window.setTimeout(() => {
-      if (battle !== activeBattle || activeBattle.result || activeBattle.rivalHp !== 0) return;
-      finishBattle("win", `${fighterName(state.shape, state.element, playerStage())} used ${move.name} for ${damage} damage and won!${edge}`);
-    }, 400);
+function openWarRoom() {
+  if (state.warComplete || state.warStarted || state.warFailed || state.warAccess) {
+    showScreen("war");
     return;
   }
-  battle.turn = "enemy";
-  setLog(`${fighterName(state.shape, state.element, playerStage())} unleashes ${move.name} for ${damage} damage!${edge} The rival steadies themself...`);
-  renderBattle();
-
-  window.setTimeout(() => {
-    if (battle !== activeBattle || activeBattle.result || activeBattle.turn !== "enemy") return;
-    const rivalMove = spells[activeBattle.rival.element][Math.floor(Math.random() * spells[activeBattle.rival.element].length)];
-    const incoming = calculateDamage(rivalMove, activeBattle.rival.stats, activeBattle.rival.element, playerStats, state.element);
-    const rivalAdvantage = affinityMultiplier(activeBattle.rival.element, state.element);
-    const rivalEdge = rivalAdvantage > 1 ? " Their element has the advantage!" : rivalAdvantage < 1 ? " Your element resists the hit." : "";
-    setLog(`${fighterName(activeBattle.rival.shape, activeBattle.rival.element, activeBattle.rival.stage)} charges ${rivalMove.name}!`);
-    animateSpell(rivalMove, activeBattle.rival.element, "rival");
-    animateFighter("rival-card", "attacking");
-    animateFighter("player-card", "taking-hit");
-    window.setTimeout(() => {
-      if (battle !== activeBattle || activeBattle.result || activeBattle.turn !== "enemy") return;
-      activeBattle.playerHp = Math.max(0, activeBattle.playerHp - incoming);
-      if (activeBattle.playerHp === 0) {
-        finishBattle("loss", `${rivalMove.name} crashes into your fighter for ${incoming} damage. You have been defeated.${rivalEdge}`);
-        return;
-      }
-      activeBattle.turn = "player";
-      setLog(`${rivalMove.name} crashes in for ${incoming} damage!${rivalEdge} Your fighter regains their footing. Your turn!`);
-      renderBattle();
-    }, 400);
-  }, 2000);
+  if (state.level < 3) {
+    document.getElementById("hub-log").textContent = "The war front is locked. Train until you reach level 3.";
+    return;
+  }
+  state.warAccess = true;
+  saveState();
+  renderAll();
+  showScreen("war");
 }
 
-function animateFighter(id, animation) {
-  const fighter = document.getElementById(id);
-  fighter.classList.remove("attacking", "taking-hit");
-  void fighter.offsetWidth;
-  fighter.classList.add(animation);
+function startWar() {
+  if (!state.faction || state.level < 3 || state.warComplete || state.warStarted) return;
+  state.warStarted = true;
+  state.warFailed = false;
+  state.warWave = 0;
+  state.warHp = 100 + state.level * 15;
+  state.warEnemyHp = enemies[state.faction][0].hp;
+  state.warTurn = "player";
+  document.getElementById("war-log").textContent = `The final war begins. ${currentEnemy().name} blocks your path.`;
+  saveState();
+  renderAll();
 }
 
-function animateSpell(move, element, side) {
-  const effect = document.createElement("span");
-  effect.className = `spell-effect ${move.kind} from-${side}`;
-  const core = document.createElement("span");
-  core.className = "spell-core";
-  effect.append(core);
-  effect.dataset.element = element;
-  effect.setAttribute("aria-hidden", "true");
-  document.querySelector(".arena").append(effect);
-  window.setTimeout(() => effect.remove(), 600);
+function retryWar() {
+  if (!state.warFailed) return;
+  state.warFailed = false;
+  startWar();
 }
 
-function finishBattle(result, message) {
-  if (result === "win") {
-    state.wins += 1;
-    state.coins += 25;
+function finishWar(result) {
+  if (result === "victory") {
+    state.warComplete = true;
+    state.warStarted = false;
+    state.warTurn = "player";
+    awardExperience(30);
+    document.getElementById("war-log").textContent = `The ${currentEnemy().name} has fallen. The war is over.`;
   } else {
-    state.losses += 1;
-    state.coins += 8;
+    state.warStarted = false;
+    state.warFailed = true;
+    state.warWave = 0;
+    state.warHp = 0;
+    state.warEnemyHp = 0;
+    state.warTurn = "player";
+    document.getElementById("war-log").textContent = "You were defeated. The war is not over—you can train and try again.";
   }
-  setLog(message);
   saveState();
-  battle = null;
-  renderAll();
-  showScreen("menu");
-  document.getElementById("menu-feedback").textContent = result === "win"
-    ? "Victory! 25 coins earned. Back at the league hub."
-    : "Defeat. 8 coins earned. Back at the league hub.";
-}
-
-function evolve(nextStage) {
-  if ((battle && !battle.result) || nextStage !== playerStage() + 1 || state.wins < [0, 3, 8][nextStage]) return;
-  state.evolutions[state.shape] = nextStage;
-  battle = null;
-  saveState();
-  setLog(`${shapeData[state.shape].name} evolved! All four base stats gained 25 points.`);
   renderAll();
 }
 
-function buyShape(shape) {
-  if ((battle && !battle.result) || state.ownedShapes.includes(shape)) return;
-  if (state.coins < shapeCost) {
-    document.getElementById("loadout-feedback").textContent = `You need ${shapeCost - state.coins} more coins to unlock ${shapeData[shape].name}. Win arena battles to earn coins.`;
+function playerAttack(abilityIndex) {
+  if (!state.warStarted || state.warTurn !== "player") return;
+  const ability = unlockedAbilities()[abilityIndex];
+  if (!ability) return;
+  const enemy = currentEnemy();
+  const damage = Math.max(1, Math.floor(ability.power + state.level * 3 - 10));
+  state.warEnemyHp = Math.max(0, state.warEnemyHp - damage);
+  if (ability.heal) {
+    state.warHp = Math.min(100 + state.level * 15, state.warHp + ability.heal);
+  }
+  const healing = ability.heal ? ` You recover ${ability.heal} HP.` : "";
+  if (state.warEnemyHp === 0) {
+    document.getElementById("war-log").textContent = `${ability.name} deals ${damage} damage! ${enemy.name} is down.${healing}`;
+    if (state.warWave === enemies[state.faction].length - 1) {
+      finishWar("victory");
+      document.getElementById("combat-message").textContent = `${enemy.name} has fallen. You won the war!`;
+      return;
+    }
+    state.warWave += 1;
+    state.warEnemyHp = currentEnemy().hp;
+    state.warTurn = "player";
+    const unlocks = awardExperience(24);
+    document.getElementById("war-log").textContent += ` Battle won! +24 XP. ${currentEnemy().name} enters the fray.${unlocks.length ? ` Level ${state.level}! ${abilityData[state.faction][state.level - 1].name} unlocked.` : ""}`;
+    document.getElementById("combat-message").textContent = `The first enemy fell. ${currentEnemy().name} joins the battle!`;
+    saveState();
+    renderAll();
     return;
   }
-  state.coins -= shapeCost;
-  state.ownedShapes.push(shape);
-  battle = null;
-  state.shape = shape;
+  state.warTurn = "enemy";
+  document.getElementById("war-log").textContent = `${ability.name} hits ${enemy.name} for ${damage} damage.${healing}`;
+  document.getElementById("combat-message").textContent = `${ability.name} hits for ${damage}. ${enemy.name} is retaliating...`;
   saveState();
   renderAll();
-  document.getElementById("loadout-feedback").textContent = `${shapeData[shape].name} unlocked and selected!`;
 }
 
-function buyElement(element) {
-  if ((battle && !battle.result) || state.ownedElements.includes(element)) return;
-  if (state.coins < elementCost) {
-    document.getElementById("loadout-feedback").textContent = `You need ${elementCost - state.coins} more coins to unlock ${elementData[element].name}. Win arena battles to earn coins.`;
+function scheduleEnemyAttack() {
+  if (enemyTurnTimer !== null) return;
+  enemyTurnTimer = window.setTimeout(() => {
+    enemyTurnTimer = null;
+    enemyAttack();
+  }, 750);
+}
+
+function enemyAttack() {
+  if (!state.warStarted || state.warTurn !== "enemy") return;
+  const enemy = currentEnemy();
+  state.warHp = Math.max(0, state.warHp - enemy.power);
+  if (state.warHp === 0) {
+    document.getElementById("war-log").textContent = `${enemy.name} strikes for ${enemy.power} damage. You have been defeated.`;
+    finishWar("defeat");
     return;
   }
-  state.coins -= elementCost;
-  state.ownedElements.push(element);
-  battle = null;
-  state.element = element;
+  state.warTurn = "player";
+  document.getElementById("war-log").textContent = `${enemy.name} strikes for ${enemy.power} damage. Choose your next ability.`;
+  document.getElementById("combat-message").textContent = `${enemy.name} hits for ${enemy.power}. Your turn.`;
   saveState();
-  renderAll();
-  document.getElementById("loadout-feedback").textContent = `${elementData[element].name} unlocked and selected!`;
-}
-
-function lockInStarter() {
-  if (state.started) return;
-  state.started = true;
-  state.ownedShapes = [state.shape];
-  state.ownedElements = [state.element];
-  saveState();
-  showScreen("menu");
-  setLog(`Your ${elementData[state.element].name} ${shapeData[state.shape].name} is ready! Win battles to unlock more shapes and elements.`);
   renderAll();
 }
 
-function buyAura(aura) {
-  if ((battle && !battle.result) || state.ownedAuras.includes(aura.id) || state.coins < aura.cost) return;
-  state.coins -= aura.cost;
-  state.ownedAuras.push(aura.id);
-  state.equippedAura = aura.id;
-  battle = null;
+function resetCampaign() {
+  window.clearTimeout(enemyTurnTimer);
+  enemyTurnTimer = null;
+  state = freshState();
+  openingScene = 0;
   saveState();
   renderAll();
-  setLog(`${aura.name} is yours and equipped. ${aura.description}`);
+  renderOpeningScene();
+  showScreen("intro");
+  document.getElementById("hub-log").textContent = "";
+  document.getElementById("training-feedback").textContent = "Pick your target, then land a hit.";
 }
 
-document.querySelectorAll(".nav-button").forEach(button => {
+function renderOpeningScene() {
+  document.getElementById("scene-count").textContent = `SCENE ${String(openingScene + 1).padStart(2, "0")} / ${String(openingScenes.length).padStart(2, "0")}`;
+  document.getElementById("story-line").textContent = openingScenes[openingScene];
+  document.getElementById("next-scene").textContent = openingScene === openingScenes.length - 1 ? "Choose your side  →" : "Continue  →";
+}
+
+function beginCampaign() {
+  if (!state.introSeen) {
+    renderOpeningScene();
+    showScreen("intro");
+  } else if (!state.faction) {
+    showScreen("faction");
+  } else if (state.warStarted || state.warComplete || state.warFailed || state.warAccess) {
+    showScreen("war");
+  } else {
+    showScreen("hub");
+  }
+  if (state.warStarted && state.warTurn === "enemy") scheduleEnemyAttack();
+}
+
+document.getElementById("next-scene").addEventListener("click", () => {
+  if (openingScene >= openingScenes.length - 1) {
+    finishIntro();
+    return;
+  }
+  openingScene += 1;
+  renderOpeningScene();
+});
+document.getElementById("skip-intro").addEventListener("click", finishIntro);
+document.querySelectorAll("[data-faction]").forEach(button => {
+  if (button.classList.contains("faction-card")) button.addEventListener("click", () => selectFaction(button.dataset.faction));
+});
+document.querySelectorAll("[data-screen]").forEach(button => {
   button.addEventListener("click", () => showScreen(button.dataset.screen));
 });
-document.querySelectorAll(".menu-link").forEach(button => {
-  button.addEventListener("click", () => showScreen(button.dataset.screen));
+document.querySelectorAll(".dummy-option").forEach(button => {
+  button.addEventListener("click", () => {
+    state.dummy = button.dataset.dummy;
+    saveState();
+    renderTraining();
+  });
 });
-document.getElementById("enter-arena").addEventListener("click", startBattle);
-document.getElementById("start-battle").addEventListener("click", startBattle);
-document.getElementById("lock-starter").addEventListener("click", lockInStarter);
+document.getElementById("train-hit").addEventListener("click", train);
+document.getElementById("open-war").addEventListener("click", openWarRoom);
+document.getElementById("start-war").addEventListener("click", startWar);
+document.getElementById("retry-war").addEventListener("click", retryWar);
+document.getElementById("return-hub").addEventListener("click", () => showScreen("hub"));
+document.getElementById("reset-save").addEventListener("click", () => document.getElementById("reset-dialog").showModal());
+document.getElementById("confirm-reset").addEventListener("click", resetCampaign);
 
-const resetDialog = document.getElementById("reset-dialog");
-document.getElementById("reset-save").addEventListener("click", () => resetDialog.showModal());
-document.getElementById("confirm-reset").addEventListener("click", event => {
-  event.preventDefault();
-  state = defaultState();
-  battle = null;
+window.unlockShapefightersCampaign = () => {
+  state.introSeen = true;
+  state.faction = "light";
+  state.level = levelCap;
+  state.xp = 0;
+  state.warAccess = true;
+  state.warStarted = false;
+  state.warComplete = true;
+  state.warFailed = false;
+  state.warWave = 2;
+  state.warHp = 100 + levelCap * 15;
+  state.warEnemyHp = 0;
+  state.warTurn = "player";
   saveState();
-  setLog("Choose your free starter shape and element to begin.");
-  showScreen("shapes");
   renderAll();
-  resetDialog.close();
-});
+  showScreen("hub");
+  return "Campaign unlocked and saved.";
+};
 
 renderAll();
-showScreen(state.started ? "menu" : "shapes");
+beginCampaign();

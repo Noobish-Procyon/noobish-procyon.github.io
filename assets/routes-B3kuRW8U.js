@@ -313,6 +313,23 @@ var r = t(e(), 1),
     { id: `magnet`, name: `MAGNET`, text: `Fragments pull from farther.` },
     { id: `guardian`, name: `GUARDIAN`, text: `Shield at every room start.` },
     { id: `phase`, name: `PHASE`, text: `Gain i-frames when dashing.` },
+    { id: `ironhide`, name: `IRONHIDE`, text: `6% less damage taken.` },
+    { id: `renewal`, name: `RENEWAL`, text: `Regenerate 0.45 vitality per second.` },
+    { id: `critical`, name: `CRITICAL EDGE`, text: `5% chance to deal 1.75x damage.` },
+    { id: `executioner`, name: `EXECUTIONER`, text: `10% more damage to foes below 30% health.` },
+    { id: `warhammer`, name: `WARHAMMER`, text: `+15% melee damage.` },
+    { id: `spellweaver`, name: `SPELLWEAVER`, text: `+12% ability damage.` },
+    { id: `blastcraft`, name: `BLASTCRAFT`, text: `+10 blast radius.` },
+    { id: `trickshot`, name: `TRICKSHOT`, text: `10% chance to fire an extra shot.` },
+    { id: `longstride`, name: `LONGSTRIDE`, text: `+10 dash distance.` },
+    { id: `evasion`, name: `EVASION`, text: `5% chance to evade a hit.` },
+    { id: `thorns`, name: `THORNS`, text: `Retaliate for 8 damage when hit.` },
+    { id: `secondwind`, name: `SECOND WIND`, text: `Restore 5 vitality on room entry.` },
+    { id: `adrenaline`, name: `ADRENALINE`, text: `+10% damage while below 35% vitality.` },
+    { id: `fortune`, name: `FORTUNE`, text: `+15% score from enemy kills.` },
+    { id: `sharpshooter`, name: `SHARPSHOOTER`, text: `+12% projectile speed and range.` },
+    { id: `aftershock`, name: `AFTERSHOCK`, text: `8% shorter melee cooldown.` },
+    { id: `guardianangel`, name: `GUARDIAN ANGEL`, text: `+1.5 seconds of shield at room start.` },
   ];
 function l(e, t) {
   let {
@@ -1003,7 +1020,7 @@ function v(e, t) {
     p = i[t].toUpperCase(),
     m = c ? s.moves[t] : r.baseMoves[t],
     h = (c ? 1.65 : 1) * (n.rage > 0 ? 1.6 : 1) * (r.might || 1),
-    v = (e) => e * h * n.damageBoost,
+    v = (e) => e * h * n.damageBoost * n.abilityBoost,
     y = (e, t, n) => Math.max(t, Math.min(n, e));
   n.abilityTimers[t] =
     r.id === `math` && t === 0
@@ -3053,6 +3070,23 @@ var j = class {
           magnet: 14,
           guardian: 0,
           phase: 0,
+          armor: 0,
+          regeneration: 0,
+          critical: 0,
+          executioner: 0,
+          meleeBoost: 1,
+          abilityBoost: 1,
+          splashBonus: 0,
+          trickshot: 0,
+          dashDistance: 0,
+          evasion: 0,
+          thorns: 0,
+          roomHeal: 0,
+          adrenaline: 0,
+          meleeSpeed: 1,
+          scoreBoost: 1,
+          projectileSpeed: 1,
+          guardianAngel: 0,
           shield: 0,
           reflect: 0,
           invuln: 0,
@@ -3357,15 +3391,16 @@ var j = class {
       this.st.delayed.push({ t: Math.max(0.01, e), fn: t });
     }
     explodeShot(e) {
+      let radius = e.splash + this.st.splashBonus;
       for (let t of this.enemies())
         e.hits.includes(t.id) ||
-          Math.hypot(t.x - e.x, t.y - e.y) > e.splash + t.r ||
+          Math.hypot(t.x - e.x, t.y - e.y) > radius + t.r ||
           this.hitEnemy(t, e.damage * 0.6, e.elementId, e.index, e.awakened);
       (this.effect({
         kind: `area`,
         x: e.x,
         y: e.y,
-        radius: e.splash,
+        radius,
         color: e.color,
         duration: 0.4,
       }),
@@ -3433,6 +3468,17 @@ var j = class {
     hurtPlayer(e, t = !1) {
       let n = this.st;
       if (!(e <= 0 || this.over) && !(n.invuln > 0 && !t)) {
+        if (Math.random() < n.evasion) {
+          ((n.invuln = 0.25),
+            this.burst(n.player.x, n.player.y, `#c9a86a`, 8));
+          return;
+        }
+        e *= 1 - n.armor;
+        let target = this.nearestEnemy();
+        target &&
+          n.thorns > 0 &&
+          T(n.player, target) < 110 &&
+          this.hitEnemy(target, n.thorns, null, -1, !1);
         if (((n.invuln = 0.6), n.shield > 0)) {
           ((n.shield = 0),
             this.burst(
@@ -3523,7 +3569,15 @@ var j = class {
     }
     hitEnemy(e, t, n, r, i) {
       if (!e || e.dead || e.type === `fragment`) return 0;
-      let o = e.mark > 0 ? 1.35 : 1,
+      let o =
+          (e.mark > 0 ? 1.35 : 1) *
+          (Math.random() < this.st.critical ? 1.75 : 1) *
+          (e.maxHp > 0 && e.hp / e.maxHp <= 0.3
+            ? 1 + this.st.executioner
+            : 1) *
+          (this.st.health / this.st.maxHealth <= 0.35
+            ? 1 + this.st.adrenaline
+            : 1),
         s = Math.min(e.hp, t * o);
       ((e.hp -= s),
         s > 0 && (e.hit = Math.max(e.hit, 0.08)),
@@ -3627,21 +3681,31 @@ var j = class {
           ? Math.atan2(n.y - r.y, n.x - r.x)
           : Math.atan2(this.aim.y - r.y, this.aim.x - r.x),
         a = t ? t.color : `#f2dfb2`,
-        o = (n, o, s, c, l = 0, u = {}) =>
-          this.addShot({
+        o = (n, speed, radius, damage, pierce = 0, options = {}) => {
+          let shot = {
             x: r.x,
             y: r.y,
-            vx: Math.cos(i + n) * o,
-            vy: Math.sin(i + n) * o,
-            r: s,
-            damage: c * e.damageBoost * e.rangedBoost,
+            vx: Math.cos(i + n) * speed * e.projectileSpeed,
+            vy: Math.sin(i + n) * speed * e.projectileSpeed,
+            r: radius,
+            damage: damage * e.damageBoost * e.rangedBoost,
             color: a,
             elementId: t?.id || null,
             index: -1,
             awakened: !1,
-            pierce: l,
-            ...u,
-          });
+            pierce,
+            ...options,
+          };
+          this.addShot(shot);
+          if (Math.random() < e.trickshot) {
+            let angle = i + n + (Math.random() < 0.5 ? -0.08 : 0.08);
+            this.addShot({
+              ...shot,
+              vx: Math.cos(angle) * speed * e.projectileSpeed,
+              vy: Math.sin(angle) * speed * e.projectileSpeed,
+            });
+          }
+        };
       if (!t) o(0, 440, 4, 20);
       else if (t.id === `fire`) o(0, 370, 8, 27);
       else if (t.id === `ice`) o(0, 310, 10, 24);
@@ -3810,34 +3874,99 @@ var j = class {
     }
     applyUpgrade(e) {
       let t = this.st;
-      e === `vitality`
-        ? ((t.maxHealth += 15),
-          (t.health = Math.min(t.maxHealth, t.health + 15)))
-        : e === `power`
-          ? (t.damageBoost *= 1.12)
-          : e === `haste`
-            ? ((t.attackSpeed *= 0.95),
-              (t.fireBoost *= 0.95),
-              (t.abilitySpeed *= 0.95))
-            : e === `fleet`
-              ? (t.moveSpeed *= 1.1)
-              : e === `reach`
-                ? (t.meleeRange *= 1.15)
-                : e === `quickstep`
-                  ? (t.dashCooldown *= 0.88)
-                  : e === `scavenger`
-                    ? (t.fragmentBonus += 1)
-                    : e === `bloodthirst`
-                      ? (t.lifesteal = 0.05 * t.upgrades[e])
-                      : e === `marksman`
-                        ? (t.rangedBoost *= 1.15)
-                        : e === `resonance`
-                          ? (t.abilitySpeed *= 0.92)
-                          : e === `magnet`
-                            ? (t.magnet += 26)
-                            : e === `guardian`
-                              ? (t.guardian = t.upgrades[e])
-                              : e === `phase` && (t.phase = t.upgrades[e]);
+      switch (e) {
+        case `vitality`:
+          t.maxHealth += 15;
+          t.health = Math.min(t.maxHealth, t.health + 15);
+          break;
+        case `power`:
+          t.damageBoost *= 1.12;
+          break;
+        case `haste`:
+          t.attackSpeed *= 0.95;
+          t.fireBoost *= 0.95;
+          t.abilitySpeed *= 0.95;
+          break;
+        case `fleet`:
+          t.moveSpeed *= 1.1;
+          break;
+        case `reach`:
+          t.meleeRange *= 1.15;
+          break;
+        case `quickstep`:
+          t.dashCooldown *= 0.88;
+          break;
+        case `scavenger`:
+        case `fortune`:
+          t.fragmentBonus += 1;
+          break;
+        case `bloodthirst`:
+          t.lifesteal = 0.05 * t.upgrades[e];
+          break;
+        case `marksman`:
+          t.rangedBoost *= 1.15;
+          break;
+        case `resonance`:
+          t.abilitySpeed *= 0.92;
+          break;
+        case `magnet`:
+          t.magnet += 26;
+          break;
+        case `guardian`:
+          t.guardian = t.upgrades[e];
+          break;
+        case `phase`:
+          t.phase = t.upgrades[e];
+          break;
+        case `ironhide`:
+          t.armor = Math.min(0.5, t.armor + 0.06);
+          break;
+        case `renewal`:
+          t.regeneration += 0.45;
+          break;
+        case `critical`:
+          t.critical = Math.min(0.5, t.critical + 0.05);
+          break;
+        case `executioner`:
+          t.executioner += 0.1;
+          break;
+        case `warhammer`:
+          t.meleeBoost *= 1.15;
+          break;
+        case `spellweaver`:
+          t.abilityBoost *= 1.12;
+          break;
+        case `blastcraft`:
+          t.splashBonus += 10;
+          break;
+        case `trickshot`:
+          t.trickshot = Math.min(0.6, t.trickshot + 0.1);
+          break;
+        case `longstride`:
+          t.dashDistance += 10;
+          break;
+        case `evasion`:
+          t.evasion = Math.min(0.3, t.evasion + 0.05);
+          break;
+        case `thorns`:
+          t.thorns += 8;
+          break;
+        case `secondwind`:
+          t.roomHeal += 5;
+          break;
+        case `adrenaline`:
+          t.adrenaline += 0.1;
+          break;
+        case `sharpshooter`:
+          t.rangedBoost *= 1.12;
+          break;
+        case `aftershock`:
+          t.meleeSpeed *= 0.92;
+          break;
+        case `guardianangel`:
+          t.guardian += 1.5;
+          break;
+      }
     }
     skipUpgrade() {
       ((this.upgradeOpen = !1),
@@ -3883,6 +4012,7 @@ var j = class {
         (e.roomCleared = !1),
         (e.gateOpen = !1),
         e.guardian > 0 && (e.shield = Math.max(e.shield, 2.5 + e.guardian)),
+        e.roomHeal > 0 && this.heal(e.roomHeal),
         (e.combo = 0),
         (e.comboTimer = 0),
         (this.history = [{ x: t / 2, y: n / 2, t: e.time }]));
@@ -4061,6 +4191,7 @@ var j = class {
       t.time += e;
       for (let n of Object.keys(t.status))
         t.status[n] = Math.max(0, t.status[n] - e);
+      t.regeneration > 0 && this.heal(t.regeneration * e);
       (t.status.poison > 0 && this.hurtPlayer(7 * e, !0),
         (t.invuln = Math.max(0, t.invuln - e)),
         (t.rage = Math.max(0, t.rage - e)));
@@ -5469,6 +5600,9 @@ function J() {
       ],
     })
   );
+}
+var Y = J;
+export { Y as component };
 }
 var Y = J;
 export { Y as component };
