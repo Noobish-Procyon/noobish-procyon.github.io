@@ -3225,6 +3225,7 @@ function O(e) {
   return {
     maxLevel: 10,
     used: t.filter((e) => e.level > 0).length,
+    totalLevels: t.reduce((e, t) => e + t.level, 0),
     options: t,
   };
 }
@@ -3349,6 +3350,7 @@ function A() {
     mode: null,
     over: !1,
     upgradeOpen: !1,
+    upgradeDetailsOpen: !1,
     upgradeChoices: [],
     gateOpen: !1,
     upgrades: O({}),
@@ -3369,6 +3371,7 @@ var j = class {
         (this.mode = null),
         (this.over = !1),
         (this.upgradeOpen = !1),
+        (this.upgradeDetailsOpen = !1),
         (this.log = []),
         (this.w = 320),
         (this.h = 300),
@@ -3682,6 +3685,10 @@ var j = class {
     }
     press(e) {
       if (this.mode === null) return;
+      if (e === `u`) {
+        ((this.upgradeDetailsOpen = !this.upgradeDetailsOpen), this.emit());
+        return;
+      }
       if (this.element()?.id === `math` && [`1`, `2`, `3`].includes(e)) {
         if (this.mathCreationReady) this.mathCreation(Number(e));
         else {
@@ -5136,6 +5143,7 @@ var j = class {
           this.mathCreationReady && this.element()?.id === `math`,
         over: this.over,
         upgradeOpen: this.upgradeOpen,
+        upgradeDetailsOpen: this.upgradeDetailsOpen,
         gateOpen: e.gateOpen,
         dashReady: e.dashTimer <= 0,
         rangedReady: e.rangedTimer <= 0,
@@ -5661,10 +5669,6 @@ function U({ snap: e, engineRef: t }) {
                             style: { color: n.color },
                             children: n.name,
                           }),
-                          (0, M.jsx)(`span`, {
-                            className: `mt-0.5 block truncate font-mono text-[7px] tracking-[0.04em] text-[#8b8598]`,
-                            children: n.traits.debuffLabel,
-                          }),
                         ],
                       }),
                     ],
@@ -5809,14 +5813,19 @@ function W({ snap: e }) {
           }),
           (0, M.jsxs)(`span`, {
             className: `font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]`,
-            children: [t.used, ` ACTIVE`],
+            children: [t.totalLevels, ` UPGRADES`],
           }),
         ],
       }),
       (0, M.jsx)(`div`, {
         className: `mt-2 max-h-36 space-y-1 overflow-y-auto`,
-        children: n.length
-          ? n.map((i) => {
+        children: !n.length
+          ? (0, M.jsx)(`p`, {
+              className: `rounded-lg border border-white/[0.06] bg-black/20 px-2 py-2 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]`,
+              children: `NO UPGRADES YET`,
+            })
+          : e.upgradeDetailsOpen
+            ? n.map((i) => {
               return (0, M.jsxs)(
                 `div`,
                 {
@@ -5847,10 +5856,10 @@ function W({ snap: e }) {
                 i.id,
               );
             })
-          : (0, M.jsx)(`p`, {
-              className: `rounded-lg border border-white/[0.06] bg-black/20 px-2 py-2 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]`,
-              children: `NO UPGRADES YET`,
-            }),
+            : (0, M.jsx)(`p`, {
+                className: `rounded-lg border border-white/[0.06] bg-black/20 px-2 py-2 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]`,
+                children: `PRESS U TO VIEW UPGRADE LEVELS`,
+              }),
       }),
     ],
   });

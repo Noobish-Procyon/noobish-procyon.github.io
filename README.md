@@ -100,6 +100,8 @@ enemies wield World 1's Water element. Progress and each world's current depth
 and upgrade levels are saved in browser storage, so reloading resumes at the
 saved depth with that world's upgrades. Every element has a themed 10% buff and
 10% debuff; awakened and inherently unawakenable elements have a 20% buff.
+During a run, the SYSTEM panel shows your total upgrade levels; press `U` to
+view upgrade names and levels.
 
 Launch: [`dungeoncrawlers/index.html`](dungeoncrawlers/index.html)
 
