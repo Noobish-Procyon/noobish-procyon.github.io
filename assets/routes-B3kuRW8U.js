@@ -4124,13 +4124,16 @@ var j = class {
         e.status.stun > 0
       )
         return;
-      let t = this.element(),
+      let equipped = this.element(),
+        t = equipped?.combatId
+          ? a.find((e) => e.id === equipped.combatId)
+          : equipped,
         n = this.nearestEnemy(),
         r = e.player,
         i = n
           ? Math.atan2(n.y - r.y, n.x - r.x)
           : Math.atan2(this.aim.y - r.y, this.aim.x - r.x),
-        a = t ? t.color : `#f2dfb2`,
+        color = equipped ? equipped.color : `#f2dfb2`,
         o = (
           n,
           speed,
@@ -4147,7 +4150,7 @@ var j = class {
             vy: Math.sin(i + n) * speed * e.projectileSpeed,
             r: radius,
             damage: damage * e.damageBoost * e.rangedBoost,
-            color: a,
+            color,
             elementId: t?.id || null,
             index: -1,
             awakened: !1,
@@ -4203,7 +4206,7 @@ var j = class {
             o < n.r + 11 &&
             this.hitEnemy(n, 30 * e.damageBoost, t.id, -1, !1);
         }
-        this.burst(n.x, n.y, a, 8);
+        this.burst(n.x, n.y, color, 8);
       } else
         t.id === `wind`
           ? [-0.05, 0.05].forEach((e) =>
