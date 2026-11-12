@@ -103,6 +103,8 @@ element's home-world currency. Progress and each world's current depth are
 saved in browser storage, and upgrade levels are shared between worlds. Every
 element has a themed 10% buff and 10% debuff;
 awakened and inherently unawakenable elements have a 20% buff.
+The Momentum upgrade builds bonus damage from landed hits and resets when you
+take damage.
 During a run, the SYSTEM panel shows your total upgrade levels; press `U` to
 view upgrade names and levels.
 

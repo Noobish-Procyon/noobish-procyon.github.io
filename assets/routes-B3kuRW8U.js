@@ -557,6 +557,11 @@ var r = t(e(), 1),
     { id: `sharpshooter`, name: `SHARPSHOOTER`, text: `+12% projectile speed and range.` },
     { id: `aftershock`, name: `AFTERSHOCK`, text: `8% shorter melee cooldown.` },
     { id: `guardianangel`, name: `GUARDIAN ANGEL`, text: `+1.5 seconds of shield at room start.` },
+    {
+      id: `momentum`,
+      name: `MOMENTUM`,
+      text: `+2% damage per hit in your streak, capped at +3% per level. Taking damage resets it.`,
+    },
   ];
 a.push(...W2);
 var ELEMENT_TRAITS = {
@@ -3838,6 +3843,8 @@ var j = class {
           scoreBoost: 1,
           projectileSpeed: 1,
           guardianAngel: 0,
+          momentum: 0,
+          momentumHits: 0,
           shield: 0,
           reflect: 0,
           invuln: 0,
@@ -4314,7 +4321,9 @@ var j = class {
             (n.shake = Math.max(n.shake, 0.12)));
           return;
         }
-        ((n.health -= e), n.health <= 0 && ((n.health = 0), this.endRun()));
+        ((n.momentumHits = 0),
+          (n.health -= e),
+          n.health <= 0 && ((n.health = 0), this.endRun()));
       }
     }
     cleanse() {
@@ -4406,10 +4415,20 @@ var j = class {
             : 1),
         s = Math.min(
           e.hp,
-          t * this.elementTraitMultiplier(`damage`) * o,
+          t *
+            (1 +
+              Math.min(
+                (this.st.momentum || 0) * 0.03,
+                (this.st.momentumHits || 0) * 0.02,
+              )) *
+            this.elementTraitMultiplier(`damage`) *
+            o,
         );
       ((e.hp -= s),
         s > 0 && (e.hit = Math.max(e.hit, 0.08)),
+        s > 0 &&
+          this.st.momentum > 0 &&
+          (this.st.momentumHits = Math.min(15, this.st.momentumHits + 1)),
         s > 0 && this.st.lifesteal > 0 && this.heal(s * this.st.lifesteal));
       let c = a.find((e) => e.id === n),
         l = i ? 1.5 : 1;
@@ -4834,6 +4853,9 @@ var j = class {
           break;
         case `guardianangel`:
           t.guardian += 1.5;
+          break;
+        case `momentum`:
+          t.momentum = t.upgrades[e];
           break;
       }
     }
