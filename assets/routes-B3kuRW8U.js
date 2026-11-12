@@ -559,6 +559,64 @@ var r = t(e(), 1),
     { id: `guardianangel`, name: `GUARDIAN ANGEL`, text: `+1.5 seconds of shield at room start.` },
   ];
 a.push(...W2);
+var ELEMENT_TRAITS = {
+    fire: [`damage`, `defense`],
+    ice: [`defense`, `moveSpeed`],
+    nature: [`defense`, `attackSpeed`],
+    water: [`moveSpeed`, `damage`],
+    light: [`attackSpeed`, `defense`],
+    dark: [`damage`, `moveSpeed`],
+    poison: [`damage`, `defense`],
+    electric: [`attackSpeed`, `defense`],
+    crystal: [`defense`, `moveSpeed`],
+    metal: [`defense`, `attackSpeed`],
+    blood: [`damage`, `defense`],
+    time: [`attackSpeed`, `moveSpeed`],
+    digital: [`attackSpeed`, `defense`],
+    wind: [`moveSpeed`, `damage`],
+    soul: [`defense`, `attackSpeed`],
+    space: [`damage`, `moveSpeed`],
+    creation: [`defense`, `attackSpeed`],
+    archangel: [`defense`, `damage`],
+    telekinesis: [`damage`, `moveSpeed`],
+    rubber: [`moveSpeed`, `attackSpeed`],
+    gas: [`damage`, `defense`],
+    silk: [`attackSpeed`, `defense`],
+    mystic: [`attackSpeed`, `moveSpeed`],
+    duality: [`defense`, `attackSpeed`],
+    math: [`attackSpeed`, `defense`],
+    coral: [`defense`, `moveSpeed`],
+    abyss: [`damage`, `moveSpeed`],
+    kelp: [`defense`, `attackSpeed`],
+    pearl: [`defense`, `damage`],
+    current: [`moveSpeed`, `damage`],
+    magma: [`damage`, `moveSpeed`],
+    thunder: [`attackSpeed`, `defense`],
+    sand: [`defense`, `attackSpeed`],
+    sound: [`attackSpeed`, `defense`],
+    gravity: [`damage`, `moveSpeed`],
+    dream: [`attackSpeed`, `defense`],
+    mirror: [`defense`, `damage`],
+    rune: [`defense`, `moveSpeed`],
+    meteor: [`damage`, `defense`],
+    beast: [`damage`, `attackSpeed`],
+    smoke: [`moveSpeed`, `damage`],
+    void: [`damage`, `defense`],
+    mirage: [`moveSpeed`, `attackSpeed`],
+    ironwood: [`defense`, `moveSpeed`],
+    solar: [`damage`, `defense`],
+    lunar: [`defense`, `attackSpeed`],
+    chaos: [`damage`, `defense`],
+    order: [`defense`, `moveSpeed`],
+    prism: [`attackSpeed`, `defense`],
+    frost: [`attackSpeed`, `moveSpeed`],
+  },
+  ELEMENT_TRAIT_LABELS = {
+    damage: `DAMAGE`,
+    moveSpeed: `MOVE SPEED`,
+    attackSpeed: `ATTACK SPEED`,
+    defense: `DEFENSE`,
+  };
 function l(e, t) {
   let {
     engine: n,
@@ -1255,9 +1313,13 @@ function v(e, t) {
     v = (e) => e * h * n.damageBoost * n.abilityBoost,
     y = (e, t, n) => Math.max(t, Math.min(n, e));
   n.abilityTimers[t] =
-    r.id === `math` && t === 0
+    (r.id === `math` && t === 0
       ? 0.5
-      : [5, 8, 12, 16][t] * (c ? 1.25 : 1) * n.attackSpeed * n.abilitySpeed;
+      : [5, 8, 12, 16][t] *
+        (c ? 1.25 : 1) *
+        n.attackSpeed *
+        n.abilitySpeed) /
+    e.elementTraitMultiplier(`attackSpeed`);
   let b = (t, n, r, i = `area`) =>
       e.effect({
         kind: i,
@@ -3460,6 +3522,31 @@ var j = class {
         null
       );
     }
+    elementTraitMultiplier(e) {
+      let t = this.element(),
+        n = t && ELEMENT_TRAITS[t.id];
+      if (!n) return 1;
+      let r =
+        this.profile.awakened.includes(t.id) || !(t.awakeMoves || t.forms)
+          ? 1.2
+          : 1.1;
+      return n[0] === e ? r : n[1] === e ? 0.9 : 1;
+    }
+    elementTraitDetails(e) {
+      if (!e) return null;
+      let t = ELEMENT_TRAITS[e.id];
+      if (!t) return null;
+      let n =
+        this.profile.awakened.includes(e.id) || !(e.awakeMoves || e.forms)
+          ? 20
+          : 10;
+      return {
+        buffStat: t[0],
+        buffLabel: `+${n}% ${ELEMENT_TRAIT_LABELS[t[0]]}`,
+        debuffStat: t[1],
+        debuffLabel: `-10% ${ELEMENT_TRAIT_LABELS[t[1]]}`,
+      };
+    }
     colorway() {
       return !this.profile.colorwayUnlocked || !this.profile.colorway
         ? null
@@ -3800,7 +3887,8 @@ var j = class {
             this.burst(n.player.x, n.player.y, `#c9a86a`, 8));
           return;
         }
-        e *= 1 - n.armor;
+        (e *= 1 - n.armor),
+          (e /= this.elementTraitMultiplier(`defense`));
         let target = this.nearestEnemy();
         target &&
           n.thorns > 0 &&
@@ -3892,7 +3980,9 @@ var j = class {
       }
     }
     damageEnemy(e, t) {
-      e.dead || ((e.hp -= t), e.hp <= 0 && this.defeatEnemy(e));
+      e.dead ||
+        ((e.hp -= t * this.elementTraitMultiplier(`damage`)),
+        e.hp <= 0 && this.defeatEnemy(e));
     }
     hitEnemy(e, t, n, r, i) {
       if (!e || e.dead || e.type === `fragment`) return 0;
@@ -3905,7 +3995,10 @@ var j = class {
           (this.st.health / this.st.maxHealth <= 0.35
             ? 1 + this.st.adrenaline
             : 1),
-        s = Math.min(e.hp, t * o);
+        s = Math.min(
+          e.hp,
+          t * this.elementTraitMultiplier(`damage`) * o,
+        );
       ((e.hp -= s),
         s > 0 && (e.hit = Math.max(e.hit, 0.08)),
         s > 0 && this.st.lifesteal > 0 && this.heal(s * this.st.lifesteal));
@@ -4114,7 +4207,9 @@ var j = class {
               t?.id === `soul` ||
               t?.id === `creation`
             ? 0.3
-            : 0.24) * e.fireBoost;
+            : 0.24) *
+        e.fireBoost /
+        this.elementTraitMultiplier(`attackSpeed`);
     }
     meleeAt(e, t) {
       let n = this.st;
@@ -4146,7 +4241,9 @@ var j = class {
           this.burst(e.x, e.y, a?.color || `#f2dfb2`, 6),
           (o += 1));
       }
-      ((n.meleeTimer = 0.5 * n.attackSpeed * n.meleeSpeed),
+      ((n.meleeTimer =
+        (0.5 * n.attackSpeed * n.meleeSpeed) /
+        this.elementTraitMultiplier(`attackSpeed`)),
         this.effect({
           kind: `arc`,
           x: r.x,
@@ -4168,7 +4265,8 @@ var j = class {
         e.status.stun > 0
       )
         return;
-      e.dashTimer = e.dashCooldown;
+      e.dashTimer =
+        e.dashCooldown / this.elementTraitMultiplier(`attackSpeed`);
       let t = this.moveDir(),
         n = { x: e.player.x, y: e.player.y };
       ((e.player.x = w(
@@ -4604,7 +4702,10 @@ var j = class {
         o || s)
       ) {
         let n = Math.hypot(o, s),
-          r = t.moveSpeed * (t.status.slow > 0 ? 0.5 : 1);
+          r =
+            t.moveSpeed *
+            this.elementTraitMultiplier(`moveSpeed`) *
+            (t.status.slow > 0 ? 0.5 : 1);
         ((i.x += (o / n) * r * e), (i.y += (s / n) * r * e));
       }
       for (
@@ -4701,7 +4802,7 @@ var j = class {
           r.type === `fragment` ||
             r.dead ||
             Math.hypot(r.x - n.x, r.y - n.y) > n.r + r.r ||
-            ((r.hp -= n.dps * e),
+            (this.damageEnemy(r, n.dps * e),
             n.slow && (r.slow = Math.max(r.slow, n.slow)),
             n.poison && (r.poison = Math.max(r.poison, n.poison)),
             n.burn && (r.burn = Math.max(r.burn, 0.6)),
@@ -4965,6 +5066,7 @@ var j = class {
               color: t.color,
               awakened: this.profile.awakened.includes(t.id),
               hasAwakening: !!(t.awakeMoves || t.forms),
+              traits: this.elementTraitDetails(t),
               form: this.profile.forms[t.id] || null,
               forms:
                 t.forms && this.profile.awakened.includes(t.id)
@@ -4980,6 +5082,7 @@ var j = class {
           name: this.elementName(e),
           color: e.color,
           cost: e.cost,
+          traits: this.elementTraitDetails(e),
           unlocked: this.profile.unlocked.includes(e.id),
           equipped:
             (this.profile.world === 2
@@ -5546,10 +5649,19 @@ function U({ snap: e, engineRef: t }) {
                         className: `h-1.5 w-1.5 shrink-0 rounded-full`,
                         style: { background: n.color },
                       }),
-                      (0, M.jsx)(`span`, {
-                        className: `truncate font-heading text-[11px] tracking-[0.05em]`,
-                        style: { color: n.color },
-                        children: n.name,
+                      (0, M.jsxs)(`span`, {
+                        className: `min-w-0 flex-1`,
+                        children: [
+                          (0, M.jsx)(`span`, {
+                            className: `block truncate font-heading text-[11px] tracking-[0.05em]`,
+                            style: { color: n.color },
+                            children: n.name,
+                          }),
+                          (0, M.jsx)(`span`, {
+                            className: `mt-0.5 block truncate font-mono text-[7px] tracking-[0.04em] text-[#8b8598]`,
+                            children: `${n.traits.buffLabel} · ${n.traits.debuffLabel}`,
+                          }),
+                        ],
                       }),
                     ],
                   }),
@@ -5844,6 +5956,11 @@ function q({ snap: e, engineRef: t }) {
                 className: `font-mono text-[8px] tracking-[0.16em] text-[#7f7a8c]`,
                 children: r,
               }),
+              e.element?.traits &&
+                (0, M.jsx)(`p`, {
+                  className: `mt-1 font-mono text-[8px] tracking-[0.08em] text-[#c9a86a]`,
+                  children: `${e.element.traits.buffLabel} · ${e.element.traits.debuffLabel}`,
+                }),
             ],
           }),
         ],
