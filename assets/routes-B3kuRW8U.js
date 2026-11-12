@@ -5603,6 +5603,3 @@ function J() {
 }
 var Y = J;
 export { Y as component };
-}
-var Y = J;
-export { Y as component };
