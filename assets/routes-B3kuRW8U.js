@@ -3651,7 +3651,10 @@ var j = class {
         );
       } else if (e === 3) {
         this.mathShotUntil = performance.now() + 8000;
-        this.addLog(`!`, `Six shots per volley for 8 seconds.`);
+        this.addLog(
+          `!`,
+          `Six shots per volley for 8 seconds — or 24 when Trickshot procs.`,
+        );
       } else {
         this.mathCreationReady = !0;
         return;
@@ -4005,7 +4008,15 @@ var j = class {
           ? Math.atan2(n.y - r.y, n.x - r.x)
           : Math.atan2(this.aim.y - r.y, this.aim.x - r.x),
         a = t ? t.color : `#f2dfb2`,
-        o = (n, speed, radius, damage, pierce = 0, options = {}) => {
+        o = (
+          n,
+          speed,
+          radius,
+          damage,
+          pierce = 0,
+          options = {},
+          allowTrickshot = !0,
+        ) => {
           let shot = {
             x: r.x,
             y: r.y,
@@ -4021,7 +4032,7 @@ var j = class {
             ...options,
           };
           this.addShot(shot);
-          if (Math.random() < e.trickshot) {
+          if (allowTrickshot && Math.random() < e.trickshot) {
             let angle = i + n + (Math.random() < 0.5 ? -0.08 : 0.08);
             this.addShot({
               ...shot,
@@ -4048,9 +4059,19 @@ var j = class {
       else if (t.id === `blood`) (o(0, 400, 7, 32), this.hurtPlayer(1));
       else if (t.id === `time`) o(0, 430, 7, 27, 1);
       else if (t.id === `math`) {
-        let count = this.mathShotUntil > performance.now() ? 6 : 3;
+        let mathBurst = this.mathShotUntil > performance.now(),
+          count = mathBurst ? (Math.random() < e.trickshot ? 24 : 6) : 3,
+          angleStep = count > 6 ? 0.65 / (count - 1) : 0.13;
         for (let shot = 0; shot < count; shot++)
-          o((shot - (count - 1) / 2) * 0.13, 500, 5, 16);
+          o(
+            (shot - (count - 1) / 2) * angleStep,
+            500,
+            5,
+            16,
+            0,
+            {},
+            !mathBurst,
+          );
       } else if (t.id === `digital` && n) {
         for (let n of this.enemies()) {
           let a = (n.x - r.x) * Math.cos(i) + (n.y - r.y) * Math.sin(i),
