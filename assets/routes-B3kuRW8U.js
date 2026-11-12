@@ -5663,7 +5663,7 @@ function U({ snap: e, engineRef: t }) {
                           }),
                           (0, M.jsx)(`span`, {
                             className: `mt-0.5 block truncate font-mono text-[7px] tracking-[0.04em] text-[#8b8598]`,
-                            children: `${n.traits.buffLabel} · ${n.traits.debuffLabel}`,
+                            children: n.traits.debuffLabel,
                           }),
                         ],
                       }),
