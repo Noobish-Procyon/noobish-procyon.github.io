@@ -617,6 +617,18 @@ var ELEMENT_TRAITS = {
     attackSpeed: `ATTACK SPEED`,
     defense: `DEFENSE`,
   };
+function getElementTraitDetails(e, awakened) {
+  if (!e) return null;
+  let t = ELEMENT_TRAITS[e.id];
+  if (!t) return null;
+  let n = awakened || !(e.awakeMoves || e.forms) ? 20 : 10;
+  return {
+    buffStat: t[0],
+    buffLabel: `+${n}% ${ELEMENT_TRAIT_LABELS[t[0]]}`,
+    debuffStat: t[1],
+    debuffLabel: `-10% ${ELEMENT_TRAIT_LABELS[t[1]]}`,
+  };
+}
 function l(e, t) {
   let {
     engine: n,
@@ -3318,6 +3330,7 @@ function A() {
       name: e.name,
       color: e.color,
       cost: e.cost,
+      traits: getElementTraitDetails(e, !1),
       unlocked: !1,
       equipped: !1,
       awakened: !1,
@@ -3533,19 +3546,10 @@ var j = class {
       return n[0] === e ? r : n[1] === e ? 0.9 : 1;
     }
     elementTraitDetails(e) {
-      if (!e) return null;
-      let t = ELEMENT_TRAITS[e.id];
-      if (!t) return null;
-      let n =
-        this.profile.awakened.includes(e.id) || !(e.awakeMoves || e.forms)
-          ? 20
-          : 10;
-      return {
-        buffStat: t[0],
-        buffLabel: `+${n}% ${ELEMENT_TRAIT_LABELS[t[0]]}`,
-        debuffStat: t[1],
-        debuffLabel: `-10% ${ELEMENT_TRAIT_LABELS[t[1]]}`,
-      };
+      return getElementTraitDetails(
+        e,
+        e && this.profile.awakened.includes(e.id),
+      );
     }
     colorway() {
       return !this.profile.colorwayUnlocked || !this.profile.colorway
