@@ -1303,6 +1303,353 @@ var g = {
     duality: h,
   },
   _ = Math.PI * 2;
+var W2_MOVESETS = {
+  coral: [`fan`, `roots`, `shield`, `nova`],
+  abyss: [`homing`, `pull`, `bastion`, `singularity`],
+  kelp: [`fan`, `repulse`, `mend`, `storm`],
+  pearl: [`beam`, `stun`, `shield`, `domain`],
+  current: [`lance`, `sweep`, `dash`, `prism`],
+  magma: [`blast`, `field`, `bastion`, `nova`],
+  thunder: [`chain`, `chain`, `reflect`, `judgment`],
+  sand: [`fan`, `sweep`, `dash`, `minefield`],
+  sound: [`ring`, `stun`, `orbit`, `prism`],
+  gravity: [`homing`, `pull`, `shield`, `singularity`],
+  dream: [`homing`, `roots`, `mend`, `domain`],
+  mirror: [`lance`, `repulse`, `reflect`, `prism`],
+  rune: [`mine`, `mines`, `wall`, `barrage`],
+  meteor: [`blast`, `field`, `bastion`, `judgment`],
+  beast: [`lance`, `sweep`, `dash`, `storm`],
+  smoke: [`blast`, `field`, `dash`, `storm`],
+  void: [`lance`, `pull`, `bastion`, `singularity`],
+  mirage: [`fan`, `mines`, `phase`, `prism`],
+  ironwood: [`homing`, `repulse`, `shield`, `minefield`],
+  solar: [`beam`, `stun`, `bastion`, `nova`],
+  lunar: [`lance`, `roots`, `mend`, `domain`],
+  chaos: [`fan`, `chain`, `wall`, `barrage`],
+  order: [`beam`, `stun`, `reflect`, `domain`],
+  prism: [`beam`, `sweep`, `orbit`, `prism`],
+  frost: [`fan`, `roots`, `mend`, `storm`],
+};
+function castWorld2Move(id, slot, ctx) {
+  let profile = W2_MOVESETS[id];
+  if (!profile || slot < 0 || slot > 3) return !1;
+  let {
+      engine,
+      st,
+      hero,
+      color,
+      aimAngle,
+      target,
+      dmg,
+      shoot,
+      spawn,
+      pool,
+      mine,
+      visual,
+      move,
+    } = ctx,
+    variant = profile[slot],
+    world2Index = W2.findIndex((element) => element.id === id),
+    bonus = Math.max(0, world2Index % 4),
+    power = (amount) => dmg(amount * (1 + bonus * 0.035)),
+    hit = (enemy, amount, moveSlot = slot) =>
+      engine.hitEnemy(enemy, power(amount), id, moveSlot, !1),
+    hitCircle = (center, radius, amount) => {
+      for (let enemy of engine.enemies())
+        Math.hypot(enemy.x - center.x, enemy.y - center.y) <=
+          radius + enemy.r && hit(enemy, amount);
+      visual(center.x, center.y, radius);
+    },
+    aimed = target || {
+      x: hero.x + Math.cos(aimAngle) * 170,
+      y: hero.y + Math.sin(aimAngle) * 170,
+    };
+
+  if (slot === 0) {
+    if (variant === `fan`) {
+      let count = 3 + (bonus % 2);
+      for (let index = 0; index < count; index++)
+        shoot(aimAngle + (index - (count - 1) / 2) * 0.16, {
+          speed: 500,
+          radius: 6,
+          damage: power(22),
+          style: `shard`,
+          pierce: 1,
+        });
+    } else if (variant === `lance`)
+      shoot(aimAngle, {
+        speed: 760,
+        radius: 8,
+        damage: power(48),
+        style: `bolt`,
+        pierce: 5,
+        knockback: 20,
+      });
+    else if (variant === `homing`)
+      for (let index = 0; index < 2; index++)
+        shoot(aimAngle + (index ? 0.11 : -0.11), {
+          speed: 320,
+          radius: 10,
+          damage: power(30),
+          homing: !0,
+          pull: 26,
+          style: `star`,
+        });
+    else if (variant === `beam`)
+      engine.beam(hero, aimAngle, 480, 38, power(46), id, slot, !1);
+    else if (variant === `ring`)
+      for (let index = 0; index < 8; index++)
+        spawn((index / 8) * _, {
+          speed: 400,
+          radius: 6,
+          damage: power(17),
+          style: `ring`,
+          pierce: 1,
+        });
+    else if (variant === `blast`)
+      shoot(aimAngle, {
+        speed: 410,
+        radius: 11,
+        damage: power(38),
+        splash: 62,
+        knockback: 30,
+        accel: 100,
+      });
+    else if (variant === `chain` && target) {
+      hit(target, 34);
+      engine.chain(target, power(22), 4 + bonus);
+      engine.burst(target.x, target.y, color, 9);
+    } else {
+      mine(aimed.x, aimed.y, {
+        blast: 76,
+        fuse: 0.35,
+        damage: power(58),
+        stun: 0.55,
+      });
+      visual(aimed.x, aimed.y, 30);
+    }
+    return !0;
+  }
+
+  if (slot === 1) {
+    if (variant === `roots`) {
+      pool(hero.x, hero.y, 100 + bonus * 8, 3.8, power(10), {
+        root: 1.8,
+        slow: 1.2,
+      });
+      for (let enemy of engine.enemies())
+        Math.hypot(enemy.x - hero.x, enemy.y - hero.y) < 108 &&
+          (enemy.root = Math.max(enemy.root || 0, 1.8));
+    } else if (variant === `pull`) {
+      for (let enemy of engine.enemies()) {
+        let distance = Math.hypot(enemy.x - aimed.x, enemy.y - aimed.y) || 1;
+        if (distance > 190 + enemy.r) continue;
+        let pull = Math.min(42, Math.max(0, distance - 28));
+        ((enemy.x += ((aimed.x - enemy.x) / distance) * pull),
+          (enemy.y += ((aimed.y - enemy.y) / distance) * pull),
+          (enemy.slow = Math.max(enemy.slow || 0, 1.6)));
+      }
+      visual(aimed.x, aimed.y, 190);
+      engine.after(0.35, () => hitCircle(aimed, 108, 48));
+    } else if (variant === `repulse`) {
+      for (let enemy of engine.enemies()) {
+        let distance = Math.hypot(enemy.x - hero.x, enemy.y - hero.y) || 1;
+        if (distance > 160 + enemy.r) continue;
+        ((enemy.x += ((enemy.x - hero.x) / distance) * 54),
+          (enemy.y += ((enemy.y - hero.y) / distance) * 54),
+          hit(enemy, 28),
+          (enemy.stun = Math.max(enemy.stun || 0, 0.35)));
+      }
+      visual(hero.x, hero.y, 160);
+    } else if (variant === `field`) {
+      pool(aimed.x, aimed.y, 116 + bonus * 7, 4.5, power(12), {
+        burn: id === `magma` || id === `meteor` || id === `solar`,
+        poison: id === `smoke` || id === `chaos` ? 4 : 0,
+        slow: 1.5,
+      });
+    } else if (variant === `mines`) {
+      for (let index = 0; index < 6; index++) {
+        let angle = (index / 6) * _;
+        mine(hero.x + Math.cos(angle) * 64, hero.y + Math.sin(angle) * 64, {
+          blast: 54,
+          fuse: 0.55,
+          damage: power(32),
+        });
+      }
+      visual(hero.x, hero.y, 88);
+    } else if (variant === `stun`) {
+      for (let enemy of engine.enemies())
+        Math.hypot(enemy.x - hero.x, enemy.y - hero.y) < 210 + enemy.r &&
+          ((enemy.stun = Math.max(enemy.stun || 0, 0.8)),
+          (enemy.mark = Math.max(enemy.mark || 0, 3)),
+          hit(enemy, 24));
+      visual(hero.x, hero.y, 210);
+    } else if (variant === `sweep`) {
+      engine.beam(hero, aimAngle, 350, 118, power(44), id, slot, !1);
+      for (let enemy of engine.enemies()) {
+        let direction = Math.atan2(enemy.y - hero.y, enemy.x - hero.x),
+          difference = Math.atan2(
+            Math.sin(direction - aimAngle),
+            Math.cos(direction - aimAngle),
+          );
+        Math.abs(difference) < 0.35 &&
+          (enemy.x += Math.cos(aimAngle) * 38);
+      }
+    } else {
+      if (target) {
+        hit(target, 30);
+        engine.chain(target, power(30), 6 + bonus);
+      }
+      visual(aimed.x, aimed.y, 132);
+    }
+    return !0;
+  }
+
+  if (slot === 2) {
+    if (variant === `shield`) {
+      ((st.shield = Math.max(st.shield, 10 + bonus * 2)),
+        (st.reflect = Math.max(st.reflect, 3.2)),
+        (st.invuln = Math.max(st.invuln, 0.55)));
+      visual(hero.x, hero.y, 74);
+    } else if (variant === `dash`) {
+      move(aimAngle, 142 + bonus * 8);
+      ((st.invuln = Math.max(st.invuln, 0.5)),
+        hitCircle(hero, 74, 26),
+        pool(hero.x, hero.y, 62, 1.8, power(8), { slow: 1.4 }));
+    } else if (variant === `mend`) {
+      (engine.cleanse(),
+        engine.heal(24 + bonus * 3),
+        (st.shield = Math.max(st.shield, 5 + bonus)));
+      engine.after(0.7, () => engine.heal(12 + bonus * 2));
+      visual(hero.x, hero.y, 66);
+    } else if (variant === `orbit`) {
+      for (let index = 0; index < 4; index++) {
+        let angle = (index / 4) * _;
+        st.blades.push({
+          angle,
+          color,
+          damage: power(25),
+          elementId: id,
+          awakened: !1,
+          life: 5,
+          orbit: 58,
+          cool: 0,
+          x: hero.x + Math.cos(angle) * 58,
+          y: hero.y + Math.sin(angle) * 58,
+        });
+      }
+      (st.shield = Math.max(st.shield, 5 + bonus),
+        visual(hero.x, hero.y, 82));
+    } else if (variant === `bastion`) {
+      ((st.shield = Math.max(st.shield, 8 + bonus)),
+        hitCircle(hero, 122, 34));
+      for (let enemy of engine.enemies()) {
+        let distance = Math.hypot(enemy.x - hero.x, enemy.y - hero.y) || 1;
+        distance < 126 &&
+          ((enemy.x += ((enemy.x - hero.x) / distance) * 62),
+          (enemy.y += ((enemy.y - hero.y) / distance) * 62));
+      }
+    } else if (variant === `phase`) {
+      move(aimAngle + Math.PI, 96);
+      (engine.cleanse(),
+        engine.heal(18 + bonus * 2),
+        (st.invuln = Math.max(st.invuln, 1.1)),
+        (st.moveSpeed *= 1.2));
+      engine.after(2, () => (st.moveSpeed /= 1.2));
+      visual(hero.x, hero.y, 54);
+    } else if (variant === `wall`) {
+      (engine.placeWall(aimAngle),
+        engine.placeWall(aimAngle + Math.PI / 2),
+        (st.shield = Math.max(st.shield, 9 + bonus * 2)));
+    } else {
+      ((st.reflect = Math.max(st.reflect, 6)),
+        (st.invuln = Math.max(st.invuln, 0.8)),
+        (st.shield = Math.max(st.shield, 6 + bonus)));
+      for (let enemy of engine.enemies())
+        Math.hypot(enemy.x - hero.x, enemy.y - hero.y) < 112 &&
+          (enemy.mark = Math.max(enemy.mark || 0, 4));
+      visual(hero.x, hero.y, 112);
+    }
+    return !0;
+  }
+
+  if (variant === `nova`) {
+    for (let pulse = 0; pulse < 3; pulse++)
+      engine.after(pulse * 0.22, () =>
+        hitCircle(hero, 146 + pulse * 34, 52 - pulse * 8),
+      );
+  } else if (variant === `judgment`) {
+    let enemies = [...engine.enemies()];
+    enemies.forEach((enemy, index) => {
+      let x = enemy.x,
+        y = enemy.y;
+      engine.after(index * 0.07, () => {
+        if (enemy.dead) return;
+        engine.effect({ kind: `line`, fromX: x, fromY: 0, x, y, color, duration: 0.35 });
+        hit(enemy, 82);
+        enemy.stun = Math.max(enemy.stun || 0, 0.65);
+      });
+    });
+  } else if (variant === `storm`) {
+    let radius = 178 + bonus * 8;
+    pool(aimed.x, aimed.y, radius, 5, power(16), {
+      slow: 2.4,
+    });
+    for (let enemy of engine.enemies())
+      Math.hypot(enemy.x - aimed.x, enemy.y - aimed.y) < radius + enemy.r &&
+        (enemy.root = Math.max(enemy.root || 0, 1));
+    engine.after(0.45, () => hitCircle(aimed, radius, 58));
+  } else if (variant === `singularity`) {
+    for (let enemy of engine.enemies()) {
+      let distance = Math.hypot(enemy.x - aimed.x, enemy.y - aimed.y) || 1;
+      if (distance > 300 + enemy.r) continue;
+      let pull = Math.min(110, Math.max(0, distance - 32));
+      ((enemy.x += ((aimed.x - enemy.x) / distance) * pull),
+        (enemy.y += ((aimed.y - enemy.y) / distance) * pull));
+    }
+    visual(aimed.x, aimed.y, 300);
+    engine.after(0.38, () => hitCircle(aimed, 164, 92));
+  } else if (variant === `minefield`) {
+    for (let index = 0; index < 10; index++) {
+      let angle = (index / 10) * _;
+      mine(hero.x + Math.cos(angle) * 92, hero.y + Math.sin(angle) * 92, {
+        blast: 70,
+        fuse: 0.45 + (index % 3) * 0.12,
+        damage: power(46),
+        stun: 0.35,
+      });
+    }
+    visual(hero.x, hero.y, 118);
+  } else if (variant === `prism`) {
+    for (let beam = -1; beam <= 1; beam++)
+      engine.beam(hero, aimAngle + beam * 0.28, 520, 66, power(64), id, slot, !1);
+    for (let enemy of engine.enemies())
+      Math.hypot(enemy.x - hero.x, enemy.y - hero.y) < 170 &&
+        (enemy.stun = Math.max(enemy.stun || 0, 1));
+  } else if (variant === `barrage`) {
+    for (let wave = 0; wave < 2; wave++)
+      for (let index = 0; index < 12; index++)
+        engine.after(wave * 0.18, () =>
+          spawn((index / 12) * _ + wave * 0.12, {
+            speed: 390 + wave * 60,
+            radius: 7,
+            damage: power(26),
+            style: `shard`,
+            pierce: 2,
+            knockback: 22,
+          }),
+        );
+  } else {
+    for (let enemy of engine.enemies())
+      (hit(enemy, 68),
+        (enemy.mark = Math.max(enemy.mark || 0, 7)),
+        (enemy.stun = Math.max(enemy.stun || 0, 0.55)));
+    (engine.heal(18 + bonus * 3),
+      (st.shield = Math.max(st.shield, 9 + bonus * 2)));
+    visual(hero.x, hero.y, Math.max(engine.w, engine.h));
+  }
+  return !0;
+}
 function v(e, t) {
   let n = e.st,
     r = e.element();
@@ -1358,9 +1705,9 @@ function v(e, t) {
         r: s.radius || 6,
         damage: s.damage ?? v(30),
         color: o,
-        elementId: r.id,
-        index: t,
-        awakened: c,
+        elementId: s.elementId || r.id,
+        index: s.index ?? t,
+        awakened: s.awakened ?? c,
         style: s.style,
         pierce: s.pierce || 0,
         bounce: s.bounce || 0,
@@ -1434,6 +1781,38 @@ function v(e, t) {
       return (e.heal(s * o), b(a.x, a.y, n), s);
     },
     k = g[r.id];
+  if (
+    world2Style &&
+    castWorld2Move(nId, t, {
+      engine: e,
+      st: n,
+      hero: a,
+      color: o,
+      aimAngle: f,
+      target: u,
+      dmg: v,
+      shoot: (angle, options = {}) =>
+        C(angle, { ...options, elementId: nId }),
+      spawn: (angle, options = {}) =>
+        S(a.x, a.y, angle, {
+          elementId: nId,
+          index: t,
+          awakened: !1,
+          ...options,
+        }),
+      pool: w,
+      mine: (x, y, options = {}) =>
+        T(x, y, {
+          elementId: nId,
+          index: t,
+          awakened: !1,
+          ...options,
+        }),
+      visual: b,
+      move: D,
+    })
+  )
+    return;
   if (r.id === `math`) {
     if (t === 0) {
       let target =
