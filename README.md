@@ -93,11 +93,12 @@ Launch: [`hyperfighters/index.html`](hyperfighters/index.html)
 
 ### Elemental Descent
 
-Descend through shifting rooms, collect fragments, and unlock the same 24-element
-roster, moves, awakenings, rooms, and upgrades as the current Base44 version,
-plus the non-awakenable Math element with its own four moves. Progress is saved
-in browser storage. The local page uses the published app's compiled assets so
-its combat behavior and controls stay in sync with that build.
+Descend through shifting rooms, collect fragments, and unlock elements. World 1
+includes the original roster and Math; reach depth 50 there to unlock World 2,
+with 25 additional elements and a separate aquatic-fragment currency. World 2
+enemies wield World 1's Water element. Progress and each world's current depth
+and upgrade levels are saved in browser storage, so reloading resumes at the
+saved depth with that world's upgrades.
 
 Launch: [`dungeoncrawlers/index.html`](dungeoncrawlers/index.html)
 

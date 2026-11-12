@@ -281,6 +281,233 @@ var r = t(e(), 1),
       ],
     },
   ],
+  W2 = [
+    {
+      id: `coral`,
+      name: `CORAL`,
+      world: 2,
+      cost: 10,
+      color: `#f27c72`,
+      combatId: `crystal`,
+      baseMoves: [`CORAL NEEDLE`, `REEF BURST`, `REEFGUARD`, `REEF CROWN`],
+    },
+    {
+      id: `abyss`,
+      name: `ABYSS`,
+      world: 2,
+      cost: 15,
+      color: `#4367a8`,
+      combatId: `dark`,
+      baseMoves: [`DEEP ORB`, `PRESSURE WELL`, `ABYSSAL VEIL`, `HADAL CRUSH`],
+    },
+    {
+      id: `kelp`,
+      name: `KELP`,
+      world: 2,
+      cost: 20,
+      color: `#568c63`,
+      combatId: `nature`,
+      baseMoves: [`KELP LASH`, `FOREST OF THE SEA`, `KELP ARMOR`, `GREEN TIDE`],
+    },
+    {
+      id: `pearl`,
+      name: `PEARL`,
+      world: 2,
+      cost: 25,
+      color: `#ead9d5`,
+      combatId: `light`,
+      baseMoves: [`PEARL FLASH`, `MOONLIT SHELL`, `LUSTER GUARD`, `PEARL NOVA`],
+    },
+    {
+      id: `current`,
+      name: `CURRENT`,
+      world: 2,
+      cost: 30,
+      color: `#54c7c3`,
+      combatId: `wind`,
+      baseMoves: [`CURRENT BOLT`, `CROSSCURRENT`, `SLIPSTREAM`, `RIP CURRENT`],
+    },
+    {
+      id: `magma`,
+      name: `MAGMA`,
+      world: 2,
+      cost: 35,
+      color: `#ef633f`,
+      combatId: `fire`,
+      baseMoves: [`MOLTEN SHARD`, `MAGMA RING`, `LAVA ARMOR`, `CALDERA`],
+    },
+    {
+      id: `thunder`,
+      name: `THUNDER`,
+      world: 2,
+      cost: 40,
+      color: `#f2d34f`,
+      combatId: `electric`,
+      baseMoves: [`THUNDERBOLT`, `CHAIN STORM`, `STATIC FIELD`, `SKYFALL`],
+    },
+    {
+      id: `sand`,
+      name: `SAND`,
+      world: 2,
+      cost: 45,
+      color: `#c9a45b`,
+      combatId: `wind`,
+      baseMoves: [`SAND SHOT`, `DUNE SWEEP`, `DUST DEVIL`, `DESERT STORM`],
+    },
+    {
+      id: `sound`,
+      name: `SOUND`,
+      world: 2,
+      cost: 50,
+      color: `#d58bd0`,
+      combatId: `wind`,
+      baseMoves: [`RESONANT PULSE`, `ECHO WAVE`, `SOUND BARRIER`, `SONIC BOOM`],
+    },
+    {
+      id: `gravity`,
+      name: `GRAVITY`,
+      world: 2,
+      cost: 55,
+      color: `#8b7db8`,
+      combatId: `space`,
+      baseMoves: [`GRAVITY WELL`, `ORBITAL SHIFT`, `HEAVY FIELD`, `SINGULARITY`],
+    },
+    {
+      id: `dream`,
+      name: `DREAM`,
+      world: 2,
+      cost: 60,
+      color: `#bf8de0`,
+      combatId: `mystic`,
+      baseMoves: [`DREAM DART`, `NIGHTMARE`, `SLEEPING VEIL`, `LUCID STORM`],
+    },
+    {
+      id: `mirror`,
+      name: `MIRROR`,
+      world: 2,
+      cost: 65,
+      color: `#b8d5dc`,
+      combatId: `duality`,
+      baseMoves: [`REFLECTED BOLT`, `SHATTER IMAGE`, `SILVER GUARD`, `MIRROR WORLD`],
+    },
+    {
+      id: `rune`,
+      name: `RUNE`,
+      world: 2,
+      cost: 70,
+      color: `#c89754`,
+      combatId: `mystic`,
+      baseMoves: [`RUNE FLAIR`, `SIGIL STORM`, `RUNE WARD`, `ANCIENT SCRIPT`],
+    },
+    {
+      id: `meteor`,
+      name: `METEOR`,
+      world: 2,
+      cost: 75,
+      color: `#dc7157`,
+      combatId: `fire`,
+      baseMoves: [`METEOR SHARD`, `IMPACT ZONE`, `STARFALL GUARD`, `EXTINCTION`],
+    },
+    {
+      id: `beast`,
+      name: `BEAST`,
+      world: 2,
+      cost: 80,
+      color: `#aa7654`,
+      combatId: `nature`,
+      baseMoves: [`FANG STRIKE`, `PACK HUNT`, `HIDE ARMOR`, `PRIMAL ROAR`],
+    },
+    {
+      id: `smoke`,
+      name: `SMOKE`,
+      world: 2,
+      cost: 85,
+      color: `#8b8791`,
+      combatId: `gas`,
+      baseMoves: [`SMOKE BOMB`, `BLINDING CLOUD`, `VANISH`, `DARKENING SKY`],
+    },
+    {
+      id: `void`,
+      name: `VOID`,
+      world: 2,
+      cost: 90,
+      color: `#69529c`,
+      combatId: `dark`,
+      baseMoves: [`VOID NEEDLE`, `NULL ZONE`, `VOID SKIN`, `TOTAL ERASURE`],
+    },
+    {
+      id: `mirage`,
+      name: `MIRAGE`,
+      world: 2,
+      cost: 95,
+      color: `#e1a56d`,
+      combatId: `light`,
+      baseMoves: [`AFTERIMAGE`, `FALSE HORIZON`, `SHIMMER`, `DESERT ILLUSION`],
+    },
+    {
+      id: `ironwood`,
+      name: `IRONWOOD`,
+      world: 2,
+      cost: 100,
+      color: `#8e7754`,
+      combatId: `metal`,
+      baseMoves: [`IRONBARK DART`, `ROOTED SPIKES`, `HEARTWOOD GUARD`, `ANCIENT GROVE`],
+    },
+    {
+      id: `solar`,
+      name: `SOLAR`,
+      world: 2,
+      cost: 105,
+      color: `#f4b844`,
+      combatId: `light`,
+      baseMoves: [`SOLAR FLARE`, `SUNBURST`, `CORONA`, `ZENITH`],
+    },
+    {
+      id: `lunar`,
+      name: `LUNAR`,
+      world: 2,
+      cost: 110,
+      color: `#9faee8`,
+      combatId: `ice`,
+      baseMoves: [`MOON SHARD`, `LUNAR ECLIPSE`, `MOONLIGHT VEIL`, `MOONFALL`],
+    },
+    {
+      id: `chaos`,
+      name: `CHAOS`,
+      world: 2,
+      cost: 115,
+      color: `#dd5d87`,
+      combatId: `poison`,
+      baseMoves: [`CHAOS BOLT`, `ENTROPY FIELD`, `UNSTABLE FORM`, `DISORDER`],
+    },
+    {
+      id: `order`,
+      name: `ORDER`,
+      world: 2,
+      cost: 120,
+      color: `#d9c899`,
+      combatId: `archangel`,
+      baseMoves: [`EDICT`, `SACRED PATTERN`, `HARMONY AEGIS`, `PERFECT LAW`],
+    },
+    {
+      id: `prism`,
+      name: `PRISM`,
+      world: 2,
+      cost: 125,
+      color: `#bd83e3`,
+      combatId: `crystal`,
+      baseMoves: [`PRISM BEAM`, `SPECTRUM`, `PRISMATIC GUARD`, `RAINBOW RUIN`],
+    },
+    {
+      id: `frost`,
+      name: `FROST`,
+      world: 2,
+      cost: 130,
+      color: `#8bd6e5`,
+      combatId: `ice`,
+      baseMoves: [`FROST SHARD`, `WHITEOUT`, `PERMAFROST`, `ZERO POINT`],
+    },
+  ],
   o = [
     `THE SUNKEN VESTIBULE`,
     `MOSS LANTERN HALL`,
@@ -331,6 +558,7 @@ var r = t(e(), 1),
     { id: `aftershock`, name: `AFTERSHOCK`, text: `8% shorter melee cooldown.` },
     { id: `guardianangel`, name: `GUARDIAN ANGEL`, text: `+1.5 seconds of shield at room start.` },
   ];
+a.push(...W2);
 function l(e, t) {
   let {
     engine: n,
@@ -1009,10 +1237,14 @@ function v(e, t) {
   let n = e.st,
     r = e.element();
   if (!r) return;
+  let nId = r.id,
+    world2Style = r.combatId,
+    awakening = world2Style ? null : e.awakening(r);
+  if (world2Style) r = { ...r, id: world2Style };
   let a = n.player,
     o = r.color,
-    s = e.awakening(r),
-    c = e.moveAwakened(r.id, t),
+    s = awakening,
+    c = !world2Style && e.moveAwakened(nId, t),
     l = s?.form || null,
     u = e.nearestEnemy(),
     d = e.moveDir(),
@@ -2883,38 +3115,60 @@ function x(e) {
     t.restore());
 }
 var S = `elemental-descent-profile-v1`,
-  C = a.filter((e) => e.awakeMoves || e.forms),
+  C = a.filter((e) => e.world !== 2 && (e.awakeMoves || e.forms)),
   w = (e, t, n) => Math.max(t, Math.min(n, e)),
   T = (e, t) => Math.hypot(e.x - t.x, e.y - t.y),
   E = 1,
   D = () => ({
     fragments: 12,
+    aquaticFragments: 0,
     unlocked: [],
     awakened: [],
     moves: {},
     forms: {},
     equipped: null,
+    world2Equipped: null,
+    world: 1,
+    bestDepth: 1,
+    world1Depth: 1,
+    world2Depth: 1,
+    world1Upgrades: {},
+    world2Upgrades: {},
     colorwayUnlocked: !1,
     colorway: null,
   });
 function O(e) {
-  let t = Object.keys(e).length;
+  let t = c.map((t) => {
+    let n = e[t.id] || 0;
+    return {
+      id: t.id,
+      name: t.name,
+      text: t.text,
+      level: n,
+      maxed: n >= 10,
+    };
+  });
   return {
-    slots: 3,
-    maxLevel: 4,
-    used: t,
-    options: c.map((n) => {
-      let r = e[n.id] || 0;
-      return {
-        id: n.id,
-        name: n.name,
-        text: n.text,
-        level: r,
-        maxed: r >= 4,
-        locked: r === 0 && t >= 3,
-      };
-    }),
+    maxLevel: 10,
+    used: t.filter((e) => e.level > 0).length,
+    options: t,
   };
+}
+function loadUpgrades(e) {
+  let t = {};
+  for (let n of c) {
+    let r = e?.[n.id];
+    Number.isInteger(r) && r > 0 && (t[n.id] = Math.min(10, r));
+  }
+  return t;
+}
+function pickUpgradeChoices(e) {
+  let t = c.filter((t) => (e[t.id] || 0) < 10);
+  for (let e = t.length - 1; e > 0; e--) {
+    let n = Math.floor(Math.random() * (e + 1));
+    [t[e], t[n]] = [t[n], t[e]];
+  }
+  return t.slice(0, 3).map((e) => e.id);
 }
 function k() {
   try {
@@ -2926,6 +3180,9 @@ function k() {
     ((r.fragments = Number.isFinite(t?.fragments)
       ? Math.max(0, Math.floor(t.fragments))
       : 0),
+      (r.aquaticFragments = Number.isFinite(t?.aquaticFragments)
+        ? Math.max(0, Math.floor(t.aquaticFragments))
+        : 0),
       (r.unlocked = Array.isArray(t?.unlocked)
         ? t.unlocked.filter((e) => n.has(e))
         : []),
@@ -2948,9 +3205,30 @@ function k() {
       }
     }
     return (
-      (r.equipped = r.unlocked.includes(t?.equipped)
-        ? t.equipped
-        : (r.unlocked[0] ?? null)),
+      (r.bestDepth = Number.isInteger(t?.bestDepth)
+        ? Math.max(1, t.bestDepth)
+        : 1),
+      (r.world1Depth = Number.isInteger(t?.world1Depth)
+        ? Math.max(1, t.world1Depth)
+        : r.bestDepth),
+      (r.world2Depth = Number.isInteger(t?.world2Depth)
+        ? Math.max(1, t.world2Depth)
+        : 1),
+      (r.world1Upgrades = loadUpgrades(t?.world1Upgrades)),
+      (r.world2Upgrades = loadUpgrades(t?.world2Upgrades)),
+      (r.world = t?.world === 2 && r.bestDepth >= 50 ? 2 : 1),
+      (r.equipped =
+        r.unlocked.includes(t?.equipped) &&
+        a.some((e) => e.id === t.equipped && e.world !== 2)
+          ? t.equipped
+          : (r.unlocked.find((e) => a.some((n) => n.id === e && n.world !== 2)) ??
+            null)),
+      (r.world2Equipped =
+        r.unlocked.includes(t?.world2Equipped) &&
+        a.some((e) => e.id === t.world2Equipped && e.world === 2)
+          ? t.world2Equipped
+          : (r.unlocked.find((e) => a.some((n) => n.id === e && n.world === 2)) ??
+            null)),
       (r.colorwayUnlocked = !!t?.colorwayUnlocked),
       (r.colorway =
         r.colorwayUnlocked && s.some((e) => e.id === t?.colorway)
@@ -2973,7 +3251,7 @@ function A() {
     score: 0,
     combo: 0,
     element: null,
-    elements: a.map((e) => ({
+    elements: a.filter((e) => (e.world || 1) === 1).map((e) => ({
       id: e.id,
       name: e.name,
       color: e.color,
@@ -2996,6 +3274,7 @@ function A() {
     mode: null,
     over: !1,
     upgradeOpen: !1,
+    upgradeChoices: [],
     gateOpen: !1,
     upgrades: O({}),
     colorways: { unlocked: !1, active: null, list: s },
@@ -3033,7 +3312,10 @@ var j = class {
         (this.mathPrisonTurn = 0),
         (this.mathShotUntil = 0),
         (this.st = {
-          room: 1,
+          room:
+            this.profile.world === 2
+              ? this.profile.world2Depth
+              : this.profile.world1Depth,
           time: 0,
           health: 100,
           maxHealth: 100,
@@ -3064,6 +3346,7 @@ var j = class {
           meleeRange: 80,
           fragmentBonus: 0,
           upgrades: {},
+          upgradeChoices: [],
           lifesteal: 0,
           rangedBoost: 1,
           abilitySpeed: 1,
@@ -3096,11 +3379,25 @@ var j = class {
           bossElement: null,
           shake: 0,
         }),
+        this.restoreUpgrades(),
         (this.history = []),
         (this.over = !1),
         (this.upgradeOpen = !1),
         this.keys.clear(),
         (this.joystick = { x: 0, y: 0 }));
+    }
+    restoreUpgrades() {
+      let e =
+        this.profile.world === 2
+          ? this.profile.world2Upgrades
+          : this.profile.world1Upgrades;
+      for (let t of c) {
+        let n = e[t.id] || 0;
+        for (let e = 1; e <= n; e++) {
+          this.st.upgrades[t.id] = e;
+          this.applyUpgrade(t.id);
+        }
+      }
     }
     start() {
       (this.measure(),
@@ -3139,8 +3436,29 @@ var j = class {
         localStorage.setItem(S, JSON.stringify(this.profile));
       } catch {}
     }
+    fragments() {
+      return this.profile.world === 2
+        ? this.profile.aquaticFragments
+        : this.profile.fragments;
+    }
+    setWorld(e) {
+      if (e !== 1 && e !== 2) return;
+      if (e === 2 && this.profile.bestDepth < 50) {
+        (this.addLog(`WORLD LOCKED`, `Reach World 1 depth 50 to unlock World 2.`),
+          this.emit());
+        return;
+      }
+      if (this.profile.world === e) return;
+      ((this.profile.world = e), this.saveProfile(), this.resumeSavedDepth());
+    }
     element() {
-      return a.find((e) => e.id === this.profile.equipped) || null;
+      let e = this.profile.world === 2
+        ? this.profile.world2Equipped
+        : this.profile.equipped;
+      return (
+        a.find((t) => t.id === e && (t.world || 1) === this.profile.world) ||
+        null
+      );
     }
     colorway() {
       return !this.profile.colorwayUnlocked || !this.profile.colorway
@@ -3194,7 +3512,7 @@ var j = class {
       return !!(r && this.profile.moves[r.key]?.[t]);
     }
     selectElement(e) {
-      let t = a.find((t) => t.id === e);
+      let t = a.find((t) => t.id === e && (t.world || 1) === this.profile.world);
       if (t) {
         if (this.profile.unlocked.includes(t.id))
           this.addLog(
@@ -3202,17 +3520,21 @@ var j = class {
             `${this.elementName(t)} answers your call.`,
           );
         else {
-          if (this.profile.fragments < t.cost) {
+          if (this.fragments() < t.cost) {
             (this.addLog(`NOT ENOUGH FRAGMENTS`, `${t.name} costs ${t.cost}.`),
               this.emit());
             return;
           }
-          ((this.profile.fragments -= t.cost),
+          (this.profile.world === 2
+            ? (this.profile.aquaticFragments -= t.cost)
+            : (this.profile.fragments -= t.cost),
             this.profile.unlocked.push(t.id),
             (this.profile.moves[t.id] = [!1, !1, !1, !1]),
             this.addLog(`ELEMENT UNLOCKED`, `${t.name} joins your circle.`));
         }
-        ((this.profile.equipped = t.id),
+        (this.profile.world === 2
+          ? (this.profile.world2Equipped = t.id)
+          : (this.profile.equipped = t.id),
           (this.mathCreationReady = !1),
           (this.mathPrisonScale = 1),
           (this.mathPrisonTargetId = null),
@@ -3233,12 +3555,14 @@ var j = class {
       }
       if (this.profile.moves[n.key]?.[e]) return;
       let r = n.costs[e];
-      if (this.profile.fragments < r) {
+      if (this.fragments() < r) {
         (this.addLog(`NOT ENOUGH FRAGMENTS`, `${n.moves[e]} costs ${r}.`),
           this.emit());
         return;
       }
-      ((this.profile.fragments -= r),
+      (this.profile.world === 2
+        ? (this.profile.aquaticFragments -= r)
+        : (this.profile.fragments -= r),
         (this.profile.moves[n.key] = this.profile.moves[n.key] || [
           !1,
           !1,
@@ -3287,7 +3611,7 @@ var j = class {
                 ? this.cast(3)
                 : e === ` `
                   ? this.dash()
-                  : e === `r` && this.restart();
+                  : void 0;
     }
     mathCreation(e) {
       if (
@@ -3644,7 +3968,7 @@ var j = class {
           vx: 0,
           vy: 0,
         }),
-        (t.score += n ? 2e3 : r ? 600 : 150),
+        (t.score += Math.round((n ? 2e3 : r ? 600 : 150) * t.scoreBoost)),
         (t.shake = n || r ? 0.35 : 0.06),
         this.burst(e.x, e.y, n ? `#c25a6b` : `#d9774d`, n || r ? 24 : 8),
         this.addLog(
@@ -3790,12 +4114,18 @@ var j = class {
         let t = Math.atan2(e.y - r.y, e.x - r.x),
           s = Math.atan2(Math.sin(t - i), Math.cos(t - i));
         Math.abs(s) > 1.15 ||
-          (this.hitEnemy(e, 34 * n.damageBoost, a?.id || null, -1, !1),
+          (this.hitEnemy(
+            e,
+            34 * n.damageBoost * n.meleeBoost,
+            a?.id || null,
+            -1,
+            !1,
+          ),
           (e.hit = Math.max(e.hit, 0.18)),
           this.burst(e.x, e.y, a?.color || `#f2dfb2`, 6),
           (o += 1));
       }
-      ((n.meleeTimer = 0.5 * n.attackSpeed),
+      ((n.meleeTimer = 0.5 * n.attackSpeed * n.meleeSpeed),
         this.effect({
           kind: `arc`,
           x: r.x,
@@ -3820,8 +4150,16 @@ var j = class {
       e.dashTimer = e.dashCooldown;
       let t = this.moveDir(),
         n = { x: e.player.x, y: e.player.y };
-      ((e.player.x = w(e.player.x + t.x * 70, 25, this.w - 25)),
-        (e.player.y = w(e.player.y + t.y * 70, 25, this.h - 25)),
+      ((e.player.x = w(
+        e.player.x + t.x * (70 + e.dashDistance),
+        25,
+        this.w - 25,
+      )),
+        (e.player.y = w(
+          e.player.y + t.y * (70 + e.dashDistance),
+          25,
+          this.h - 25,
+        )),
         this.effect({
           kind: `line`,
           fromX: n.x,
@@ -3856,16 +4194,15 @@ var j = class {
     chooseUpgrade(e) {
       let t = this.st,
         n = c.find((t) => t.id === e);
-      if (!n) return;
+      if (!n || !t.upgradeChoices.includes(e)) return;
       let r = t.upgrades[e] || 0;
-      if (!(r >= 4)) {
-        if (r === 0 && Object.keys(t.upgrades).length >= 3) {
-          (this.addLog(`SYSTEM FULL`, `Three upgrades are already loaded.`),
-            this.emit());
-          return;
-        }
+      if (r < 10) {
         ((t.upgrades[e] = r + 1),
           this.applyUpgrade(e),
+          (this.profile[this.profile.world === 2 ? `world2Upgrades` : `world1Upgrades`] =
+            { ...t.upgrades }),
+          this.saveProfile(),
+          (t.upgradeChoices = []),
           (this.upgradeOpen = !1),
           (t.gateOpen = !0),
           this.addLog(`UPGRADE`, `${n.name} LV ${r + 1}. Step into the gate.`),
@@ -3897,8 +4234,10 @@ var j = class {
           t.dashCooldown *= 0.88;
           break;
         case `scavenger`:
-        case `fortune`:
           t.fragmentBonus += 1;
+          break;
+        case `fortune`:
+          t.scoreBoost *= 1.15;
           break;
         case `bloodthirst`:
           t.lifesteal = 0.05 * t.upgrades[e];
@@ -3970,17 +4309,18 @@ var j = class {
     }
     skipUpgrade() {
       ((this.upgradeOpen = !1),
+        (this.st.upgradeChoices = []),
         (this.st.gateOpen = !0),
         this.addLog(`SYSTEM`, `Left it empty. The gate opens.`),
         this.emit());
     }
-    restart() {
+    resumeSavedDepth() {
       let e = this.mode;
       (this.resetState(),
         this.measure(),
         this.generateRoom(),
         (this.mode = e),
-        this.addLog(`NEW RUN`, `Fragments and unlocked elements are kept.`),
+        this.addLog(`DESCENT RESUMED`, `Continuing from the saved depth.`),
         this.emit());
     }
     endRun() {
@@ -3995,6 +4335,17 @@ var j = class {
     generateRoom() {
       let e = this.st,
         { w: t, h: n } = this;
+      let depthField =
+        this.profile.world === 2 ? `world2Depth` : `world1Depth`;
+      if (
+        this.profile[depthField] !== e.room ||
+        (this.profile.world === 1 && e.room > this.profile.bestDepth)
+      ) {
+        this.profile[depthField] = e.room;
+        if (this.profile.world === 1)
+          this.profile.bestDepth = Math.max(this.profile.bestDepth, e.room);
+        this.saveProfile();
+      }
       ((this.mathPrisonScale = 1),
         (this.mathPrisonTargetId = null),
         (this.mathPrisonTurn = 0),
@@ -4011,6 +4362,7 @@ var j = class {
         (e.delayed = []),
         (e.roomCleared = !1),
         (e.gateOpen = !1),
+        (e.upgradeChoices = []),
         e.guardian > 0 && (e.shield = Math.max(e.shield, 2.5 + e.guardian)),
         e.roomHeal > 0 && this.heal(e.roomHeal),
         (e.combo = 0),
@@ -4020,7 +4372,11 @@ var j = class {
         i = !r && e.room % 5 == 0,
         s = C.filter((e) => !this.profile.awakened.includes(e.id)),
         c = s.length ? s : C;
-      e.bossElement = r ? c[Math.floor(Math.random() * c.length)].id : null;
+      e.bossElement = r
+        ? this.profile.world === 2
+          ? `water`
+          : c[Math.floor(Math.random() * c.length)].id
+        : null;
       let l = 3 + Math.min(5, e.room + 1);
       for (let t = 0; t < l; t++) e.entities.push(this.makeEnemy(`enemy`));
       (r
@@ -4093,7 +4449,12 @@ var j = class {
             : e === `miniboss`
               ? 27
               : (38 + Math.random() * 20) * 1.15,
-        elementId: e === `awakenedBoss` ? this.st.bossElement : null,
+        elementId:
+          this.profile.world === 2
+            ? `water`
+            : e === `awakenedBoss`
+              ? this.st.bossElement
+              : null,
         hit: 0,
         fireTimer: e === `enemy` ? 0 : 1.2 + Math.random(),
         burn: 0,
@@ -4258,12 +4619,14 @@ var j = class {
         if (a.type === `fragment`) {
           ((a.spin += e * 3),
             T(i, a) < i.r + a.r + t.magnet &&
-              ((this.profile.fragments += a.value),
+              (this.profile.world === 2
+                ? (this.profile.aquaticFragments += a.value)
+                : (this.profile.fragments += a.value),
               this.saveProfile(),
               this.burst(a.x, a.y, `#b78aff`, 10),
               this.addLog(
                 `FRAGMENT`,
-                `+${a.value} · ${this.profile.fragments} held.`,
+                `+${a.value} · ${this.fragments()} held.`,
               ),
               (a.dead = !0)));
           continue;
@@ -4529,8 +4892,12 @@ var j = class {
         for (let e of t.entities)
           e.type !== `fragment` ||
             e.dead ||
-            ((this.profile.fragments += e.value), (e.dead = !0));
-        (this.saveProfile(),
+            (this.profile.world === 2
+              ? (this.profile.aquaticFragments += e.value)
+              : (this.profile.fragments += e.value),
+              (e.dead = !0));
+        ((t.upgradeChoices = pickUpgradeChoices(t.upgrades)),
+          this.saveProfile(),
           (this.upgradeOpen = !0),
           this.addLog(`ROOM CLEAR`, `Claim an upgrade before the gate opens.`),
           this.emit());
@@ -4564,7 +4931,10 @@ var j = class {
                 : `CLEAR THE ROOM`,
         health: Math.max(0, Math.ceil(e.health)),
         maxHealth: e.maxHealth,
-        fragments: this.profile.fragments,
+        world: this.profile.world,
+        worldUnlocked: this.profile.bestDepth >= 50,
+        bestDepth: this.profile.bestDepth,
+        fragments: this.fragments(),
         score: e.score,
         combo: e.combo,
         element: t
@@ -4584,13 +4954,16 @@ var j = class {
                   : null,
             }
           : null,
-        elements: a.map((e) => ({
+        elements: a.filter((e) => (e.world || 1) === this.profile.world).map((e) => ({
           id: e.id,
           name: this.elementName(e),
           color: e.color,
           cost: e.cost,
           unlocked: this.profile.unlocked.includes(e.id),
-          equipped: this.profile.equipped === e.id,
+          equipped:
+            (this.profile.world === 2
+              ? this.profile.world2Equipped
+              : this.profile.equipped) === e.id,
           awakened: this.profile.awakened.includes(e.id),
         })),
         moves: i.map((n, r) => {
@@ -4610,11 +4983,20 @@ var j = class {
             ready: e.abilityTimers[r] <= 0,
             buyable: o && !s && !a,
             canBuy:
-              o && !s && !a && this.profile.fragments >= (i?.costs?.[r] ?? 0),
+              o && !s && !a && this.fragments() >= (i?.costs?.[r] ?? 0),
             buyCost: i?.costs?.[r] ?? 0,
           };
         }),
-        upgrades: O(e.upgrades),
+        upgrades: {
+          ...O(e.upgrades),
+          choices: e.upgradeChoices
+            .map((e) => c.find((t) => t.id === e))
+            .filter(Boolean)
+            .map((e) => ({
+              ...e,
+              level: this.st.upgrades[e.id] || 0,
+            })),
+        },
         colorways: {
           unlocked: this.profile.colorwayUnlocked,
           active: this.profile.colorwayUnlocked ? this.profile.colorway : null,
@@ -4858,16 +5240,6 @@ function I({ canvasRef: e, engineRef: t, snap: n }) {
               }),
             ],
           }),
-          (0, M.jsxs)(`span`, {
-            className: `text-[#b9b1a0]`,
-            children: [
-              `R `,
-              (0, M.jsx)(`span`, {
-                className: `text-[#6d6879]`,
-                children: `NEW RUN`,
-              }),
-            ],
-          }),
         ],
       }),
       (0, M.jsx)(N, { engineRef: t, snap: n }),
@@ -4876,7 +5248,7 @@ function I({ canvasRef: e, engineRef: t, snap: n }) {
 }
 var L = `fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#04050a]/85 p-4 backdrop-blur-sm`,
   R = `w-full max-w-lg rounded-2xl border border-white/10 bg-[#0f1017] p-6 shadow-[0_40px_120px_-40px_rgba(0,0,0,1)]`;
-function z({ engineRef: e }) {
+function z({ engineRef: e, snap: t }) {
   return (0, M.jsx)(`div`, {
     className: L,
     children: (0, M.jsxs)(`div`, {
@@ -4884,7 +5256,7 @@ function z({ engineRef: e }) {
       children: [
         (0, M.jsx)(`p`, {
           className: `font-mono text-[9px] tracking-[0.28em] text-[#c9a86a]`,
-          children: `ELEMENTAL DUNGEON / 01`,
+          children: `ELEMENTAL DUNGEON / ${t.world === 2 ? `02` : `01`}`,
         }),
         (0, M.jsx)(`h2`, {
           className: `mt-3 font-heading text-3xl leading-[1.05] tracking-[-0.02em] text-[#f0e9d8]`,
@@ -4892,7 +5264,45 @@ function z({ engineRef: e }) {
         }),
         (0, M.jsx)(`p`, {
           className: `mt-3 max-w-sm text-sm leading-relaxed text-[#9d97a8]`,
-          children: `Fight through shifting rooms, gather fragments, unlock an element, and face its awakened boss.`,
+          children: `Fight through shifting rooms, gather fragments, unlock elements, and face awakened bosses.`,
+        }),
+        (0, M.jsxs)(`div`, {
+          className: `mt-5 rounded-xl border border-white/[0.08] bg-black/20 p-3`,
+          children: [
+            (0, M.jsx)(`p`, {
+              className: `font-mono text-[8px] tracking-[0.2em] text-[#7f7a8c]`,
+              children: `CHOOSE YOUR WORLD`,
+            }),
+            (0, M.jsxs)(`div`, {
+              className: `mt-2 grid grid-cols-2 gap-2`,
+              children: [
+                (0, M.jsx)(`button`, {
+                  type: `button`,
+                  onClick: () => e.current?.setWorld(1),
+                  className: `rounded-lg border border-[#c9a86a]/40 bg-[#c9a86a]/10 px-3 py-2 text-left font-heading text-[10px] tracking-[0.08em] text-[#efe0bd]`,
+                  children: `WORLD 1 · THE DESCENT`,
+                }),
+                (0, M.jsx)(`button`, {
+                  type: `button`,
+                  disabled: !t.worldUnlocked,
+                  onClick: () => e.current?.setWorld(2),
+                  className: [
+                    `rounded-lg border px-3 py-2 text-left font-heading text-[10px] tracking-[0.08em]`,
+                    t.worldUnlocked
+                      ? `border-[#54c7c3]/40 bg-[#54c7c3]/10 text-[#a3e4df]`
+                      : `cursor-not-allowed border-white/[0.06] text-[#5f5a6b]`,
+                  ].join(` `),
+                  children: `WORLD 2 · THE DEPTHS`,
+                }),
+              ],
+            }),
+            (0, M.jsx)(`p`, {
+              className: `mt-2 font-mono text-[8px] leading-relaxed tracking-[0.1em] text-[#6d6879]`,
+              children: t.worldUnlocked
+                ? `25 NEW ELEMENTS · AQUATIC FRAGMENTS · WATER-TYPED ENEMIES.`
+                : `WORLD 2 UNLOCKS AT WORLD 1 DEPTH 50 · RECORD ${String(t.bestDepth || 1).padStart(2, `0`)}/50.`,
+            }),
+          ],
         }),
         (0, M.jsxs)(`div`, {
           className: `mt-6 grid gap-2 sm:grid-cols-2`,
@@ -4931,7 +5341,7 @@ function z({ engineRef: e }) {
         }),
         (0, M.jsx)(`p`, {
           className: `mt-5 font-mono text-[8px] leading-relaxed tracking-[0.14em] text-[#6d6879]`,
-          children: `Z X C V CAST ELEMENT MOVES · R STARTS A NEW RUN · FRAGMENTS PERSIST BETWEEN RUNS`,
+          children: `Z X C V CAST ELEMENT MOVES · DEPTH SAVES AUTOMATICALLY · RELOAD TO RESUME`,
         }),
       ],
     }),
@@ -4953,37 +5363,33 @@ function B({ snap: e, engineRef: t }) {
             }),
             (0, M.jsxs)(`span`, {
               className: `font-mono text-[9px] tracking-[0.16em] text-[#8b8598]`,
-              children: [n.used, ` / `, n.slots, ` SLOTS LOADED`],
+              children: [n.used, ` UPGRADES ACTIVE`],
             }),
           ],
         }),
         (0, M.jsx)(`h2`, {
           className: `mt-2 font-heading text-2xl tracking-[-0.01em] text-[#f0e9d8]`,
-          children: `Load an upgrade`,
+          children: `Choose an upgrade`,
         }),
         (0, M.jsxs)(`p`, {
           className: `mt-1 text-[11px] leading-snug text-[#9d97a8]`,
           children: [
-            `Three upgrades at a time. Each climbs to level `,
+            `Choose one of three upgrades. Every upgrade can reach level `,
             n.maxLevel,
             `.`,
           ],
         }),
         (0, M.jsx)(`div`, {
-          className: `mt-5 grid gap-1.5 sm:grid-cols-2`,
-          children: n.options.map((e) => {
-            let r = e.maxed || e.locked;
+          className: `mt-5 grid gap-1.5 sm:grid-cols-3`,
+          children: n.choices.map((e) => {
             return (0, M.jsxs)(
               `button`,
               {
                 type: `button`,
-                disabled: r,
                 onClick: () => t.current?.chooseUpgrade(e.id),
                 className: [
                   `rounded-xl border px-3 py-2.5 text-left transition`,
-                  r
-                    ? `cursor-not-allowed border-white/[0.06] bg-white/[0.01] opacity-40`
-                    : `border-white/10 bg-white/[0.02] hover:border-[#c9a86a]/60 hover:bg-[#c9a86a]/10`,
+                  `border-white/10 bg-white/[0.02] hover:border-[#c9a86a]/60 hover:bg-[#c9a86a]/10`,
                 ].join(` `),
                 children: [
                   (0, M.jsxs)(`span`, {
@@ -4995,11 +5401,7 @@ function B({ snap: e, engineRef: t }) {
                       }),
                       (0, M.jsx)(`span`, {
                         className: `shrink-0 font-mono text-[8px] tracking-[0.12em] text-[#8b8598]`,
-                        children: e.maxed
-                          ? `MAXED`
-                          : e.locked
-                            ? `NO SLOT`
-                            : `LV ${e.level}/${n.maxLevel}`,
+                        children: `LV ${e.level}/${n.maxLevel}`,
                       }),
                     ],
                   }),
@@ -5013,6 +5415,11 @@ function B({ snap: e, engineRef: t }) {
             );
           }),
         }),
+        n.choices.length === 0 &&
+          (0, M.jsx)(`p`, {
+            className: `mt-5 rounded-xl border border-white/[0.06] bg-white/[0.01] px-3 py-4 text-center font-mono text-[9px] tracking-[0.12em] text-[#8b8598]`,
+            children: `ALL UPGRADES MAXED`,
+          }),
         (0, M.jsx)(`button`, {
           type: `button`,
           onClick: () => t.current?.skipUpgrade(),
@@ -5044,20 +5451,21 @@ function V({ snap: e, engineRef: t }) {
             e.room,
             ` holding `,
             e.fragments,
-            ` fragments.`,
+            e.world === 2 ? ` aquatic fragments.` : ` fragments.`,
             (0, M.jsx)(`br`, {}),
             `Your collection is kept for the next descent.`,
           ],
         }),
-        (0, M.jsx)(`button`, {
-          type: `button`,
-          onClick: () => t.current?.restart(),
-          className: `mt-6 w-full rounded-xl border border-[#c9a86a]/50 bg-[#c9a86a]/15 px-4 py-3 font-heading text-sm tracking-[0.08em] text-[#f1e3c1] transition hover:bg-[#c9a86a]/25`,
-          children: `START A NEW RUN`,
-        }),
+        e.worldUnlocked &&
+          (0, M.jsx)(`button`, {
+            type: `button`,
+            onClick: () => t.current?.setWorld(e.world === 1 ? 2 : 1),
+            className: `mt-2 w-full rounded-xl border border-[#54c7c3]/40 bg-[#54c7c3]/10 px-4 py-2 font-heading text-[10px] tracking-[0.08em] text-[#a3e4df] transition hover:bg-[#54c7c3]/20`,
+            children: e.world === 1 ? `DESCEND INTO WORLD 2` : `RETURN TO WORLD 1`,
+          }),
         (0, M.jsx)(`p`, {
-          className: `mt-3 font-mono text-[8px] tracking-[0.16em] text-[#6d6879]`,
-          children: `OR PRESS R`,
+          className: `mt-6 font-mono text-[8px] tracking-[0.16em] text-[#6d6879]`,
+          children: `DEPTH SAVED · RELOAD TO CONTINUE HERE`,
         }),
       ],
     }),
@@ -5065,7 +5473,7 @@ function V({ snap: e, engineRef: t }) {
 }
 function H({ snap: e, engineRef: t }) {
   return e.mode === null
-    ? (0, M.jsx)(z, { engineRef: t })
+    ? (0, M.jsx)(z, { engineRef: t, snap: e })
     : e.over
       ? (0, M.jsx)(V, { snap: e, engineRef: t })
       : e.upgradeOpen
@@ -5264,46 +5672,48 @@ function W({ snap: e }) {
           }),
           (0, M.jsxs)(`span`, {
             className: `font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]`,
-            children: [t.used, `/`, t.slots, ` SLOTS`],
+            children: [t.used, ` ACTIVE`],
           }),
         ],
       }),
       (0, M.jsx)(`div`, {
-        className: `mt-2 space-y-1`,
-        children: Array.from({ length: t.slots }).map((e, r) => {
-          let i = n[r];
-          return (0, M.jsxs)(
-            `div`,
-            {
-              className: `flex items-center justify-between gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5`,
-              children: [
-                (0, M.jsx)(`span`, {
-                  className: [
-                    `min-w-0 truncate font-mono text-[9px] tracking-[0.1em]`,
-                    i ? `text-[#e6cf9a]` : `text-[#4f4a5c]`,
-                  ].join(` `),
-                  children: i ? i.name : `EMPTY SLOT`,
-                }),
-                (0, M.jsx)(`span`, {
-                  className: `flex shrink-0 gap-1`,
-                  children: Array.from({ length: t.maxLevel }).map((e, t) =>
-                    (0, M.jsx)(
-                      `span`,
-                      {
-                        className: [
-                          `h-1.5 w-1.5 rounded-full`,
-                          i && t < i.level ? `bg-[#c9a86a]` : `bg-white/10`,
-                        ].join(` `),
-                      },
-                      t,
-                    ),
-                  ),
-                }),
-              ],
-            },
-            r,
-          );
-        }),
+        className: `mt-2 max-h-36 space-y-1 overflow-y-auto`,
+        children: n.length
+          ? n.map((i) => {
+              return (0, M.jsxs)(
+                `div`,
+                {
+                  className: `flex items-center justify-between gap-2 rounded-lg border border-white/[0.06] bg-black/20 px-2 py-1.5`,
+                  children: [
+                    (0, M.jsx)(`span`, {
+                      className: `min-w-0 truncate font-mono text-[9px] tracking-[0.1em] text-[#e6cf9a]`,
+                      children: i.name,
+                    }),
+                    (0, M.jsx)(`span`, {
+                      className: `flex shrink-0 gap-1`,
+                      children: Array.from({ length: t.maxLevel }).map(
+                        (e, t) =>
+                          (0, M.jsx)(
+                            `span`,
+                            {
+                              className: [
+                                `h-1.5 w-1.5 rounded-full`,
+                                t < i.level ? `bg-[#c9a86a]` : `bg-white/10`,
+                              ].join(` `),
+                            },
+                            t,
+                          ),
+                      ),
+                    }),
+                  ],
+                },
+                i.id,
+              );
+            })
+          : (0, M.jsx)(`p`, {
+              className: `rounded-lg border border-white/[0.06] bg-black/20 px-2 py-2 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]`,
+              children: `NO UPGRADES YET`,
+            }),
       }),
     ],
   });
@@ -5445,7 +5855,7 @@ function q({ snap: e, engineRef: t }) {
             children: [
               (0, M.jsx)(`p`, {
                 className: `font-mono text-[8px] tracking-[0.2em] text-[#7f7a8c]`,
-                children: `FRAGMENTS`,
+                children: e.world === 2 ? `AQUATIC FRAGMENTS` : `FRAGMENTS`,
               }),
               (0, M.jsx)(`p`, {
                 className: `font-heading text-base tabular-nums text-[#b78aff]`,
@@ -5458,7 +5868,7 @@ function q({ snap: e, engineRef: t }) {
             children: [
               (0, M.jsx)(`p`, {
                 className: `font-mono text-[8px] tracking-[0.2em] text-[#7f7a8c]`,
-                children: `DEPTH`,
+                children: `WORLD ${e.world} · DEPTH`,
               }),
               (0, M.jsx)(`p`, {
                 className: `font-heading text-base tabular-nums text-[#efe5cf]`,
