@@ -3206,8 +3206,7 @@ var S = `elemental-descent-profile-v1`,
     bestDepth: 1,
     world1Depth: 1,
     world2Depth: 1,
-    world1Upgrades: {},
-    world2Upgrades: {},
+    upgrades: {},
     colorwayUnlocked: !1,
     colorway: null,
   });
@@ -3235,6 +3234,13 @@ function loadUpgrades(e) {
     let r = e?.[n.id];
     Number.isInteger(r) && r > 0 && (t[n.id] = Math.min(10, r));
   }
+  return t;
+}
+function loadSharedUpgrades(e) {
+  let t = loadUpgrades(e?.upgrades);
+  for (let n of [e?.world1Upgrades, e?.world2Upgrades])
+    for (let [e, r] of Object.entries(loadUpgrades(n)))
+      t[e] = Math.max(t[e] || 0, r);
   return t;
 }
 function pickUpgradeChoices(e) {
@@ -3289,21 +3295,18 @@ function k() {
       (r.world2Depth = Number.isInteger(t?.world2Depth)
         ? Math.max(1, t.world2Depth)
         : 1),
-      (r.world1Upgrades = loadUpgrades(t?.world1Upgrades)),
-      (r.world2Upgrades = loadUpgrades(t?.world2Upgrades)),
+      (r.upgrades = loadSharedUpgrades(t)),
       (r.world = t?.world === 2 && r.bestDepth >= 50 ? 2 : 1),
       (r.equipped =
         r.unlocked.includes(t?.equipped) &&
-        a.some((e) => e.id === t.equipped && e.world !== 2)
+        a.some((e) => e.id === t.equipped)
           ? t.equipped
-          : (r.unlocked.find((e) => a.some((n) => n.id === e && n.world !== 2)) ??
-            null)),
+          : (r.unlocked.find((e) => a.some((n) => n.id === e)) ?? null)),
       (r.world2Equipped =
         r.unlocked.includes(t?.world2Equipped) &&
-        a.some((e) => e.id === t.world2Equipped && e.world === 2)
+        a.some((e) => e.id === t.world2Equipped)
           ? t.world2Equipped
-          : (r.unlocked.find((e) => a.some((n) => n.id === e && n.world === 2)) ??
-            null)),
+          : (r.unlocked.find((e) => a.some((n) => n.id === e)) ?? null)),
       (r.colorwayUnlocked = !!t?.colorwayUnlocked),
       (r.colorway =
         r.colorwayUnlocked && s.some((e) => e.id === t?.colorway)
@@ -3318,11 +3321,16 @@ function k() {
 function A() {
   return {
     room: 1,
+    world: 1,
+    worldUnlocked: !1,
+    elementListWorld: 1,
     roomName: o[0],
     roomStatus: `CLEAR THE ROOM`,
     health: 100,
     maxHealth: 100,
     fragments: 0,
+    world1Fragments: 0,
+    world2Fragments: 0,
     score: 0,
     combo: 0,
     element: null,
@@ -3331,6 +3339,8 @@ function A() {
       name: e.name,
       color: e.color,
       cost: e.cost,
+      currencyLabel: `FRAG`,
+      currencyBalance: 0,
       traits: getElementTraitDetails(e, !1),
       unlocked: !1,
       equipped: !1,
@@ -3369,6 +3379,7 @@ var j = class {
         (this.aim = { x: 160, y: 150 }),
         (this.joystick = { x: 0, y: 0 }),
         (this.mode = null),
+        (this.elementListWorld = this.profile.world),
         (this.over = !1),
         (this.upgradeOpen = !1),
         (this.upgradeDetailsOpen = !1),
@@ -3465,12 +3476,8 @@ var j = class {
         (this.joystick = { x: 0, y: 0 }));
     }
     restoreUpgrades() {
-      let e =
-        this.profile.world === 2
-          ? this.profile.world2Upgrades
-          : this.profile.world1Upgrades;
       for (let t of c) {
-        let n = e[t.id] || 0;
+        let n = this.profile.upgrades[t.id] || 0;
         for (let e = 1; e <= n; e++) {
           this.st.upgrades[t.id] = e;
           this.applyUpgrade(t.id);
@@ -3519,6 +3526,16 @@ var j = class {
         ? this.profile.aquaticFragments
         : this.profile.fragments;
     }
+    elementFragments(e) {
+      return (e.world || 1) === 2
+        ? this.profile.aquaticFragments
+        : this.profile.fragments;
+    }
+    spendElementFragments(e, t) {
+      (e.world || 1) === 2
+        ? (this.profile.aquaticFragments -= t)
+        : (this.profile.fragments -= t);
+    }
     setWorld(e) {
       if (e !== 1 && e !== 2) return;
       if (e === 2 && this.profile.bestDepth < 50) {
@@ -3527,16 +3544,21 @@ var j = class {
         return;
       }
       if (this.profile.world === e) return;
-      ((this.profile.world = e), this.saveProfile(), this.resumeSavedDepth());
+      ((this.profile.world = e),
+        (this.elementListWorld = e),
+        this.saveProfile(),
+        this.resumeSavedDepth());
+    }
+    setElementListWorld(e) {
+      if (e !== 1 && e !== 2) return;
+      if (e === 2 && this.profile.bestDepth < 50) return;
+      ((this.elementListWorld = e), this.emit());
     }
     element() {
       let e = this.profile.world === 2
         ? this.profile.world2Equipped
         : this.profile.equipped;
-      return (
-        a.find((t) => t.id === e && (t.world || 1) === this.profile.world) ||
-        null
-      );
+      return a.find((t) => t.id === e) || null;
     }
     elementTraitMultiplier(e) {
       let t = this.element(),
@@ -3606,7 +3628,8 @@ var j = class {
       return !!(r && this.profile.moves[r.key]?.[t]);
     }
     selectElement(e) {
-      let t = a.find((t) => t.id === e && (t.world || 1) === this.profile.world);
+      let t = a.find((t) => t.id === e);
+      if ((t?.world || 1) === 2 && this.profile.bestDepth < 50) return;
       if (t) {
         if (this.profile.unlocked.includes(t.id))
           this.addLog(
@@ -3614,14 +3637,12 @@ var j = class {
             `${this.elementName(t)} answers your call.`,
           );
         else {
-          if (this.fragments() < t.cost) {
+          if (this.elementFragments(t) < t.cost) {
             (this.addLog(`NOT ENOUGH FRAGMENTS`, `${t.name} costs ${t.cost}.`),
               this.emit());
             return;
           }
-          (this.profile.world === 2
-            ? (this.profile.aquaticFragments -= t.cost)
-            : (this.profile.fragments -= t.cost),
+          (this.spendElementFragments(t, t.cost),
             this.profile.unlocked.push(t.id),
             (this.profile.moves[t.id] = [!1, !1, !1, !1]),
             this.addLog(`ELEMENT UNLOCKED`, `${t.name} joins your circle.`));
@@ -3649,14 +3670,12 @@ var j = class {
       }
       if (this.profile.moves[n.key]?.[e]) return;
       let r = n.costs[e];
-      if (this.fragments() < r) {
+      if (this.elementFragments(t) < r) {
         (this.addLog(`NOT ENOUGH FRAGMENTS`, `${n.moves[e]} costs ${r}.`),
           this.emit());
         return;
       }
-      (this.profile.world === 2
-        ? (this.profile.aquaticFragments -= r)
-        : (this.profile.fragments -= r),
+      (this.spendElementFragments(t, r),
         (this.profile.moves[n.key] = this.profile.moves[n.key] || [
           !1,
           !1,
@@ -4329,8 +4348,7 @@ var j = class {
       if (r < 10) {
         ((t.upgrades[e] = r + 1),
           this.applyUpgrade(e),
-          (this.profile[this.profile.world === 2 ? `world2Upgrades` : `world1Upgrades`] =
-            { ...t.upgrades }),
+          (this.profile.upgrades = { ...t.upgrades }),
           this.saveProfile(),
           (t.upgradeChoices = []),
           (this.upgradeOpen = !1),
@@ -5066,8 +5084,11 @@ var j = class {
         maxHealth: e.maxHealth,
         world: this.profile.world,
         worldUnlocked: this.profile.bestDepth >= 50,
+        elementListWorld: this.elementListWorld,
         bestDepth: this.profile.bestDepth,
         fragments: this.fragments(),
+        world1Fragments: this.profile.fragments,
+        world2Fragments: this.profile.aquaticFragments,
         score: e.score,
         combo: e.combo,
         element: t
@@ -5088,11 +5109,16 @@ var j = class {
                   : null,
             }
           : null,
-        elements: a.filter((e) => (e.world || 1) === this.profile.world).map((e) => ({
+        elements: a.filter((e) => (e.world || 1) === this.elementListWorld).map((e) => ({
           id: e.id,
           name: this.elementName(e),
           color: e.color,
           cost: e.cost,
+          currencyLabel: (e.world || 1) === 2 ? `AQUA` : `FRAG`,
+          currencyBalance:
+            (e.world || 1) === 2
+              ? this.profile.aquaticFragments
+              : this.profile.fragments,
           traits: this.elementTraitDetails(e),
           unlocked: this.profile.unlocked.includes(e.id),
           equipped:
@@ -5118,8 +5144,12 @@ var j = class {
             ready: e.abilityTimers[r] <= 0,
             buyable: o && !s && !a,
             canBuy:
-              o && !s && !a && this.fragments() >= (i?.costs?.[r] ?? 0),
+              o &&
+              !s &&
+              !a &&
+              this.elementFragments(t) >= (i?.costs?.[r] ?? 0),
             buyCost: i?.costs?.[r] ?? 0,
+            currencyLabel: (t?.world || 1) === 2 ? `AQUA` : `FRAG`,
           };
         }),
         upgrades: {
@@ -5634,11 +5664,37 @@ function U({ snap: e, engineRef: t }) {
         ],
       }),
       (0, M.jsx)(`div`, {
+        className: `mt-2 grid grid-cols-2 gap-1`,
+        children: [1, 2].map((n) =>
+          (0, M.jsx)(
+            `button`,
+            {
+              type: `button`,
+              disabled: n === 2 && !e.worldUnlocked,
+              onClick: () => t.current?.setElementListWorld(n),
+              className: [
+                `rounded-lg border px-2 py-1.5 font-mono text-[8px] tracking-[0.12em] transition`,
+                e.elementListWorld === n
+                  ? `border-[#c9a86a]/50 bg-[#c9a86a]/10 text-[#e6cf9a]`
+                  : `border-white/[0.08] text-[#8b8598] hover:border-white/20`,
+                n === 2 && !e.worldUnlocked ? `opacity-40` : ``,
+              ].join(` `),
+              children: n === 1 ? `WORLD 1` : `WORLD 2 · THE DEPTHS`,
+            },
+            n,
+          ),
+        ),
+      }),
+      (0, M.jsx)(`p`, {
+        className: `mt-1.5 font-mono text-[7px] tracking-[0.08em] text-[#6d6879]`,
+        children: `W1 ${e.world1Fragments} FRAG · W2 ${e.world2Fragments} AQUA`,
+      }),
+      (0, M.jsx)(`div`, {
         className: `mt-2 grid grid-cols-2 gap-1.5`,
         children: [...e.elements]
           .sort((e, t) => e.cost - t.cost)
           .map((n) => {
-            let r = !n.unlocked && e.fragments >= n.cost,
+            let r = !n.unlocked && n.currencyBalance >= n.cost,
               i = !n.unlocked && !r;
             return (0, M.jsxs)(
               `button`,
@@ -5679,7 +5735,7 @@ function U({ snap: e, engineRef: t }) {
                       ? `ON`
                       : n.unlocked
                         ? `SWAP`
-                        : `${n.cost}`,
+                        : `${n.cost} ${n.currencyLabel}`,
                   }),
                 ],
               },
@@ -5772,7 +5828,7 @@ function U({ snap: e, engineRef: t }) {
                               ? `bg-[#c9a86a]/20 text-[#e6cf9a] hover:bg-[#c9a86a]/30`
                               : `text-[#5f5a6b]`,
                           ].join(` `),
-                          children: [e.buyCost, ` FRAG`],
+                          children: [e.buyCost, ` `, e.currencyLabel],
                         })
                       : (0, M.jsx)(`span`, {
                           className: `shrink-0 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]`,
