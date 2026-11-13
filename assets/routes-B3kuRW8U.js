@@ -1311,27 +1311,27 @@ var g = {
 var W2_MOVESETS = {
   coral: [`fan`, `roots`, `shield`, `nova`],
   abyss: [`homing`, `pull`, `bastion`, `singularity`],
-  kelp: [`fan`, `repulse`, `mend`, `storm`],
+  kelp: [`lance`, `roots`, `mend`, `storm`],
   pearl: [`beam`, `stun`, `shield`, `domain`],
   current: [`lance`, `sweep`, `dash`, `prism`],
-  magma: [`blast`, `field`, `bastion`, `nova`],
-  thunder: [`chain`, `chain`, `reflect`, `judgment`],
+  magma: [`blast`, `field`, `phase`, `nova`],
+  thunder: [`chain`, `stun`, `reflect`, `judgment`],
   sand: [`fan`, `sweep`, `dash`, `minefield`],
   sound: [`ring`, `stun`, `orbit`, `prism`],
   gravity: [`homing`, `pull`, `shield`, `singularity`],
   dream: [`homing`, `roots`, `mend`, `domain`],
   mirror: [`lance`, `repulse`, `reflect`, `prism`],
   rune: [`mine`, `mines`, `wall`, `barrage`],
-  meteor: [`blast`, `field`, `bastion`, `judgment`],
+  meteor: [`blast`, `field`, `dash`, `judgment`],
   beast: [`lance`, `sweep`, `dash`, `storm`],
-  smoke: [`blast`, `field`, `dash`, `storm`],
+  smoke: [`blast`, `field`, `phase`, `storm`],
   void: [`lance`, `pull`, `bastion`, `singularity`],
   mirage: [`fan`, `mines`, `phase`, `prism`],
-  ironwood: [`homing`, `repulse`, `shield`, `minefield`],
+  ironwood: [`homing`, `roots`, `shield`, `minefield`],
   solar: [`beam`, `stun`, `bastion`, `nova`],
-  lunar: [`lance`, `roots`, `mend`, `domain`],
-  chaos: [`fan`, `chain`, `wall`, `barrage`],
-  order: [`beam`, `stun`, `reflect`, `domain`],
+  lunar: [`fan`, `roots`, `mend`, `domain`],
+  chaos: [`chain`, `mines`, `wall`, `barrage`],
+  order: [`beam`, `stun`, `reflect`, `judgment`],
   prism: [`beam`, `sweep`, `orbit`, `prism`],
   frost: [`fan`, `roots`, `mend`, `storm`],
 };
@@ -1357,6 +1357,7 @@ function castWorld2Move(id, slot, ctx) {
     world2Index = W2.findIndex((element) => element.id === id),
     bonus = Math.max(0, world2Index % 4),
     power = (amount) => dmg(amount * (1 + bonus * 0.035)),
+    prime = (enemy) => (enemy.mark = Math.max(enemy.mark || 0, 4)),
     hit = (enemy, amount, moveSlot = slot) =>
       engine.hitEnemy(enemy, power(amount), id, moveSlot, !1),
     hitCircle = (center, radius, amount) => {
@@ -1444,7 +1445,7 @@ function castWorld2Move(id, slot, ctx) {
       });
       for (let enemy of engine.enemies())
         Math.hypot(enemy.x - hero.x, enemy.y - hero.y) < 108 &&
-          (enemy.root = Math.max(enemy.root || 0, 1.8));
+          ((enemy.root = Math.max(enemy.root || 0, 1.8)), prime(enemy));
     } else if (variant === `pull`) {
       for (let enemy of engine.enemies()) {
         let distance = Math.hypot(enemy.x - aimed.x, enemy.y - aimed.y) || 1;
@@ -1452,7 +1453,8 @@ function castWorld2Move(id, slot, ctx) {
         let pull = Math.min(42, Math.max(0, distance - 28));
         ((enemy.x += ((aimed.x - enemy.x) / distance) * pull),
           (enemy.y += ((aimed.y - enemy.y) / distance) * pull),
-          (enemy.slow = Math.max(enemy.slow || 0, 1.6)));
+          (enemy.slow = Math.max(enemy.slow || 0, 1.6)),
+          prime(enemy));
       }
       visual(aimed.x, aimed.y, 190);
       engine.after(0.35, () => hitCircle(aimed, 108, 48));
@@ -1463,15 +1465,21 @@ function castWorld2Move(id, slot, ctx) {
         ((enemy.x += ((enemy.x - hero.x) / distance) * 54),
           (enemy.y += ((enemy.y - hero.y) / distance) * 54),
           hit(enemy, 28),
-          (enemy.stun = Math.max(enemy.stun || 0, 0.35)));
+          (enemy.stun = Math.max(enemy.stun || 0, 0.35)),
+          prime(enemy));
       }
       visual(hero.x, hero.y, 160);
     } else if (variant === `field`) {
-      pool(aimed.x, aimed.y, 116 + bonus * 7, 4.5, power(12), {
+      let radius = 116 + bonus * 7;
+      pool(aimed.x, aimed.y, radius, 4.5, power(12), {
         burn: id === `magma` || id === `meteor` || id === `solar`,
         poison: id === `smoke` || id === `chaos` ? 4 : 0,
         slow: 1.5,
       });
+      for (let enemy of engine.enemies()) {
+        if (Math.hypot(enemy.x - aimed.x, enemy.y - aimed.y) < radius + enemy.r)
+          prime(enemy);
+      }
     } else if (variant === `mines`) {
       for (let index = 0; index < 6; index++) {
         let angle = (index / 6) * _;
@@ -1480,29 +1488,41 @@ function castWorld2Move(id, slot, ctx) {
           fuse: 0.55,
           damage: power(32),
         });
+        for (let enemy of engine.enemies()) {
+          if (
+            Math.hypot(
+              enemy.x - (hero.x + Math.cos(angle) * 64),
+              enemy.y - (hero.y + Math.sin(angle) * 64),
+            ) < 54 + enemy.r
+          )
+            prime(enemy);
+        }
       }
       visual(hero.x, hero.y, 88);
     } else if (variant === `stun`) {
       for (let enemy of engine.enemies())
         Math.hypot(enemy.x - hero.x, enemy.y - hero.y) < 210 + enemy.r &&
           ((enemy.stun = Math.max(enemy.stun || 0, 0.8)),
-          (enemy.mark = Math.max(enemy.mark || 0, 3)),
+          prime(enemy),
           hit(enemy, 24));
       visual(hero.x, hero.y, 210);
     } else if (variant === `sweep`) {
       engine.beam(hero, aimAngle, 350, 118, power(44), id, slot, !1);
       for (let enemy of engine.enemies()) {
-        let direction = Math.atan2(enemy.y - hero.y, enemy.x - hero.x),
+        let distance = Math.hypot(enemy.x - hero.x, enemy.y - hero.y),
+          direction = Math.atan2(enemy.y - hero.y, enemy.x - hero.x),
           difference = Math.atan2(
             Math.sin(direction - aimAngle),
             Math.cos(direction - aimAngle),
           );
-        Math.abs(difference) < 0.35 &&
-          (enemy.x += Math.cos(aimAngle) * 38);
+        distance < 350 + enemy.r &&
+          Math.abs(difference) < 0.35 &&
+          ((enemy.x += Math.cos(aimAngle) * 38), prime(enemy));
       }
     } else {
       if (target) {
         hit(target, 30);
+        prime(target);
         engine.chain(target, power(30), 6 + bonus);
       }
       visual(aimed.x, aimed.y, 132);
@@ -6194,7 +6214,10 @@ function U({ snap: e, engineRef: t }) {
               }),
               (0, M.jsx)(`span`, {
                 className: `font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]`,
-                children: `BASE + AWAKENED`,
+                children:
+                  e.world === 2
+                    ? `X MARKS · V HITS FOR +35%`
+                    : `BASE + AWAKENED`,
               }),
             ],
           }),

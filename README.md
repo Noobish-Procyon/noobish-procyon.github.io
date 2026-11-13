@@ -96,12 +96,14 @@ Launch: [`hyperfighters/index.html`](hyperfighters/index.html)
 Descend through shifting rooms, collect fragments, and unlock elements. World 1
 includes the original roster and Math; reach depth 50 there to unlock World 2,
 with 25 additional elements and a separate aquatic-fragment currency. World 2
-elements each have a custom four-move set, and World 2 enemies wield World 1's
-Water element. Use the World 1 and World 2 tabs to choose elements from either
-roster in either world; unlocking elements and awakening moves uses that
-element's home-world currency. Progress and each world's current depth are
-saved in browser storage, and upgrade levels are shared between worlds. Every
-element has a themed 10% buff and 10% debuff;
+elements each have a custom four-move set. Their X moves mark affected enemies
+for four seconds, making them take 35% more damage; follow with V moves to cash
+in on the setup. World 2 enemies wield World 1's Water element. Use the World 1
+and World 2 tabs to choose elements from either roster in either world;
+unlocking elements and awakening moves uses that element's home-world currency.
+Progress and each world's current depth are saved in browser storage, and
+upgrade levels are shared between worlds. Every element has a themed 10% buff
+and 10% debuff;
 awakened and inherently unawakenable elements have a 20% buff.
 The Momentum upgrade builds bonus damage from landed hits and resets when you
 take damage.
