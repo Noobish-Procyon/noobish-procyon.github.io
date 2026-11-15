@@ -409,13 +409,13 @@ var r = t(e(), 1),
       baseMoves: [`METEOR SHARD`, `IMPACT ZONE`, `STARFALL GUARD`, `EXTINCTION`],
     },
     {
-      id: `beast`,
-      name: `BEAST`,
+      id: `dough`,
+      name: `DOUGH`,
       world: 2,
       cost: 80,
       color: `#aa7654`,
       combatId: `nature`,
-      baseMoves: [`FANG STRIKE`, `PACK HUNT`, `HIDE ARMOR`, `PRIMAL ROAR`],
+      baseMoves: [`DOUGH BARRAGE`, `STICKY SNARE`, `MOCHI ARMOR`, `DOUGH DROP`],
     },
     {
       id: `smoke`,
@@ -604,7 +604,7 @@ var ELEMENT_TRAITS = {
     mirror: [`defense`, `damage`],
     rune: [`defense`, `moveSpeed`],
     meteor: [`damage`, `defense`],
-    beast: [`damage`, `attackSpeed`],
+    dough: [`damage`, `attackSpeed`],
     smoke: [`moveSpeed`, `damage`],
     void: [`damage`, `defense`],
     mirage: [`moveSpeed`, `attackSpeed`],
@@ -1323,7 +1323,7 @@ var W2_MOVESETS = {
   mirror: [`lance`, `repulse`, `reflect`, `prism`],
   rune: [`mine`, `mines`, `wall`, `barrage`],
   meteor: [`blast`, `field`, `dash`, `judgment`],
-  beast: [`lance`, `stun`, `dash`, `storm`],
+  dough: [`fan`, `roots`, `shield`, `minefield`],
   smoke: [`blast`, `stun`, `phase`, `storm`],
   void: [`lance`, `pull`, `bastion`, `minefield`],
   mirage: [`fan`, `mines`, `phase`, `prism`],
@@ -3670,6 +3670,7 @@ function k() {
     let e = localStorage.getItem(S);
     if (!e) return D();
     let t = JSON.parse(e),
+      migrateElementId = (e) => (e === `beast` ? `dough` : e),
       n = new Set(a.map((e) => e.id)),
       r = D();
     ((r.fragments = Number.isFinite(t?.fragments)
@@ -3679,7 +3680,7 @@ function k() {
         ? Math.max(0, Math.floor(t.aquaticFragments))
         : 0),
       (r.unlocked = Array.isArray(t?.unlocked)
-        ? t.unlocked.filter((e) => n.has(e))
+        ? t.unlocked.map(migrateElementId).filter((e) => n.has(e))
         : []),
       (r.awakened = Array.isArray(t?.awakened)
         ? t.awakened.filter((e) => C.some((t) => t.id === e))
@@ -3712,14 +3713,14 @@ function k() {
       (r.upgrades = loadSharedUpgrades(t)),
       (r.world = t?.world === 2 && r.bestDepth >= 50 ? 2 : 1),
       (r.equipped =
-        r.unlocked.includes(t?.equipped) &&
-        a.some((e) => e.id === t.equipped)
-          ? t.equipped
+        r.unlocked.includes(migrateElementId(t?.equipped)) &&
+        a.some((e) => e.id === migrateElementId(t.equipped))
+          ? migrateElementId(t.equipped)
           : (r.unlocked.find((e) => a.some((n) => n.id === e)) ?? null)),
       (r.world2Equipped =
-        r.unlocked.includes(t?.world2Equipped) &&
-        a.some((e) => e.id === t.world2Equipped)
-          ? t.world2Equipped
+        r.unlocked.includes(migrateElementId(t?.world2Equipped)) &&
+        a.some((e) => e.id === migrateElementId(t.world2Equipped))
+          ? migrateElementId(t.world2Equipped)
           : (r.unlocked.find((e) => a.some((n) => n.id === e)) ?? null)),
       (r.colorwayUnlocked = !!t?.colorwayUnlocked),
       (r.colorway =
