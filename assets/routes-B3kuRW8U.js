@@ -379,7 +379,7 @@ var r = t(e(), 1),
       cost: 60,
       color: `#bf8de0`,
       combatId: `mystic`,
-      baseMoves: [`DREAM DART`, `NIGHTMARE`, `SLEEPING VEIL`, `LUCID STORM`],
+      baseMoves: [`DREAM DART`, `NIGHTMARE`, `LUCID MEND`, `LUCID STORM`],
     },
     {
       id: `mirror`,
@@ -1319,19 +1319,19 @@ var W2_MOVESETS = {
   sand: [`fan`, `sweep`, `dash`, `minefield`],
   sound: [`ring`, `stun`, `orbit`, `prism`],
   gravity: [`homing`, `pull`, `shield`, `singularity`],
-  dream: [`homing`, `roots`, `mend`, `domain`],
+  dream: [`homing`, `nightmare`, `mend`, `domain`],
   mirror: [`lance`, `repulse`, `reflect`, `prism`],
   rune: [`mine`, `mines`, `wall`, `barrage`],
   meteor: [`blast`, `field`, `dash`, `judgment`],
-  beast: [`lance`, `sweep`, `dash`, `storm`],
-  smoke: [`blast`, `field`, `phase`, `storm`],
-  void: [`lance`, `pull`, `bastion`, `singularity`],
+  beast: [`lance`, `stun`, `dash`, `storm`],
+  smoke: [`blast`, `stun`, `phase`, `storm`],
+  void: [`lance`, `pull`, `bastion`, `minefield`],
   mirage: [`fan`, `mines`, `phase`, `prism`],
   ironwood: [`homing`, `roots`, `shield`, `minefield`],
   solar: [`beam`, `stun`, `bastion`, `nova`],
-  lunar: [`fan`, `roots`, `mend`, `domain`],
-  chaos: [`chain`, `mines`, `wall`, `barrage`],
-  order: [`beam`, `stun`, `reflect`, `judgment`],
+  lunar: [`fan`, `sweep`, `mend`, `domain`],
+  chaos: [`chain`, `mines`, `wall`, `judgment`],
+  order: [`beam`, `field`, `reflect`, `judgment`],
   prism: [`beam`, `sweep`, `orbit`, `prism`],
   frost: [`fan`, `roots`, `mend`, `storm`],
 };
@@ -1438,7 +1438,17 @@ function castWorld2Move(id, slot, ctx) {
   }
 
   if (slot === 1) {
-    if (variant === `roots`) {
+    if (variant === `nightmare`) {
+      let radius = 150 + bonus * 6;
+      for (let enemy of engine.enemies()) {
+        if (Math.hypot(enemy.x - aimed.x, enemy.y - aimed.y) > radius + enemy.r)
+          continue;
+        enemy.stun = Math.max(enemy.stun || 0, 1.1);
+        enemy.slow = Math.max(enemy.slow || 0, 2.2);
+        hit(enemy, 30);
+      }
+      visual(aimed.x, aimed.y, radius);
+    } else if (variant === `roots`) {
       pool(hero.x, hero.y, 100 + bonus * 8, 3.8, power(10), {
         root: 1.8,
         slow: 1.2,
