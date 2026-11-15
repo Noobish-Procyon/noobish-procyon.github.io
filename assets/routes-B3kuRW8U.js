@@ -299,6 +299,9 @@ var r = t(e(), 1),
       color: `#4367a8`,
       combatId: `dark`,
       baseMoves: [`DEEP ORB`, `PRESSURE WELL`, `ABYSSAL VEIL`, `HADAL CRUSH`],
+      awakenedName: `TRENCH`,
+      awakeMoves: [`HADAL SEEKER`, `CRUSHING DEPTHS`, `ABYSSAL FORTRESS`, `TRENCH COLLAPSE`],
+      moveCosts: [25, 35, 45, 55],
     },
     {
       id: `kelp`,
@@ -308,6 +311,9 @@ var r = t(e(), 1),
       color: `#568c63`,
       combatId: `nature`,
       baseMoves: [`KELP LASH`, `FOREST OF THE SEA`, `KELP ARMOR`, `GREEN TIDE`],
+      awakenedName: `LEVIATHAN`,
+      awakeMoves: [`LEVIATHAN'S REACH`, `ENTANGLING TIDE`, `SEAHEART`, `VERDANT MAELSTROM`],
+      moveCosts: [30, 40, 50, 60],
     },
     {
       id: `pearl`,
@@ -317,6 +323,9 @@ var r = t(e(), 1),
       color: `#ead9d5`,
       combatId: `light`,
       baseMoves: [`PEARL FLASH`, `MOONLIT SHELL`, `LUSTER GUARD`, `PEARL NOVA`],
+      awakenedName: `RADIANCE`,
+      awakeMoves: [`LUSTROUS BEAM`, `BLINDING TIDE`, `ORBITAL SHELL`, `ABALONE NOVA`],
+      moveCosts: [35, 45, 55, 65],
     },
     {
       id: `current`,
@@ -326,6 +335,9 @@ var r = t(e(), 1),
       color: `#54c7c3`,
       combatId: `wind`,
       baseMoves: [`CURRENT BOLT`, `CROSSCURRENT`, `SLIPSTREAM`, `RIP CURRENT`],
+      awakenedName: `TIDAL`,
+      awakeMoves: [`UNDERTOW LANCE`, `CROSSWAVE`, `RIPTIDE STEP`, `TIDAL PRISM`],
+      moveCosts: [40, 50, 60, 70],
     },
     {
       id: `magma`,
@@ -335,6 +347,9 @@ var r = t(e(), 1),
       color: `#ef633f`,
       combatId: `fire`,
       baseMoves: [`MOLTEN SHARD`, `MAGMA RING`, `LAVA ARMOR`, `CALDERA`],
+      awakenedName: `INFERNO`,
+      awakeMoves: [`ERUPTION BOLT`, `MOLTEN KINGDOM`, `OBSIDIAN BULWARK`, `VOLCANO JUDGMENT`],
+      moveCosts: [45, 55, 65, 75],
     },
     {
       id: `thunder`,
@@ -344,6 +359,9 @@ var r = t(e(), 1),
       color: `#f2d34f`,
       combatId: `electric`,
       baseMoves: [`THUNDERBOLT`, `CHAIN STORM`, `STATIC FIELD`, `SKYFALL`],
+      awakenedName: `TEMPEST`,
+      awakeMoves: [`VOLT CHAIN`, `THUNDERCLAP`, `LIGHTNING AEGIS`, `GODSTORM`],
+      moveCosts: [50, 60, 70, 80],
     },
     {
       id: `sand`,
@@ -353,6 +371,9 @@ var r = t(e(), 1),
       color: `#c9a45b`,
       combatId: `wind`,
       baseMoves: [`SAND SHOT`, `DUNE SWEEP`, `DUST DEVIL`, `DESERT STORM`],
+      awakenedName: `DUNE SEA`,
+      awakeMoves: [`SCIMITAR FAN`, `SANDSPIN`, `MIRAGE STEP`, `BURIAL FIELD`],
+      moveCosts: [55, 65, 75, 85],
     },
     {
       id: `sound`,
@@ -362,6 +383,9 @@ var r = t(e(), 1),
       color: `#d58bd0`,
       combatId: `wind`,
       baseMoves: [`RESONANT PULSE`, `ECHO WAVE`, `SOUND BARRIER`, `SONIC BOOM`],
+      awakenedName: `RESONANCE`,
+      awakeMoves: [`ECHO RING`, `SILENT NIGHTMARE`, `HARMONIC ORBIT`, `CRESCENDO`],
+      moveCosts: [60, 70, 80, 90],
     },
     {
       id: `gravity`,
@@ -371,6 +395,9 @@ var r = t(e(), 1),
       color: `#8b7db8`,
       combatId: `space`,
       baseMoves: [`GRAVITY WELL`, `ORBITAL SHIFT`, `HEAVY FIELD`, `SINGULARITY`],
+      awakenedName: `SINGULARITY`,
+      awakeMoves: [`EVENT HORIZON`, `ORBITAL PULL`, `GRAVITY WELL`, `BLACK SUN`],
+      moveCosts: [65, 75, 85, 95],
     },
     {
       id: `dream`,
@@ -380,6 +407,9 @@ var r = t(e(), 1),
       color: `#bf8de0`,
       combatId: `mystic`,
       baseMoves: [`DREAM DART`, `NIGHTMARE`, `LUCID MEND`, `LUCID STORM`],
+      awakenedName: `LUCID`,
+      awakeMoves: [`STARFALL`, `SLEEP PARALYSIS`, `DREAMWEAVER`, `SLEEPING WORLD`],
+      moveCosts: [65, 75, 85, 95],
     },
     {
       id: `mirror`,
@@ -389,6 +419,9 @@ var r = t(e(), 1),
       color: `#b8d5dc`,
       combatId: `duality`,
       baseMoves: [`REFLECTED BOLT`, `SHATTER IMAGE`, `SILVER GUARD`, `MIRROR WORLD`],
+      awakenedName: `REFLECTION`,
+      awakeMoves: [`SPLINTER LANCE`, `PRISMATIC REBOUND`, `MIRROR AEGIS`, `HALL OF FACES`],
+      moveCosts: [75, 85, 95, 105],
     },
     {
       id: `rune`,
@@ -398,6 +431,9 @@ var r = t(e(), 1),
       color: `#c89754`,
       combatId: `mystic`,
       baseMoves: [`RUNE FLAIR`, `SIGIL STORM`, `RUNE WARD`, `ANCIENT SCRIPT`],
+      awakenedName: `RUNEKEEPER`,
+      awakeMoves: [`ROOT SIGIL`, `BINDING SCRIPT`, `RUNESTONE WALL`, `THOUSAND GLYPHS`],
+      moveCosts: [80, 90, 100, 110],
     },
     {
       id: `meteor`,
@@ -407,6 +443,9 @@ var r = t(e(), 1),
       color: `#dc7157`,
       combatId: `fire`,
       baseMoves: [`METEOR SHARD`, `IMPACT ZONE`, `STARFALL GUARD`, `EXTINCTION`],
+      awakenedName: `SUPERNOVA`,
+      awakeMoves: [`COMET STREAK`, `ASTEROID SWEEP`, `ORBITAL IMPACT`, `CATACLYSM`],
+      moveCosts: [85, 95, 105, 115],
     },
     {
       id: `dough`,
@@ -416,6 +455,9 @@ var r = t(e(), 1),
       color: `#f5e6c8`,
       combatId: `nature`,
       baseMoves: [`DOUGH BARRAGE`, `STICKY SNARE`, `MOCHI ARMOR`, `DOUGH DROP`],
+      awakenedName: `MOCHI`,
+      awakeMoves: [`MOCHI BLAST`, `STICKY FLOOD`, `GOLDEN DOUGH`, `MOCHI METEOR`],
+      moveCosts: [85, 95, 105, 115],
     },
     {
       id: `smoke`,
@@ -425,6 +467,9 @@ var r = t(e(), 1),
       color: `#8b8791`,
       combatId: `gas`,
       baseMoves: [`SMOKE BOMB`, `BLINDING CLOUD`, `VANISH`, `DARKENING SKY`],
+      awakenedName: `PHANTOM`,
+      awakeMoves: [`SHROUDED BLAST`, `CHOKING VEIL`, `GHOST STEP`, `BLACKOUT`],
+      moveCosts: [95, 105, 115, 125],
     },
     {
       id: `void`,
@@ -434,6 +479,9 @@ var r = t(e(), 1),
       color: `#69529c`,
       combatId: `dark`,
       baseMoves: [`VOID NEEDLE`, `NULL ZONE`, `VOID SKIN`, `TOTAL ERASURE`],
+      awakenedName: `OBLIVION`,
+      awakeMoves: [`NULL LANCE`, `EVENT TIDE`, `VOID BASTION`, `ENDLESS NIGHT`],
+      moveCosts: [100, 110, 120, 130],
     },
     {
       id: `mirage`,
@@ -443,6 +491,9 @@ var r = t(e(), 1),
       color: `#e1a56d`,
       combatId: `light`,
       baseMoves: [`AFTERIMAGE`, `FALSE HORIZON`, `SHIMMER`, `DESERT ILLUSION`],
+      awakenedName: `PHANTASM`,
+      awakeMoves: [`HORIZON FAN`, `DOPPELGANGER MINE`, `VANISHING ACT`, `INFINITE REFRACTION`],
+      moveCosts: [105, 115, 125, 135],
     },
     {
       id: `ironwood`,
@@ -452,6 +503,9 @@ var r = t(e(), 1),
       color: `#8e7754`,
       combatId: `metal`,
       baseMoves: [`IRONBARK DART`, `ROOTED SPIKES`, `HEARTWOOD GUARD`, `ANCIENT GROVE`],
+      awakenedName: `WORLDROOT`,
+      awakeMoves: [`IRONBARK SEEKER`, `WORLDROOT SNARE`, `HEARTWOOD BASTION`, `FOREST OF IRON`],
+      moveCosts: [110, 120, 130, 140],
     },
     {
       id: `solar`,
@@ -461,6 +515,9 @@ var r = t(e(), 1),
       color: `#f4b844`,
       combatId: `light`,
       baseMoves: [`SOLAR FLARE`, `SUNBURST`, `CORONA`, `ZENITH`],
+      awakenedName: `CORONA`,
+      awakeMoves: [`PHOTON RAY`, `SOLAR FLARES`, `PROMINENCE GUARD`, `TOTAL ECLIPSE`],
+      moveCosts: [115, 125, 135, 145],
     },
     {
       id: `lunar`,
@@ -470,6 +527,9 @@ var r = t(e(), 1),
       color: `#9faee8`,
       combatId: `ice`,
       baseMoves: [`MOON SHARD`, `LUNAR ECLIPSE`, `MOONLIGHT VEIL`, `MOONFALL`],
+      awakenedName: `ECLIPSE`,
+      awakeMoves: [`CRESCENT FAN`, `ECLIPSE SWEEP`, `MOONLIGHT MEND`, `DARK MOONFALL`],
+      moveCosts: [120, 130, 140, 150],
     },
     {
       id: `chaos`,
@@ -1335,8 +1395,30 @@ var W2_MOVESETS = {
   prism: [`beam`, `sweep`, `orbit`, `prism`],
   frost: [`fan`, `roots`, `mend`, `storm`],
 };
+var W2_AWAKENED_MOVESETS = {
+  abyss: [`homing`, `pull`, `reflect`, `singularity`],
+  kelp: [`lance`, `roots`, `mend`, `domain`],
+  pearl: [`beam`, `stun`, `orbit`, `nova`],
+  current: [`lance`, `sweep`, `phase`, `prism`],
+  magma: [`blast`, `field`, `bastion`, `judgment`],
+  sand: [`fan`, `sweep`, `phase`, `minefield`],
+  sound: [`ring`, `nightmare`, `orbit`, `prism`],
+  gravity: [`homing`, `pull`, `shield`, `domain`],
+  mirror: [`lance`, `repulse`, `shield`, `prism`],
+  rune: [`mine`, `roots`, `wall`, `barrage`],
+  meteor: [`blast`, `sweep`, `dash`, `judgment`],
+  dough: [`blast`, `field`, `bastion`, `nova`],
+  dream: [`beam`, `nightmare`, `mend`, `domain`],
+  smoke: [`blast`, `field`, `phase`, `minefield`],
+  void: [`lance`, `pull`, `bastion`, `domain`],
+  mirage: [`fan`, `mines`, `dash`, `prism`],
+  ironwood: [`homing`, `roots`, `bastion`, `minefield`],
+  solar: [`beam`, `stun`, `reflect`, `nova`],
+  lunar: [`fan`, `roots`, `mend`, `judgment`],
+  thunder: [`chain`, `sweep`, `orbit`, `prism`],
+};
 function castWorld2Move(id, slot, ctx) {
-  let profile = W2_MOVESETS[id];
+  let profile = ctx.awakened ? W2_AWAKENED_MOVESETS[id] : W2_MOVESETS[id];
   if (!profile || slot < 0 || slot > 3) return !1;
   let {
       engine,
@@ -1346,6 +1428,7 @@ function castWorld2Move(id, slot, ctx) {
       aimAngle,
       target,
       dmg,
+      awakened,
       shoot,
       spawn,
       pool,
@@ -1359,7 +1442,7 @@ function castWorld2Move(id, slot, ctx) {
     power = (amount) => dmg(amount * (1 + bonus * 0.035)),
     prime = (enemy) => (enemy.mark = Math.max(enemy.mark || 0, 4)),
     hit = (enemy, amount, moveSlot = slot) =>
-      engine.hitEnemy(enemy, power(amount), id, moveSlot, !1),
+      engine.hitEnemy(enemy, power(amount), id, moveSlot, awakened),
     hitCircle = (center, radius, amount) => {
       for (let enemy of engine.enemies())
         Math.hypot(enemy.x - center.x, enemy.y - center.y) <=
@@ -1691,12 +1774,12 @@ function v(e, t) {
   if (!r) return;
   let nId = r.id,
     world2Style = r.combatId,
-    awakening = world2Style ? null : e.awakening(r);
+    awakening = e.awakening(r);
   if (world2Style) r = { ...r, id: world2Style };
   let a = n.player,
     o = r.color,
     s = awakening,
-    c = !world2Style && e.moveAwakened(nId, t),
+    c = e.moveAwakened(nId, t),
     l = s?.form || null,
     u = e.nearestEnemy(),
     d = e.moveDir(),
@@ -1826,13 +1909,14 @@ function v(e, t) {
       aimAngle: f,
       target: u,
       dmg: v,
+      awakened: c,
       shoot: (angle, options = {}) =>
-        C(angle, { ...options, elementId: nId }),
+        C(angle, { ...options, elementId: nId, awakened: c }),
       spawn: (angle, options = {}) =>
         S(a.x, a.y, angle, {
           elementId: nId,
           index: t,
-          awakened: !1,
+          awakened: c,
           ...options,
         }),
       pool: w,
@@ -1840,7 +1924,7 @@ function v(e, t) {
         T(x, y, {
           elementId: nId,
           index: t,
-          awakened: !1,
+          awakened: c,
           ...options,
         }),
       visual: b,
@@ -3683,7 +3767,9 @@ function k() {
         ? t.unlocked.map(migrateElementId).filter((e) => n.has(e))
         : []),
       (r.awakened = Array.isArray(t?.awakened)
-        ? t.awakened.filter((e) => C.some((t) => t.id === e))
+        ? t.awakened.filter((e) =>
+            a.some((t) => t.id === e && (t.awakeMoves || t.forms)),
+          )
         : []));
     for (let e of a) {
       let n = e.forms
@@ -4953,12 +5039,16 @@ var j = class {
         (this.history = [{ x: t / 2, y: n / 2, t: e.time }]));
       let r = e.room % 10 == 0,
         i = !r && e.room % 5 == 0,
-        s = C.filter((e) => !this.profile.awakened.includes(e.id)),
-        c = s.length ? s : C;
+        s = (this.profile.world === 2
+          ? a.filter((e) => e.world === 2 && (e.awakeMoves || e.forms))
+          : C).filter((e) => !this.profile.awakened.includes(e.id)),
+        c =
+          this.profile.world === 2
+            ? a.filter((e) => e.world === 2 && (e.awakeMoves || e.forms))
+            : C;
       e.bossElement = r
-        ? this.profile.world === 2
-          ? `water`
-          : c[Math.floor(Math.random() * c.length)].id
+        ? (s.length ? s : c)[Math.floor(Math.random() * (s.length || c.length))]
+            ?.id || null
         : null;
       let l = 3 + Math.min(5, e.room + 1);
       for (let t = 0; t < l; t++) e.entities.push(this.makeEnemy(`enemy`));
@@ -5033,10 +5123,10 @@ var j = class {
               ? 27
               : (38 + Math.random() * 20) * 1.15,
         elementId:
-          this.profile.world === 2
-            ? `water`
-            : e === `awakenedBoss`
-              ? this.st.bossElement
+          e === `awakenedBoss`
+            ? this.st.bossElement
+            : this.profile.world === 2
+              ? `water`
               : null,
         hit: 0,
         fireTimer: e === `enemy` ? 0 : 1.2 + Math.random(),
