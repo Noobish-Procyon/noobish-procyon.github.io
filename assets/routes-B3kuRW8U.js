@@ -1692,9 +1692,16 @@ function castWorld2Move(id, slot, ctx) {
   }
 
   if (variant === `nova`) {
+    let novaCenter =
+      id === `dough` && awakened
+        ? target
+          ? { x: target.x, y: target.y }
+          : null
+        : hero;
+    if (!novaCenter) return !0;
     for (let pulse = 0; pulse < 3; pulse++)
       engine.after(pulse * 0.22, () =>
-        hitCircle(hero, 146 + pulse * 34, 52 - pulse * 8),
+        hitCircle(novaCenter, 146 + pulse * 34, 52 - pulse * 8),
       );
   } else if (variant === `judgment`) {
     let enemies = [...engine.enemies()];
@@ -1797,6 +1804,31 @@ function v(e, t) {
         n.attackSpeed *
         n.abilitySpeed) /
     e.elementTraitMultiplier(`attackSpeed`);
+  let moveVfx = {
+    fruitId: nId,
+    variantName: c ? s?.name || r.name : r.name,
+    form: l,
+    awakened: c,
+    slot: t,
+    world: r.world || 1,
+  };
+  let focus =
+      t === 2
+    ? a
+    : u || {
+        x: a.x + Math.cos(f) * 120,
+        y: a.y + Math.sin(f) * 120,
+      };
+  if (!(nId === `dough` && c && t === 3 && !u))
+    e.effect({
+      kind: `sigil`,
+      x: focus.x,
+      y: focus.y,
+      radius: t === 3 ? 68 : 54,
+      color: o,
+      ...moveVfx,
+      duration: c ? 0.9 : 0.72,
+    });
   let b = (t, n, r, i = `area`) =>
       e.effect({
         kind: i,
@@ -1806,6 +1838,7 @@ function v(e, t) {
         color: o,
         key: p,
         label: m,
+        ...moveVfx,
         duration: 0.6,
       }),
     x = (n, i, a) => {
@@ -1823,6 +1856,7 @@ function v(e, t) {
         r: s.radius || 6,
         damage: s.damage ?? v(30),
         color: o,
+        ...moveVfx,
         elementId: s.elementId || r.id,
         index: s.index ?? t,
         awakened: s.awakened ?? c,
@@ -3170,6 +3204,112 @@ function y(e, t) {
     i = parseInt(r, 16);
   return `rgba(${(i >> 16) & 255}, ${(i >> 8) & 255}, ${i & 255}, ${t})`;
 }
+function drawElementalGlyph(e, t, n) {
+  if (!t.fruitId) return;
+  let r = `${t.world || 1}:${t.fruitId}:${t.variantName || `base`}:${t.form || ``}:${t.slot ?? 0}`,
+    i = 2166136261;
+  for (let e = 0; e < r.length; e++)
+    i = Math.imul(i ^ r.charCodeAt(e), 16777619);
+  i >>>= 0;
+  let a = i % 6,
+    o = 5 + ((i >>> 4) % 4) + (t.awakened ? 3 : 0),
+    s = Math.min(46, Math.max(26, (t.radius || 58) * 0.42)),
+    direction = t.form === `death` ? -1 : 1,
+    l = direction * (n * (1.2 + (i % 5) * 0.32)) + (i % 628) / 100;
+  e.save();
+  e.globalAlpha *= t.awakened ? 0.92 : 0.78;
+  e.strokeStyle = t.color;
+  e.fillStyle = t.color;
+  e.lineWidth = t.awakened ? 2 : 1.5;
+  e.lineCap = `round`;
+  e.lineJoin = `round`;
+  e.shadowColor = t.color;
+  e.shadowBlur = t.awakened ? 14 : 9;
+  e.beginPath();
+  if (a === 0) {
+    for (let r = 0; r < (t.awakened ? 3 : 2); r++) {
+      let a = l + r * 0.7,
+        o = a + n * direction * (r + 1);
+      e.ellipse(t.x, t.y, s * (0.62 + r * 0.18), s * (0.28 + r * 0.06), a, 0, Math.PI * 2);
+      e.moveTo(t.x + Math.cos(o) * s * 0.8 + 3, t.y + Math.sin(o) * s * 0.42);
+      e.arc(t.x + Math.cos(o) * s * 0.8, t.y + Math.sin(o) * s * 0.42, 3 + r, 0, Math.PI * 2);
+    }
+  } else if (a === 1) {
+    for (let r = 0; r < o; r++) {
+      let a = l + (r / o) * Math.PI * 2,
+        c = s * (r % 2 ? 0.3 : 0.44),
+        u = s * (r % 3 ? 0.92 : 1.18);
+      e.moveTo(t.x + Math.cos(a) * c, t.y + Math.sin(a) * c);
+      e.lineTo(t.x + Math.cos(a - 0.12) * u * 0.55, t.y + Math.sin(a - 0.12) * u * 0.55);
+      e.lineTo(t.x + Math.cos(a) * u, t.y + Math.sin(a) * u);
+      e.lineTo(t.x + Math.cos(a + 0.12) * u * 0.55, t.y + Math.sin(a + 0.12) * u * 0.55);
+      e.closePath();
+    }
+  } else if (a === 2) {
+    for (let r = 0; r < 3 + (i % 3); r++)
+      for (let a = 0; a <= 14; a++) {
+        let o = a / 14,
+          c = l + (r / (3 + (i % 3))) * Math.PI * 2 + o * Math.PI * 1.7 * direction,
+          u = s * (0.12 + o * 0.82);
+        a === 0
+          ? e.moveTo(t.x + Math.cos(c) * u, t.y + Math.sin(c) * u)
+          : e.lineTo(t.x + Math.cos(c) * u, t.y + Math.sin(c) * u);
+      }
+  } else if (a === 3) {
+    for (let r = 0; r < (t.awakened ? 3 : 2); r++) {
+      let a = 4 + ((i >>> (r + 2)) % 4),
+        o = 1 - r * 0.22,
+        c = l + (r * Math.PI) / a;
+      for (let u = 0; u < a; u++) {
+        let d = c + (u / a) * Math.PI * 2,
+          f = c + ((u + 1) / a) * Math.PI * 2;
+        e.moveTo(t.x + Math.cos(d) * s * o, t.y + Math.sin(d) * s * o);
+        e.lineTo(t.x + Math.cos(f) * s * o, t.y + Math.sin(f) * s * o);
+      }
+    }
+  } else if (a === 4) {
+    for (let r = 0; r < o; r++) {
+      let a = l + (r / o) * Math.PI * 2,
+        c = t.x + Math.cos(a) * s,
+        u = t.y + Math.sin(a) * s,
+        d = Math.cos(a + Math.PI / 2) * s * 0.22,
+        f = Math.sin(a + Math.PI / 2) * s * 0.22;
+      e.moveTo(t.x, t.y);
+      e.quadraticCurveTo(t.x + d, t.y + f, c, u);
+      e.quadraticCurveTo(t.x - d, t.y - f, t.x, t.y);
+    }
+  } else {
+    for (let r = 0; r < 3 + (i % 2); r++) {
+      let a = (r - 1) * s * 0.22;
+      e.moveTo(t.x - s, t.y + a);
+      for (let o = 1; o <= 12; o++)
+        e.lineTo(
+          t.x - s + (o / 12) * s * 2,
+          t.y + a + Math.sin(o * 0.78 + l + r) * s * 0.13,
+        );
+    }
+  }
+  e.stroke();
+  e.globalAlpha *= 0.72;
+  e.setLineDash(t.awakened ? [2, 4] : [1, 5]);
+  e.lineWidth = 1;
+  e.beginPath();
+  e.arc(t.x, t.y, s * (t.awakened ? 1.22 : 1.08), l, l + Math.PI * (t.awakened ? 1.85 : 1.35));
+  e.stroke();
+  e.setLineDash([]);
+  if (t.form === `life` || t.form === `death`) {
+    e.globalAlpha *= 0.85;
+    e.lineWidth = 2;
+    e.beginPath();
+    for (let r = 0; r < 6; r++) {
+      let a = l + (r / 6) * Math.PI * 2;
+      e.moveTo(t.x + Math.cos(a) * s * 0.18, t.y + Math.sin(a) * s * 0.18);
+      e.lineTo(t.x + Math.cos(a) * s * (t.form === `life` ? 0.72 : 0.94), t.y + Math.sin(a) * s * (t.form === `life` ? 0.72 : 0.94));
+    }
+    e.stroke();
+  }
+  e.restore();
+}
 function b(e, t, n) {
   let r = Math.max(0, 1 - n);
   if (
@@ -3182,8 +3322,24 @@ function b(e, t, n) {
     (e.lineJoin = `round`),
     (e.shadowColor = t.color),
     (e.shadowBlur = 18),
-    t.kind === `line`)
+    t.kind === `sigil`)
   ) {
+    let i = (t.radius || 54) * (0.62 + n * 0.48),
+      a = e.createRadialGradient(t.x, t.y, i * 0.08, t.x, t.y, i);
+    a.addColorStop(0, y(t.color, r * 0.18));
+    a.addColorStop(0.7, y(t.color, r * 0.08));
+    a.addColorStop(1, y(t.color, 0));
+    e.fillStyle = a;
+    e.beginPath();
+    e.arc(t.x, t.y, i, 0, Math.PI * 2);
+    e.fill();
+    e.globalAlpha = r * 0.8;
+    e.setLineDash(t.awakened ? [4, 4] : [2, 6]);
+    e.beginPath();
+    e.arc(t.x, t.y, i * 0.82, -n * Math.PI, Math.PI * 1.4 - n * Math.PI);
+    e.stroke();
+    e.setLineDash([]);
+  } else if (t.kind === `line`) {
     e.globalAlpha = r * 0.22;
     e.lineWidth = 9;
     e.beginPath();
@@ -3301,7 +3457,8 @@ function b(e, t, n) {
     e.arc(t.x, t.y, i * 0.78, 0, Math.PI * 2);
     e.stroke();
   }
-  ((e.shadowBlur = 0),
+  (t.fruitId && drawElementalGlyph(e, t, n),
+    (e.shadowBlur = 0),
     t.key &&
       ((e.globalAlpha = r * 0.85),
       (e.fillStyle = `#e5dcc9`),
