@@ -4048,6 +4048,7 @@ function A() {
     over: !1,
     upgradeOpen: !1,
     upgradeDetailsOpen: !1,
+    elementStatsOpen: !1,
     upgradeChoices: [],
     gateOpen: !1,
     upgrades: O({}),
@@ -4070,6 +4071,7 @@ var j = class {
         (this.over = !1),
         (this.upgradeOpen = !1),
         (this.upgradeDetailsOpen = !1),
+        (this.elementStatsOpen = !1),
         (this.log = []),
         (this.w = 320),
         (this.h = 300),
@@ -4408,10 +4410,17 @@ var j = class {
     setControlMode(e) {
       ((this.mode = e), (this.last = performance.now()), this.emit());
     }
+    toggleElementStats() {
+      ((this.elementStatsOpen = !this.elementStatsOpen), this.emit());
+    }
     setKey(e, t) {
       t ? this.keys.add(e) : this.keys.delete(e);
     }
     press(e) {
+      if (e === `i`) {
+        this.toggleElementStats();
+        return;
+      }
       if (this.mode === null) return;
       if (e === `u`) {
         ((this.upgradeDetailsOpen = !this.upgradeDetailsOpen), this.emit());
@@ -5907,6 +5916,7 @@ var j = class {
         over: this.over,
         upgradeOpen: this.upgradeOpen,
         upgradeDetailsOpen: this.upgradeDetailsOpen,
+        elementStatsOpen: this.elementStatsOpen,
         gateOpen: e.gateOpen,
         dashReady: e.dashTimer <= 0,
         rangedReady: e.rangedTimer <= 0,
@@ -6392,7 +6402,7 @@ function U({ snap: e, engineRef: t }) {
           }),
           (0, M.jsx)(`span`, {
             className: `font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]`,
-            children: `15 PTS · HP ATK DEF AS MS`,
+            children: `UNLOCK / SWAP`,
           }),
         ],
       }),
@@ -6433,7 +6443,6 @@ function U({ snap: e, engineRef: t }) {
               `button`,
               {
                 type: `button`,
-                title: `HP ${n.stats.hp} · ATK ${n.stats.attack} · DEF ${n.stats.defense} · ATK SPEED ${n.stats.attackSpeed} · MOVE SPEED ${n.stats.moveSpeed}`,
                 disabled: i,
                 onClick: () => t.current?.selectElement(n.id),
                 className: [
@@ -6458,10 +6467,6 @@ function U({ snap: e, engineRef: t }) {
                             className: `block truncate font-heading text-[11px] tracking-[0.05em]`,
                             style: { color: n.color },
                             children: n.name,
-                          }),
-                          (0, M.jsx)(`span`, {
-                            className: `block truncate font-mono text-[6px] tracking-[0.02em] text-[#7f7a8c]`,
-                            children: `HP${n.stats.hp} ATK${n.stats.attack} DEF${n.stats.defense} AS${n.stats.attackSpeed} MS${n.stats.moveSpeed}`,
                           }),
                         ],
                       }),
@@ -6595,9 +6600,17 @@ function U({ snap: e, engineRef: t }) {
     ],
   });
 }
-function W({ snap: e }) {
+function W({ snap: e, engineRef: n }) {
   let t = e.upgrades,
-    n = t.options.filter((e) => e.level > 0);
+    r = t.options.filter((e) => e.level > 0),
+    i = e.element?.stats,
+    a = [
+      [`HP`, i?.hp],
+      [`ATK`, i?.attack],
+      [`DEF`, i?.defense],
+      [`ATK SPD`, i?.attackSpeed],
+      [`MOVE SPD`, i?.moveSpeed],
+    ];
   return (0, M.jsxs)(`div`, {
     className: `mt-4 border-t border-white/[0.08] pt-3`,
     children: [
@@ -6616,13 +6629,13 @@ function W({ snap: e }) {
       }),
       (0, M.jsx)(`div`, {
         className: `mt-2 max-h-36 space-y-1 overflow-y-auto`,
-        children: !n.length
+        children: !r.length
           ? (0, M.jsx)(`p`, {
               className: `rounded-lg border border-white/[0.06] bg-black/20 px-2 py-2 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]`,
               children: `NO UPGRADES YET`,
             })
           : e.upgradeDetailsOpen
-            ? n.map((i) => {
+            ? r.map((i) => {
               return (0, M.jsxs)(
                 `div`,
                 {
@@ -6657,6 +6670,85 @@ function W({ snap: e }) {
                 className: `rounded-lg border border-white/[0.06] bg-black/20 px-2 py-2 font-mono text-[8px] tracking-[0.1em] text-[#5f5a6b]`,
                 children: `PRESS U TO VIEW UPGRADE LEVELS`,
               }),
+      }),
+      (0, M.jsxs)(`section`, {
+        className: `mt-4 border-t border-white/[0.08] pt-3`,
+        children: [
+          (0, M.jsxs)(`div`, {
+            className: `flex items-center justify-between gap-2`,
+            children: [
+                (0, M.jsx)(`p`, {
+                  className: `font-mono text-[9px] tracking-[0.16em] text-[#7f7a8c]`,
+                  children: `SYSTEM II · ELEMENT STATS`,
+                }),
+                (0, M.jsx)(`button`, {
+                  type: `button`,
+                  onClick: () => n.current?.toggleElementStats(),
+                  className: `rounded border border-white/10 px-2 py-1 font-mono text-[8px] text-[#c9a86a] hover:border-[#c9a86a]/40`,
+                  "aria-expanded": e.elementStatsOpen,
+                  children: e.elementStatsOpen ? `CLOSE · I` : `OPEN · I`,
+                }),
+            ],
+          }),
+          e.elementStatsOpen &&
+            (0, M.jsxs)(`div`, {
+                className: `mt-2 rounded-lg border border-white/[0.06] bg-black/20 p-2`,
+                children: [
+                  (0, M.jsxs)(`div`, {
+                    className: `flex items-baseline justify-between`,
+                    children: [
+                      (0, M.jsx)(`span`, {
+                        className: `font-heading text-[10px] tracking-[0.08em]`,
+                        style: { color: e.element?.color || `#7f7a8c` },
+                        children: e.element?.name || `NO ELEMENT`,
+                      }),
+                      (0, M.jsx)(`span`, {
+                        className: `font-mono text-[7px] tracking-[0.12em] text-[#7f7a8c]`,
+                        children: `15 POINTS`,
+                      }),
+                    ],
+                  }),
+                  i
+                    ? (0, M.jsx)(`div`, {
+                        className: `mt-3 grid grid-cols-5 gap-2`,
+                        children: a.map(([label, value]) =>
+                          (0, M.jsxs)(
+                            `div`,
+                            {
+                              className: `flex flex-col items-center gap-1`,
+                              children: [
+                                (0, M.jsx)(`span`, {
+                                  className: `font-mono text-[8px] tabular-nums text-[#e6cf9a]`,
+                                  children: value,
+                                }),
+                                (0, M.jsx)(`div`, {
+                                  className: `flex h-16 w-full items-end overflow-hidden rounded-sm bg-white/[0.06]`,
+                                  children: (0, M.jsx)(`div`, {
+                                    className: `w-full rounded-sm transition-all duration-300`,
+                                    style: {
+                                      height: `${(value / 5) * 100}%`,
+                                      background: e.element.color,
+                                      boxShadow: `0 0 12px ${e.element.color}80`,
+                                    },
+                                  }),
+                                }),
+                                (0, M.jsx)(`span`, {
+                                  className: `text-center font-mono text-[6px] leading-tight text-[#8b8598]`,
+                                  children: label,
+                                }),
+                              ],
+                            },
+                            label,
+                          ),
+                        ),
+                      })
+                    : (0, M.jsx)(`p`, {
+                        className: `mt-2 font-mono text-[8px] text-[#5f5a6b]`,
+                        children: `EQUIP AN ELEMENT TO VIEW ITS STATS.`,
+                      }),
+                ],
+            }),
+        ],
       }),
     ],
   });
@@ -6826,7 +6918,7 @@ function q({ snap: e, engineRef: t }) {
           }),
         ],
       }),
-      (0, M.jsx)(W, { snap: e }),
+      (0, M.jsx)(W, { snap: e, engineRef: t }),
       (0, M.jsx)(G, { snap: e, engineRef: t }),
       (0, M.jsxs)(`div`, {
         className: `mt-4 border-t border-white/[0.08] pt-3`,
