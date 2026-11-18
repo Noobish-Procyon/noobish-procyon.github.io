@@ -624,22 +624,62 @@ var r = t(e(), 1),
     },
   ];
 a.push(...W2);
+var ELEMENT_STAT_POINTS = {
+  fire: [1, 4, 5, 3, 2],
+  ice: [3, 2, 1, 4, 5],
+  nature: [4, 5, 1, 3, 2],
+  water: [1, 3, 4, 2, 5],
+  light: [2, 5, 3, 4, 1],
+  dark: [4, 2, 5, 1, 3],
+  poison: [5, 4, 3, 2, 1],
+  electric: [2, 4, 1, 3, 5],
+  crystal: [4, 1, 2, 5, 3],
+  metal: [5, 3, 2, 1, 4],
+  blood: [2, 1, 4, 5, 3],
+  time: [3, 4, 5, 1, 2],
+  digital: [5, 1, 4, 3, 2],
+  wind: [1, 5, 2, 3, 4],
+  soul: [3, 2, 1, 5, 4],
+  space: [4, 5, 2, 1, 3],
+  creation: [1, 3, 4, 5, 2],
+  archangel: [2, 5, 4, 1, 3],
+  telekinesis: [4, 2, 5, 3, 1],
+  rubber: [1, 2, 3, 4, 5],
+  gas: [2, 4, 1, 5, 3],
+  silk: [4, 1, 3, 2, 5],
+  mystic: [5, 3, 2, 4, 1],
+  duality: [2, 1, 5, 3, 4],
+  math: [3, 4, 5, 2, 1],
+  coral: [5, 2, 1, 3, 4],
+  abyss: [1, 5, 2, 4, 3],
+  kelp: [3, 2, 4, 1, 5],
+  pearl: [4, 5, 2, 3, 1],
+  current: [1, 3, 5, 2, 4],
+  magma: [2, 5, 4, 3, 1],
+  thunder: [4, 3, 1, 2, 5],
+  sand: [1, 2, 3, 5, 4],
+  sound: [2, 4, 3, 1, 5],
+  gravity: [4, 1, 3, 5, 2],
+  dream: [5, 1, 3, 1, 5],
+  mirror: [2, 1, 5, 4, 3],
+  rune: [3, 5, 1, 2, 4],
+  meteor: [5, 2, 1, 4, 3],
+  dough: [1, 5, 3, 2, 4],
+  smoke: [3, 2, 4, 5, 1],
+  void: [4, 5, 3, 1, 2],
+  mirage: [1, 3, 5, 4, 2],
+  ironwood: [3, 1, 2, 4, 5],
+  solar: [4, 3, 1, 5, 2],
+  lunar: [1, 2, 4, 3, 5],
+  chaos: [2, 4, 3, 5, 1],
+  order: [4, 1, 5, 2, 3],
+  prism: [5, 3, 4, 2, 1],
+  frost: [2, 3, 1, 4, 5],
+};
 function getElementStatPoints(e) {
-  if (!e)
+  let values = e && ELEMENT_STAT_POINTS[e.id];
+  if (!values)
     return { hp: 3, attack: 3, defense: 3, attackSpeed: 3, moveSpeed: 3 };
-  let index = a.findIndex((element) => element.id === e.id);
-  if (index < 0)
-    return { hp: 3, attack: 3, defense: 3, attackSpeed: 3, moveSpeed: 3 };
-  let rank = (index * 37 + 17) % 120,
-    pool = [1, 2, 3, 4, 5],
-    values = [];
-  for (let count = 5; count > 0; count--) {
-    let factorial = 1;
-    for (let factor = 2; factor < count; factor++) factorial *= factor;
-    let position = Math.floor(rank / factorial);
-    rank %= factorial;
-    values.push(pool.splice(position, 1)[0]);
-  }
   return {
     hp: values[0],
     attack: values[1],
