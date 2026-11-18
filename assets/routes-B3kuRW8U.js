@@ -624,6 +624,34 @@ var r = t(e(), 1),
     },
   ];
 a.push(...W2);
+function getElementStatPoints(e) {
+  if (!e)
+    return { hp: 3, attack: 3, defense: 3, attackSpeed: 3, moveSpeed: 3 };
+  let index = a.findIndex((element) => element.id === e.id);
+  if (index < 0)
+    return { hp: 3, attack: 3, defense: 3, attackSpeed: 3, moveSpeed: 3 };
+  let rank = (index * 37 + 17) % 120,
+    pool = [1, 2, 3, 4, 5],
+    values = [];
+  for (let count = 5; count > 0; count--) {
+    let factorial = 1;
+    for (let factor = 2; factor < count; factor++) factorial *= factor;
+    let position = Math.floor(rank / factorial);
+    rank %= factorial;
+    values.push(pool.splice(position, 1)[0]);
+  }
+  return {
+    hp: values[0],
+    attack: values[1],
+    defense: values[2],
+    attackSpeed: values[3],
+    moveSpeed: values[4],
+  };
+}
+function getElementStatMultiplier(e, stat) {
+  let points = getElementStatPoints(e)[stat];
+  return 1 + (points - 3) * 0.05;
+}
 var ELEMENT_TRAITS = {
     fire: [`damage`, `defense`],
     ice: [`defense`, `moveSpeed`],
@@ -3999,6 +4027,7 @@ function A() {
       cost: e.cost,
       currencyLabel: `FRAG`,
       currencyBalance: 0,
+      stats: getElementStatPoints(e),
       traits: getElementTraitDetails(e, !1),
       unlocked: !1,
       equipped: !1,
@@ -4053,6 +4082,8 @@ var j = class {
         this.addLog(`DESCENT`, `WASD to move · Q ranged · click melee.`));
     }
     resetState() {
+      let baseHealth =
+        100 + (getElementStatPoints(this.element()).hp - 3) * 10;
       ((this.mathCreationReady = !1),
         (this.mathPrisonScale = 1),
         (this.mathPrisonTargetId = null),
@@ -4064,8 +4095,9 @@ var j = class {
               ? this.profile.world2Depth
               : this.profile.world1Depth,
           time: 0,
-          health: 100,
-          maxHealth: 100,
+          health: baseHealth,
+          maxHealth: baseHealth,
+          elementBaseHealth: baseHealth,
           score: 0,
           combo: 0,
           comboTimer: 0,
@@ -4222,13 +4254,21 @@ var j = class {
     }
     elementTraitMultiplier(e) {
       let t = this.element(),
-        n = t && ELEMENT_TRAITS[t.id];
-      if (!n) return 1;
-      let r =
-        this.profile.awakened.includes(t.id) || !(t.awakeMoves || t.forms)
-          ? 1.2
-          : 1.1;
-      return n[0] === e ? r : n[1] === e ? 0.9 : 1;
+        n = t && ELEMENT_TRAITS[t.id],
+        r = 1;
+      if (n) {
+        let i =
+          this.profile.awakened.includes(t.id) || !(t.awakeMoves || t.forms)
+            ? 1.2
+            : 1.1;
+        r *= n[0] === e ? i : n[1] === e ? 0.9 : 1;
+      }
+      return (
+        e !== `hp` &&
+        [`damage`, `defense`, `moveSpeed`, `attackSpeed`].includes(e) &&
+        (r *= getElementStatMultiplier(t, e === `damage` ? `attack` : e)),
+        r
+      );
     }
     elementTraitDetails(e) {
       return getElementTraitDetails(
@@ -4310,6 +4350,7 @@ var j = class {
         (this.profile.world === 2
           ? (this.profile.world2Equipped = t.id)
           : (this.profile.equipped = t.id),
+          this.applyElementStatPoints(),
           (this.mathCreationReady = !1),
           (this.mathPrisonScale = 1),
           (this.mathPrisonTargetId = null),
@@ -4317,6 +4358,14 @@ var j = class {
           this.saveProfile(),
           this.emit());
       }
+    }
+    applyElementStatPoints() {
+      if (!this.st) return;
+      let e = 100 + (getElementStatPoints(this.element()).hp - 3) * 10,
+        t = e - (this.st.elementBaseHealth || 100);
+      ((this.st.maxHealth += t),
+        (this.st.health = Math.min(this.st.health, this.st.maxHealth)),
+        (this.st.elementBaseHealth = e));
     }
     buyMove(e) {
       let t = this.element(),
@@ -5778,6 +5827,7 @@ var j = class {
               id: t.id,
               name: this.elementName(t),
               color: t.color,
+              stats: getElementStatPoints(t),
               awakened: this.profile.awakened.includes(t.id),
               hasAwakening: !!(t.awakeMoves || t.forms),
               traits: this.elementTraitDetails(t),
@@ -5795,6 +5845,7 @@ var j = class {
           id: e.id,
           name: this.elementName(e),
           color: e.color,
+          stats: getElementStatPoints(e),
           cost: e.cost,
           currencyLabel: (e.world || 1) === 2 ? `AQUA` : `FRAG`,
           currencyBalance:
@@ -6341,7 +6392,7 @@ function U({ snap: e, engineRef: t }) {
           }),
           (0, M.jsx)(`span`, {
             className: `font-mono text-[8px] tracking-[0.16em] text-[#5f5a6b]`,
-            children: `UNLOCK / SWAP`,
+            children: `15 PTS · HP ATK DEF AS MS`,
           }),
         ],
       }),
@@ -6382,6 +6433,7 @@ function U({ snap: e, engineRef: t }) {
               `button`,
               {
                 type: `button`,
+                title: `HP ${n.stats.hp} · ATK ${n.stats.attack} · DEF ${n.stats.defense} · ATK SPEED ${n.stats.attackSpeed} · MOVE SPEED ${n.stats.moveSpeed}`,
                 disabled: i,
                 onClick: () => t.current?.selectElement(n.id),
                 className: [
@@ -6406,6 +6458,10 @@ function U({ snap: e, engineRef: t }) {
                             className: `block truncate font-heading text-[11px] tracking-[0.05em]`,
                             style: { color: n.color },
                             children: n.name,
+                          }),
+                          (0, M.jsx)(`span`, {
+                            className: `block truncate font-mono text-[6px] tracking-[0.02em] text-[#7f7a8c]`,
+                            children: `HP${n.stats.hp} ATK${n.stats.attack} DEF${n.stats.defense} AS${n.stats.attackSpeed} MS${n.stats.moveSpeed}`,
                           }),
                         ],
                       }),
